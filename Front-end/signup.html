@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up – Prolio AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #7b4dff 0%, #5E7CFF 35%, #49C6C6 70%, #2F8DA8 100%);
+        }
+
+        /* ─── LEFT PANEL ─── */
+        #leftPanel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: clamp(40px, 6vw, 100px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #leftPanel::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            top: -120px; left: -120px;
+        }
+
+        #leftPanel::after {
+            content: '';
+            position: absolute;
+            width: 350px; height: 350px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            bottom: -80px; right: -60px;
+        }
+
+        #brandLogo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(26px, 3.5vw, 44px);
+            font-weight: 900;
+            letter-spacing: 3px;
+            font-style: italic;
+            color: #ffe066;
+            text-shadow: 0 2px 16px rgba(255,224,102,0.35);
+            margin-bottom: clamp(40px, 6vw, 80px);
+            z-index: 1;
+            text-decoration: none;
+            display: block;
+        }
+
+        #brandTagline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 70px);
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 3px 18px rgba(0,0,0,0.18);
+            line-height: 1.1;
+            letter-spacing: -1px;
+            z-index: 1;
+            margin-bottom: 20px;
+        }
+
+        .accent-cyan  { font-style: italic; font-weight: 700; color: #7bedff; text-shadow: 0 2px 20px rgba(123,237,255,0.45); }
+        .accent-yellow { font-style: normal; font-weight: 900; color: #ffe066; text-shadow: 0 2px 20px rgba(255,224,102,0.40); }
+
+        #brandSub {
+            font-size: clamp(13px, 1.4vw, 17px);
+            color: #d0eeff;
+            max-width: 420px;
+            line-height: 1.75;
+            z-index: 1;
+            margin-bottom: clamp(30px, 4vw, 60px);
+        }
+
+        #featurePills { display: flex; flex-direction: column; gap: 12px; z-index: 1; }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.14);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: #ffffff;
+            font-size: clamp(12px, 1vw, 14px);
+            font-weight: 700;
+            width: fit-content;
+            letter-spacing: 0.3px;
+        }
+
+        .pill-icon {
+            width: 22px; height: 22px;
+            background: rgba(255,255,255,0.28);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px;
+        }
+
+        /* ─── RIGHT PANEL ─── */
+        #rightPanel {
+            width: clamp(340px, 40vw, 520px);
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(28px, 3.5vw, 52px) clamp(28px, 4vw, 56px);
+            box-shadow: -10px 0 60px rgba(0,0,0,0.15);
+            overflow-y: auto;
+        }
+
+        #cardLogo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-style: italic;
+            background: linear-gradient(135deg, #7b4dff, #49C6C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        /* ─── STEP INDICATOR ─── */
+        #stepIndicator {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 22px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .step-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-dot.active {
+            background: linear-gradient(135deg, #7b4dff, #5E7CFF);
+            border-color: #7b4dff;
+            color: white;
+            box-shadow: 0 4px 12px rgba(123,77,255,0.35);
+        }
+
+        .step-dot.done {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-color: #22c55e;
+            color: white;
+        }
+
+        .step-dot.done::after { content: '✓'; font-size: 13px; }
+        .step-dot.done span { display: none; }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            max-width: 50px;
+            transition: background 0.3s;
+        }
+
+        .step-line.done { background: linear-gradient(90deg, #7b4dff, #22c55e); }
+
+        .step-label {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .step-label.active-label { color: #7b4dff; }
+
+        #stepLabels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 4px;
+            margin-bottom: 18px;
+        }
+
+        #cardTitle {
+            font-size: clamp(18px, 2.2vw, 26px);
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        #cardSubtitle {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+
+        /* ─── SOCIAL BUTTONS ─── */
+        .socialBtn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            text-decoration: none;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #1e293b;
+        }
+
+        .socialBtn:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            transform: translateY(-1px);
+        }
+
+        .socialBtn:active { transform: scale(0.98); }
+
+        .googleIcon { width: 20px; height: 20px; flex-shrink: 0; }
+
+        .msGrid {
+            width: 20px; height: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .msGrid span:nth-child(1) { background: #f25022; border-radius: 1px; }
+        .msGrid span:nth-child(2) { background: #7fba00; border-radius: 1px; }
+        .msGrid span:nth-child(3) { background: #00a4ef; border-radius: 1px; }
+        .msGrid span:nth-child(4) { background: #ffb900; border-radius: 1px; }
+
+        /* ─── DIVIDER ─── */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; margin: 16px 0;
+        }
+
+        .divider hr { flex: 1; border: none; border-top: 1px solid #e2e8f0; }
+
+        .divider span {
+            font-size: 12px; color: #94a3b8;
+            font-weight: 600; white-space: nowrap;
+        }
+
+        /* ─── FIELD STYLES ─── */
+        .fieldGroup { width: 100%; margin-bottom: 14px; }
+
+        .fieldLabel {
+            font-size: 12px; font-weight: 700;
+            color: #374151; margin-bottom: 6px;
+            display: block; letter-spacing: 0.5px;
+        }
+
+        .fieldWrap { position: relative; width: 100%; }
+
+        .fieldIcon {
+            position: absolute; left: 14px;
+            top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: 16px;
+            pointer-events: none;
+        }
+
+        .formInput {
+            width: 100%;
+            padding: 13px 16px 13px 42px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            outline: none;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.25s;
+        }
+
+        .formInput:focus {
+            border-color: #7b4dff;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(123,77,255,0.10);
+        }
+
+        .formInput.error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.10); }
+        .formInput.success { border-color: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,0.10); }
+
+        .fieldError {
+            font-size: 11px; color: #ef4444;
+            font-weight: 600; margin-top: 4px;
+            display: none;
+        }
+
+        .fieldError.show { display: block; }
+
+        /* Toggle pwd */
+        #togglePwd {
+            position: absolute; right: 14px;
+            top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: #94a3b8;
+            font-size: 16px; background: none;
+            border: none; padding: 0;
+        }
+
+        #togglePwd:hover { color: #5E7CFF; }
+
+        /* Contact type toggle */
+        #contactTypeRow {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            width: 100%;
+        }
+
+        .typeBtn {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .typeBtn.selected {
+            border-color: #7b4dff;
+            background: rgba(123,77,255,0.06);
+            color: #7b4dff;
+        }
+
+        /* ─── OTP BOXES ─── */
+        #otpContainer {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 18px 0;
+            width: 100%;
+        }
+
+        .otpBox {
+            width: 52px; height: 58px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            outline: none;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.2s;
+            caret-color: #7b4dff;
+        }
+
+        .otpBox:focus {
+            border-color: #7b4dff;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(123,77,255,0.12);
+            transform: scale(1.05);
+        }
+
+        .otpBox.filled {
+            border-color: #7b4dff;
+            background: rgba(123,77,255,0.05);
+        }
+
+        #otpInfo {
+            font-size: 13px;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        #otpInfo strong { color: #0f172a; }
+
+        #resendRow {
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        #resendBtn {
+            background: none; border: none;
+            color: #7b4dff; font-weight: 700;
+            font-size: 12px; cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            padding: 0;
+        }
+
+        #resendBtn:disabled { color: #94a3b8; cursor: default; }
+
+        #resendTimer { font-weight: 700; color: #0f172a; }
+
+        /* ─── PASSWORD STRENGTH ─── */
+        #strengthBar {
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        #strengthFill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        #strengthText {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+            color: #94a3b8;
+        }
+
+        /* ─── PRIMARY BUTTON ─── */
+        .primaryBtn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7b4dff, #5E7CFF, #49c6c6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(123,77,255,0.35);
+            transition: all 0.25s ease;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .primaryBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(123,77,255,0.40);
+        }
+
+        .primaryBtn:active { transform: scale(0.98); }
+
+        /* Back button */
+        .backBtn {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .backBtn:hover { border-color: #7b4dff; color: #7b4dff; }
+
+        /* ─── SPINNER ─── */
+        .spinner {
+            display: none;
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .primaryBtn.loading .btnText { opacity: 0.7; }
+        .primaryBtn.loading .spinner { display: inline-block; }
+
+        /* ─── BOTTOM LINKS ─── */
+        #loginRow {
+            font-size: 13px; color: #64748b;
+            text-align: center; margin-bottom: 16px;
+        }
+
+        #loginRow a { color: #7b4dff; font-weight: 700; text-decoration: none; }
+        #loginRow a:hover { text-decoration: underline; }
+
+        #legalLinks {
+            font-size: 11px; color: #94a3b8;
+            text-align: center; line-height: 1.8;
+        }
+
+        #legalLinks a { color: #64748b; text-decoration: none; font-weight: 600; transition: 0.2s; }
+        #legalLinks a:hover { color: #7b4dff; text-decoration: underline; }
+
+        /* ─── SUCCESS STATE ─── */
+        #successView {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            padding: 20px 0;
+        }
+
+        #successIcon {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 24px rgba(34,197,94,0.35);
+            animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        #successTitle { font-size: 22px; font-weight: 800; color: #0f172a; }
+        #successSub { font-size: 14px; color: #64748b; line-height: 1.6; }
+
+        #goLoginBtn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            border: none; border-radius: 12px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7b4dff, #5E7CFF, #49c6c6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(123,77,255,0.35);
+            transition: all 0.25s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        #goLoginBtn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(123,77,255,0.40); }
+
+        /* ─── TOAST ─── */
+        #toast {
+            position: fixed;
+            bottom: 24px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px; font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            z-index: 9999;
+            white-space: nowrap;
+        }
+
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ─── STEP VIEWS ─── */
+        .stepView { display: none; width: 100%; }
+        .stepView.active { display: block; }
+
+        /* ════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════ */
+        @media (max-width: 900px) {
+            body { flex-direction: column; min-height: 100vh; }
+
+            #rightPanel {
+                order: 1; width: 100%; max-width: 100%;
+                border-radius: 0 0 32px 32px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+                padding: 36px clamp(20px, 6vw, 60px) 32px;
+            }
+
+            #leftPanel {
+                order: 2;
+                padding: clamp(36px, 5vw, 60px) clamp(24px, 5vw, 60px);
+                align-items: center; text-align: center; min-height: auto;
+            }
+
+            #brandLogo { margin-bottom: 20px; }
+            #brandTagline { font-size: clamp(28px, 7vw, 52px); }
+            #brandSub { max-width: 100%; }
+            #featurePills { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            #rightPanel { padding: 28px 18px 26px; border-radius: 0 0 24px 24px; }
+            #leftPanel { padding: 24px 18px 36px; }
+            #brandTagline { font-size: clamp(22px, 8vw, 36px); }
+            .otpBox { width: 44px; height: 50px; font-size: 20px; }
+            .pill { font-size: 11px; padding: 8px 14px; }
+        }
+
+        @media (min-width: 1440px) {
+            #rightPanel { width: 520px; padding: 56px; }
+            #brandTagline { font-size: 72px; }
+        }
+
+        @media (min-width: 1920px) {
+            #rightPanel { width: 580px; padding: 70px; }
+            .formInput { font-size: 15px; }
+            .primaryBtn { font-size: 17px; padding: 17px; }
+            .socialBtn { font-size: 15px; padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── LEFT BRANDING PANEL ──────────────────────────── -->
+<div id="leftPanel">
+    <a href="index.html" id="brandLogo">Prolio AI</a>
+    <h1 id="brandTagline">
+        Start your<br>
+        <span class="accent-cyan">career journey</span><br>
+        <span class="accent-yellow">today.</span>
+    </h1>
+    <p id="brandSub">
+        Join thousands of professionals building AI-powered portfolios and resumes — in just a few clicks.
+    </p>
+    <div id="featurePills">
+        <div class="pill"><div class="pill-icon">🚀</div> Free to get started</div>
+        <div class="pill"><div class="pill-icon">🔒</div> Secure &amp; private</div>
+        <div class="pill"><div class="pill-icon">⚡</div> Ready in minutes</div>
+    </div>
+</div>
+
+<!-- ── RIGHT SIGNUP PANEL ───────────────────────────── -->
+<div id="rightPanel">
+
+    <div id="cardLogo">Prolio AI</div>
+
+    <!-- Step Indicator -->
+    <div id="stepIndicator">
+        <div class="step-dot active" id="dot1"><span>1</span></div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-dot" id="dot2"><span>2</span></div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-dot" id="dot3"><span>3</span></div>
+    </div>
+    <div id="stepLabels">
+        <span class="step-label active-label" id="lbl1">Account</span>
+        <span class="step-label" id="lbl2">Verify</span>
+        <span class="step-label" id="lbl3">Profile</span>
+    </div>
+
+    <!-- ══ STEP 1 — Account ══ -->
+    <div class="stepView active" id="step1">
+        <h2 id="cardTitle">Create account</h2>
+        <p id="cardSubtitle">Sign up with Google, Microsoft or email</p>
+
+        <!-- Google -->
+        <button class="socialBtn" onclick="handleSocial('Google')">
+            <svg class="googleIcon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#EA4335" d="M24 9.5c3.1 0 5.6 1.1 7.6 2.9l5.6-5.6C33.6 3.5 29.1 1.5 24 1.5 14.9 1.5 7.2 7.1 3.9 15l6.6 5.1C12.1 14 17.6 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.4c-.5 2.8-2.1 5.1-4.4 6.7l6.8 5.3c4-3.7 6.3-9.2 6.3-16z"/>
+                <path fill="#FBBC05" d="M10.5 28.6A14.4 14.4 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6l-6.6-5.1A23.4 23.4 0 0 0 1.5 24c0 3.8.9 7.3 2.5 10.4l6.5-5.8z"/>
+                <path fill="#34A853" d="M24 46.5c5.1 0 9.4-1.7 12.5-4.6l-6.8-5.3c-1.7 1.2-3.9 1.9-5.7 1.9-6.4 0-11.8-4.3-13.7-10.1l-6.5 5.8C7.2 40.9 14.9 46.5 24 46.5z"/>
+                <path fill="none" d="M1.5 1.5h45v45h-45z"/>
+            </svg>
+            Sign up with Google
+        </button>
+
+        <!-- Microsoft -->
+        <button class="socialBtn" onclick="handleSocial('Microsoft')">
+            <div class="msGrid">
+                <span></span><span></span>
+                <span></span><span></span>
+            </div>
+            Sign up with Microsoft
+        </button>
+
+        <div class="divider"><hr><span>or sign up with email / mobile</span><hr></div>
+
+        <!-- Contact type toggle -->
+        <div id="contactTypeRow">
+            <button class="typeBtn selected" id="btnEmail" onclick="switchType('email')">✉ Email</button>
+            <button class="typeBtn" id="btnPhone" onclick="switchType('phone')">📱 Mobile</button>
+        </div>
+
+        <!-- Email / Phone input -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" id="contactLabel" for="contactInput">Email address</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon" id="contactIcon">✉</span>
+                <input type="email" id="contactInput" class="formInput" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="fieldError" id="contactError">Please enter a valid email address.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="passwordInput">Password</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon">🔒</span>
+                <input type="password" id="passwordInput" class="formInput" placeholder="Create a password" autocomplete="new-password" oninput="checkStrength(this.value)">
+                <button id="togglePwd" type="button" onclick="togglePwd()" title="Show/hide">👁</button>
+            </div>
+            <div id="strengthBar"><div id="strengthFill"></div></div>
+            <div id="strengthText">Enter a password</div>
+            <div class="fieldError" id="passwordError">Password must be at least 8 characters.</div>
+        </div>
+
+        <button class="primaryBtn" id="step1Btn" onclick="goStep2()">
+            <span class="btnText">Continue</span>
+            <span class="spinner"></span>
+        </button>
+
+        <p id="loginRow">Already have an account? <a href="LoginPage.html">Sign in</a></p>
+
+        <p id="legalLinks">
+            By signing up you agree to our
+            <a href="privacypolicy.html">Privacy Policy</a>
+            and <a href="yourprivacypolicychoices.html">Privacy Choices</a>.
+        </p>
+    </div>
+
+    <!-- ══ STEP 2 — OTP Verification ══ -->
+    <div class="stepView" id="step2">
+        <h2 id="cardTitle" style="text-align:center;font-size:clamp(18px,2.2vw,26px);font-weight:800;color:#0f172a;margin-bottom:4px;">Verify your account</h2>
+        <p id="otpInfo">We sent a 6-digit code to<br><strong id="otpTarget">—</strong></p>
+
+        <div id="otpContainer">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp1">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp2">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp3">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp4">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp5">
+            <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp6">
+        </div>
+
+        <div id="resendRow">
+            Didn't receive it?
+            <button id="resendBtn" onclick="resendOTP()" disabled>Resend</button>
+            in <span id="resendTimer">30s</span>
+        </div>
+
+        <button class="primaryBtn" id="step2Btn" onclick="verifyOTP()" style="margin-top:18px;">
+            <span class="btnText">Verify &amp; Continue</span>
+            <span class="spinner"></span>
+        </button>
+
+        <button class="backBtn" onclick="goBack(1)">← Back</button>
+    </div>
+
+    <!-- ══ STEP 3 — Profile ══ -->
+    <div class="stepView" id="step3">
+        <h2 style="text-align:center;font-size:clamp(18px,2.2vw,26px);font-weight:800;color:#0f172a;margin-bottom:4px;">Complete your profile</h2>
+        <p style="font-size:13px;color:#64748b;margin-bottom:20px;text-align:center;">Just a few more details to personalise your experience.</p>
+
+        <!-- Full name -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="fullName">Full name</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon">👤</span>
+                <input type="text" id="fullName" class="formInput" placeholder="e.g. Arun Ravi" autocomplete="name">
+            </div>
+            <div class="fieldError" id="nameError">Please enter your full name.</div>
+        </div>
+
+        <!-- Role / Job title -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="jobRole">Role / Job title</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon">💼</span>
+                <input type="text" id="jobRole" class="formInput" placeholder="e.g. Frontend Developer" autocomplete="organization-title">
+            </div>
+        </div>
+
+        <!-- How did you hear about us -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="referral">How did you hear about us?</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon" style="font-size:13px;">📣</span>
+                <select id="referral" class="formInput" style="appearance:none; cursor:pointer;">
+                    <option value="">Select an option</option>
+                    <option>Google / Search</option>
+                    <option>LinkedIn</option>
+                    <option>Friend / Colleague</option>
+                    <option>Social media</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Terms checkbox -->
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;">
+            <input type="checkbox" id="termsCheck" style="margin-top:3px;width:16px;height:16px;accent-color:#7b4dff;cursor:pointer;flex-shrink:0;">
+            <label for="termsCheck" style="font-size:12px;color:#64748b;line-height:1.6;cursor:pointer;">
+                I agree to the <a href="privacypolicy.html" style="color:#7b4dff;font-weight:700;text-decoration:none;">Privacy Policy</a>
+                and <a href="yourprivacypolicychoices.html" style="color:#7b4dff;font-weight:700;text-decoration:none;">Privacy Choices</a>
+            </label>
+        </div>
+
+        <button class="primaryBtn" id="step3Btn" onclick="createAccount()">
+            <span class="btnText">Create My Account 🎉</span>
+            <span class="spinner"></span>
+        </button>
+
+        <button class="backBtn" onclick="goBack(2)">← Back</button>
+    </div>
+
+    <!-- ══ SUCCESS STATE ══ -->
+    <div id="successView">
+        <div id="successIcon">🎉</div>
+        <h2 id="successTitle">You're all set!</h2>
+        <p id="successSub">Welcome to Prolio AI. Your account has been created successfully. Start building your portfolio now.</p>
+        <a href="LoginPage.html" id="goLoginBtn">Go to Login →</a>
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+    /* ══ State ══ */
+    let contactType = 'email';
+    let resendInterval = null;
+
+    /* ══ Toast ══ */
+    function showToast(msg, duration = 3200) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    /* ══ Social Sign-up ══ */
+    function handleSocial(provider) {
+        showToast('Connecting to ' + provider + '...');
+        /* TODO: wire up real OAuth */
+    }
+
+    /* ══ Email / Phone toggle ══ */
+    function switchType(type) {
+        contactType = type;
+        const input = document.getElementById('contactInput');
+        const label = document.getElementById('contactLabel');
+        const icon  = document.getElementById('contactIcon');
+        const btnE  = document.getElementById('btnEmail');
+        const btnP  = document.getElementById('btnPhone');
+
+        if (type === 'email') {
+            input.type = 'email';
+            input.placeholder = 'you@example.com';
+            input.autocomplete = 'email';
+            label.textContent = 'Email address';
+            icon.textContent = '✉';
+            btnE.classList.add('selected');
+            btnP.classList.remove('selected');
+            document.getElementById('contactError').textContent = 'Please enter a valid email address.';
+        } else {
+            input.type = 'tel';
+            input.placeholder = '+91 9876543210';
+            input.autocomplete = 'tel';
+            label.textContent = 'Mobile number';
+            icon.textContent = '📱';
+            btnP.classList.add('selected');
+            btnE.classList.remove('selected');
+            document.getElementById('contactError').textContent = 'Please enter a valid 10-digit mobile number.';
+        }
+
+        input.value = '';
+        input.classList.remove('error', 'success');
+    }
+
+    /* ══ Password toggle ══ */
+    function togglePwd() {
+        const inp = document.getElementById('passwordInput');
+        const btn = document.getElementById('togglePwd');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+    }
+
+    /* ══ Password strength ══ */
+    function checkStrength(val) {
+        const fill = document.getElementById('strengthFill');
+        const text = document.getElementById('strengthText');
+        let score = 0;
+        if (val.length >= 8)  score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+
+        const levels = [
+            { w: '0%',   bg: '#e2e8f0', label: 'Enter a password' },
+            { w: '25%',  bg: '#ef4444', label: '⚠ Too weak' },
+            { w: '50%',  bg: '#f59e0b', label: '🔶 Fair' },
+            { w: '75%',  bg: '#3b82f6', label: '🔷 Good' },
+            { w: '100%', bg: '#22c55e', label: '✅ Strong' }
+        ];
+
+        const lvl = val.length === 0 ? levels[0] : levels[score];
+        fill.style.width = lvl.w;
+        fill.style.background = lvl.bg;
+        text.textContent = lvl.label;
+        text.style.color = lvl.bg;
+    }
+
+    /* ══ Validators ══ */
+    function validateEmail(e)  { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+    function validatePhone(p)  { return /^[+]?[\d\s\-()]{10,15}$/.test(p); }
+
+    /* ══ Step navigation helpers ══ */
+    function setStep(n) {
+        document.querySelectorAll('.stepView').forEach((v, i) => {
+            v.classList.toggle('active', i + 1 === n);
+        });
+        // Update dots
+        for (let i = 1; i <= 3; i++) {
+            const dot = document.getElementById('dot' + i);
+            const lbl = document.getElementById('lbl' + i);
+            dot.classList.remove('active', 'done');
+            lbl.classList.remove('active-label');
+            if (i < n)       { dot.classList.add('done'); }
+            else if (i === n) { dot.classList.add('active'); lbl.classList.add('active-label'); }
+        }
+        // Update lines
+        for (let i = 1; i <= 2; i++) {
+            document.getElementById('line' + i).classList.toggle('done', i < n);
+        }
+    }
+
+    function goBack(to) { setStep(to); }
+
+    /* ══ STEP 1 → STEP 2 ══ */
+    function goStep2() {
+        const contact = document.getElementById('contactInput').value.trim();
+        const password = document.getElementById('passwordInput').value;
+        const cErr = document.getElementById('contactError');
+        const pErr = document.getElementById('passwordError');
+        let valid = true;
+
+        /* Validate contact */
+        cErr.classList.remove('show');
+        document.getElementById('contactInput').classList.remove('error');
+        if (contactType === 'email' && !validateEmail(contact)) {
+            cErr.classList.add('show');
+            document.getElementById('contactInput').classList.add('error');
+            valid = false;
+        } else if (contactType === 'phone' && !validatePhone(contact)) {
+            cErr.classList.add('show');
+            document.getElementById('contactInput').classList.add('error');
+            valid = false;
+        }
+
+        /* Validate password */
+        pErr.classList.remove('show');
+        document.getElementById('passwordInput').classList.remove('error');
+        if (password.length < 8) {
+            pErr.classList.add('show');
+            document.getElementById('passwordInput').classList.add('error');
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        const btn = document.getElementById('step1Btn');
+        btn.classList.add('loading'); btn.disabled = true;
+
+        setTimeout(() => {
+            btn.classList.remove('loading'); btn.disabled = false;
+            document.getElementById('otpTarget').textContent = contact;
+            setStep(2);
+            startResendTimer();
+            document.getElementById('otp1').focus();
+            showToast('📨 OTP sent to ' + contact);
+        }, 1200);
+    }
+
+    /* ══ OTP auto-advance ══ */
+    document.querySelectorAll('.otpBox').forEach((box, idx, boxes) => {
+        box.addEventListener('input', () => {
+            const val = box.value.replace(/\D/g, '');
+            box.value = val;
+            if (val) { box.classList.add('filled'); if (idx < 5) boxes[idx + 1].focus(); }
+            else { box.classList.remove('filled'); }
+        });
+        box.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !box.value && idx > 0) boxes[idx - 1].focus();
+        });
+        box.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+            [...paste].forEach((ch, i) => {
+                if (boxes[i]) { boxes[i].value = ch; boxes[i].classList.add('filled'); }
+            });
+            const next = Math.min(paste.length, 5);
+            boxes[next].focus();
+        });
+    });
+
+    /* ══ Resend timer ══ */
+    function startResendTimer() {
+        const btn = document.getElementById('resendBtn');
+        const timer = document.getElementById('resendTimer');
+        btn.disabled = true;
+        let sec = 30;
+        timer.textContent = sec + 's';
+        resendInterval = setInterval(() => {
+            sec--;
+            timer.textContent = sec + 's';
+            if (sec <= 0) {
+                clearInterval(resendInterval);
+                btn.disabled = false;
+                timer.textContent = '';
+            }
+        }, 1000);
+    }
+
+    function resendOTP() {
+        showToast('📨 OTP resent!');
+        document.querySelectorAll('.otpBox').forEach(b => { b.value = ''; b.classList.remove('filled'); });
+        startResendTimer();
+        document.getElementById('otp1').focus();
+    }
+
+    /* ══ STEP 2 → STEP 3 ══ */
+    function verifyOTP() {
+        const otp = ['otp1','otp2','otp3','otp4','otp5','otp6']
+            .map(id => document.getElementById(id).value).join('');
+
+        if (otp.length < 6 || /\D/.test(otp)) {
+            showToast('⚠️ Please enter the complete 6-digit OTP.');
+            return;
+        }
+
+        const btn = document.getElementById('step2Btn');
+        btn.classList.add('loading'); btn.disabled = true;
+
+        setTimeout(() => {
+            btn.classList.remove('loading'); btn.disabled = false;
+            /* Demo: accept any 6-digit OTP */
+            setStep(3);
+            clearInterval(resendInterval);
+        }, 1400);
+    }
+
+    /* ══ STEP 3 → SUCCESS ══ */
+    function createAccount() {
+        const name  = document.getElementById('fullName').value.trim();
+        const terms = document.getElementById('termsCheck').checked;
+        const nErr  = document.getElementById('nameError');
+
+        nErr.classList.remove('show');
+        document.getElementById('fullName').classList.remove('error');
+
+        if (!name) {
+            nErr.classList.add('show');
+            document.getElementById('fullName').classList.add('error');
+            return;
+        }
+
+        if (!terms) {
+            showToast('⚠️ Please agree to the Privacy Policy to continue.');
+            return;
+        }
+
+        const btn = document.getElementById('step3Btn');
+        btn.classList.add('loading'); btn.disabled = true;
+
+        setTimeout(() => {
+            btn.classList.remove('loading'); btn.disabled = false;
+
+            /* Hide all steps & step indicator, show success */
+            document.querySelectorAll('.stepView').forEach(v => v.style.display = 'none');
+            document.getElementById('stepIndicator').style.display = 'none';
+            document.getElementById('stepLabels').style.display = 'none';
+            document.getElementById('cardLogo').style.marginBottom = '20px';
+
+            const sv = document.getElementById('successView');
+            sv.style.display = 'flex';
+        }, 1600);
+    }
+
+    /* ══ Enter key support ══ */
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Enter') return;
+        const active = document.querySelector('.stepView.active');
+        if (!active) return;
+        if (active.id === 'step1') goStep2();
+        else if (active.id === 'step2') verifyOTP();
+        else if (active.id === 'step3') createAccount();
+    });
+</script>
+</body>
+</html>

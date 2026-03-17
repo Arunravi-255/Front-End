@@ -3,765 +3,670 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prolio Ai</title>
-    <!--google fonts-->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Montserrat:wght@900&family=Playball&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>Login – Prolio AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            background: linear-gradient(
-                180deg,
-                #7b4dff 0%,
-                #5E7CFF 20%,
-                #49C6C6 40%,
-                #3FB5C4 60%,
-                #2F8DA8 80%,
-                #1F5F75 100%
-            );
-            padding-top: 90px;
-            min-height: 100vh;
-        }
-
-        section { margin: 0; }
-
-        /* ─── NAVBAR ─── */
-        #nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 80px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            z-index: 1000;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
-        }
-
-        #logo {
             font-family: 'Montserrat', sans-serif;
-            font-size: clamp(18px, 2.2vw, 30px);
-            font-weight: 800;
-            padding-left: 10px;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #7b4dff 0%, #5E7CFF 35%, #49C6C6 70%, #2F8DA8 100%);
+        }
+
+        /* ─── LEFT PANEL (branding) ─── */
+        #leftPanel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: clamp(40px, 6vw, 100px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #leftPanel::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            top: -120px;
+            left: -120px;
+        }
+
+        #leftPanel::after {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            bottom: -80px;
+            right: -60px;
+        }
+
+        #brandLogo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(26px, 3.5vw, 44px);
+            font-weight: 900;
             letter-spacing: 3px;
             font-style: italic;
+            /* Bright white with a golden shimmer */
+            color: #ffe066;
+            text-shadow: 0 2px 16px rgba(255,224,102,0.35);
+            margin-bottom: clamp(40px, 6vw, 80px);
+            z-index: 1;
         }
 
-        #navLinks {
-            display: flex;
-            gap: clamp(14px, 2.5vw, 35px);
-            font-weight: 600;
-        }
-
-        #navLinks a {
-            text-decoration: none;
-            font-weight: 600;
-            color: #1e293b;
-            transition: color 0.3s;
-            font-size: clamp(13px, 1.1vw, 16px);
-        }
-
-        #navLinks a:hover { color: #5E7CFF; }
-
-        #hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-            padding: 4px;
-            background: none;
-            border: none;
-        }
-
-        #hamburger span {
-            width: 25px;
-            height: 3px;
-            background: #334155;
-            border-radius: 2px;
-            display: block;
-        }
-
-        /* ─── HERO SECTION ─── */
-        #mainbackground1 {
-            min-height: 100vh;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 60px 100px;
-            gap: 40px;
-            background: transparent;
-        }
-
-        #container {
-            max-width: 950px;
-            flex: 1;
-            animation: fadeSlide 1.2s ease forwards;
-        }
-
-        #h01 {
+        #brandTagline {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(44px, 8.5vw, 130px);
+            font-size: clamp(32px, 5vw, 70px);
             font-weight: 900;
-            color: #15113D;
-            line-height: 0.95;
+            /* Crisp white for main words */
+            color: #ffffff;
+            text-shadow: 0 3px 18px rgba(0,0,0,0.18);
+            line-height: 1.1;
             letter-spacing: -1px;
-            text-shadow: 2px 4px 10px rgba(0,0,0,0.15);
-        }
-
-        #row {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        #h02 {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-weight: 600;
-            font-size: clamp(26px, 5.2vw, 80px);
-            color: #15113d;
-        }
-
-        #h03 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(34px, 6.8vw, 100px);
-            font-weight: 900;
-            color: white;
-            -webkit-text-stroke: clamp(2px, 0.3vw, 4px) #ffffff;
-            font-style: italic;
-            position: relative;
-            top: -5px;
-            margin-left: 8px;
-        }
-
-        #h04 {
-            font-family: 'PlayBall', cursive;
-            font-size: clamp(55px, 11.5vw, 170px);
-            font-weight: 400;
-            color: #000000;
-            margin-top: -10px;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(40px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ─── LOGIN BOX ─── */
-        #loginBox {
-            width: clamp(270px, 28vw, 380px);
-            padding: clamp(24px, 2.8vw, 40px);
-            background: linear-gradient(135deg, #ffffff, #f4f7ff);
-            border-radius: 20px;
-            box-shadow: 0px 20px 40px rgba(0,0,0,0.25);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            backdrop-filter: blur(10px);
-            flex-shrink: 0;
-        }
-
-        #loginHeading {
-            font-size: clamp(20px, 2.2vw, 32px);
-            font-weight: 800;
-            color: #1a1440;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-
-        #emailInput, #passwordInput {
-            padding: 14px 16px;
-            font-size: 15px;
-            border-radius: 10px;
-            border: 2px solid #5E7CFF;
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 0 8px rgba(94,124,255,0.3);
-            background: #ffffff;
-            width: 100%;
-        }
-
-        #emailInput:focus, #passwordInput:focus {
-            border-color: #7b4dff;
-            box-shadow: 0 0 12px rgba(123,77,255,0.5);
-        }
-
-        #loginButton {
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            background: linear-gradient(135deg, #7bedff, #5E7CFF, #49c6c6);
-            transition: all 0.25s ease;
-            box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
-            color: white;
-            transform: translateY(-2px);
-            width: 100%;
-        }
-
-        #loginButton:hover {
-            transform: translateY(-4px);
-            box-shadow: 0px 15px 25px rgba(0,0,0,0.3);
-        }
-
-        #loginButton:active { transform: scale(0.98); }
-
-        #signupText {
-            font-size: 13px;
-            text-align: center;
-            color: #555;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        #signupText:hover {
-            color: #5E7CFF;
-            text-decoration: underline;
-        }
-
-        #forgotPassword {
-            font-size: 13px;
-            color: #555;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 4px;
-        }
-
-        #forgotPassword:hover {
-            color: #5E7CFF;
-            text-decoration: underline;
-        }
-
-        /* ─── SECTION TWO ─── */
-        #sectionTwo {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: clamp(60px, 7vw, 120px) clamp(24px, 6vw, 120px);
-            color: white;
-            background: transparent;
-            text-align: center;
-        }
-
-        #sectionTwoTitle {
-            font-size: clamp(24px, 3.6vw, 52px);
-            font-weight: 800;
+            z-index: 1;
             margin-bottom: 20px;
-            color: white;
         }
 
-        #sectionTwoText {
-            font-size: clamp(14px, 1.4vw, 18px);
-            max-width: 650px;
-            text-align: center;
-            margin-bottom: clamp(36px, 5vw, 60px);
-            color: white;
-            line-height: 1.6;
+        /* "your resume" — bright cyan accent */
+        #brandTagline .accent-cyan {
+            font-style: italic;
+            font-weight: 700;
+            color: #7bedff;
+            text-shadow: 0 2px 20px rgba(123,237,255,0.45);
         }
 
-        #featureContainer {
-            display: flex;
-            justify-content: center;
-            gap: clamp(16px, 2.8vw, 40px);
-            flex-wrap: wrap;
+        /* "with AI." — warm yellow accent */
+        #brandTagline .accent-yellow {
+            font-style: normal;
+            font-weight: 900;
+            color: #ffe066;
+            text-shadow: 0 2px 20px rgba(255,224,102,0.40);
         }
 
-        #featureBox1, #featureBox2, #featureBox3 {
-            width: clamp(210px, 21vw, 280px);
-            padding: clamp(18px, 2.4vw, 30px);
-            border-radius: 16px;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
-            color: white;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+        #brandSub {
+            font-size: clamp(13px, 1.4vw, 17px);
+            /* Off-white with a slight blue tint — easy on eyes, clearly readable */
+            color: #d0eeff;
+            max-width: 420px;
+            line-height: 1.75;
+            z-index: 1;
+            margin-bottom: clamp(30px, 4vw, 60px);
         }
 
-        #featureBox1:hover, #featureBox2:hover, #featureBox3:hover {
-            transform: translateY(-8px);
-            box-shadow: 0px 20px 40px rgba(0,0,0,0.3);
-        }
-
-        #featureContainer h2 {
-            font-size: clamp(16px, 1.7vw, 22px);
-            margin-bottom: 12px;
-        }
-
-        #featureContainer p {
-            font-size: clamp(13px, 1.1vw, 14px);
-            line-height: 1.5;
-        }
-
-        /* ─── SECTION THREE ─── */
-        #sectionThree {
-            min-height: 100vh;
+        /* Feature pills */
+        #featurePills {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: clamp(60px, 7vw, 120px) clamp(24px, 6vw, 100px);
-            color: white;
-            text-align: center;
-            background: transparent;
+            gap: 12px;
+            z-index: 1;
         }
 
-        #sectionThreeTitle {
-            font-size: clamp(24px, 3.6vw, 52px);
-            font-weight: 800;
-            margin-bottom: clamp(40px, 5.5vw, 80px);
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        }
-
-        #timeLine {
+        .pill {
             display: flex;
-            justify-content: center;
-            gap: clamp(18px, 3.5vw, 60px);
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.14);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 50px;
+            padding: 10px 20px;
+            /* Bright white text on pills */
+            color: #ffffff;
+            font-size: clamp(12px, 1vw, 14px);
+            font-weight: 700;
+            width: fit-content;
+            letter-spacing: 0.3px;
         }
 
-        #stepBox1, #stepBox2, #stepBox3 {
-            width: clamp(190px, 19vw, 260px);
-            padding: clamp(18px, 2.4vw, 30px);
-            border-radius: 18px;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(12px);
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        #stepBox1:hover, #stepBox2:hover, #stepBox3:hover {
-            transform: translateY(-10px);
-            box-shadow: 0px 20px 40px rgba(0,0,0,0.3);
-        }
-
-        #stepNumber1, #stepNumber2, #stepNumber3 {
-            width: 45px;
-            height: 45px;
+        .pill-icon {
+            width: 22px;
+            height: 22px;
+            background: rgba(255,255,255,0.28);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            margin: 0 auto 15px auto;
-            background: linear-gradient(135deg, #7B4DFF, #5E7CFF, #49C6C6);
-            color: white;
+            font-size: 11px;
         }
 
-        #timeLine h2 {
-            font-size: clamp(15px, 1.5vw, 20px);
-            margin-bottom: 10px;
-        }
-
-        #timeLine p {
-            font-size: clamp(13px, 1.1vw, 14px);
-            line-height: 1.6;
-        }
-
-        /* ─── FOOTER ─── */
-        #footerSection {
-            background: #0f172a;
-            color: white;
-            padding: clamp(50px, 6vw, 80px) clamp(24px, 8vw, 120px) 30px;
-        }
-
-        #footerContainer {
+        /* ─── RIGHT PANEL (login card) ─── */
+        #rightPanel {
+            width: clamp(340px, 40vw, 520px);
+            background: #ffffff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: clamp(24px, 4vw, 60px);
-            margin-bottom: 40px;
+            align-items: center;
+            padding: clamp(32px, 4vw, 60px) clamp(28px, 4vw, 56px);
+            box-shadow: -10px 0 60px rgba(0,0,0,0.15);
+            overflow-y: auto;
         }
 
-        #footerTitle {
-            font-size: clamp(18px, 2vw, 28px);
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        #footerLinksTitle, #contactTitle {
-            font-size: clamp(14px, 1.4vw, 18px);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        #footerText {
-            max-width: 300px;
-            font-size: clamp(13px, 1.1vw, 14px);
-            line-height: 1.6;
-            color: #cbd5e1;
-        }
-
-        #footerLinks p {
-            font-size: clamp(13px, 1.1vw, 14px);
-            color: #cbd5e1;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        #footerLinks p:hover { color: white; }
-
-        #footerContact p {
-            font-size: clamp(13px, 1.1vw, 14px);
-            color: #cbd5e1;
+        #cardLogo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-style: italic;
+            background: linear-gradient(135deg, #7b4dff, #49C6C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 6px;
         }
 
-        #copyright {
-            border-top: 1px solid #334155;
-            padding-top: 20px;
+        #cardTitle {
+            font-size: clamp(20px, 2.5vw, 30px);
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
             text-align: center;
         }
 
-        #copyrightText {
+        #cardSubtitle {
             font-size: 13px;
-            color: #94a3b8;
+            color: #64748b;
+            margin-bottom: 28px;
+            text-align: center;
         }
 
-        #portfolioPreview {
-            max-width: 600px;
+        /* ─── SOCIAL BUTTONS ─── */
+        .socialBtn {
             width: 100%;
-            padding: 40px;
-            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            text-decoration: none;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #1e293b;
         }
+
+        .socialBtn:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            transform: translateY(-1px);
+        }
+
+        .socialBtn:active { transform: scale(0.98); }
+
+        /* Google icon SVG inline */
+        .googleIcon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Microsoft icon */
+        .msGrid {
+            width: 20px;
+            height: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .msGrid span:nth-child(1) { background: #f25022; border-radius: 1px; }
+        .msGrid span:nth-child(2) { background: #7fba00; border-radius: 1px; }
+        .msGrid span:nth-child(3) { background: #00a4ef; border-radius: 1px; }
+        .msGrid span:nth-child(4) { background: #ffb900; border-radius: 1px; }
+
+        /* ─── DIVIDER ─── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            margin: 18px 0;
+        }
+
+        .divider hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .divider span {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* ─── FORM FIELDS ─── */
+        .fieldGroup {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+
+        .fieldLabel {
+            font-size: 12px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 6px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .fieldWrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .fieldWrap .fieldIcon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .formInput {
+            width: 100%;
+            padding: 13px 16px 13px 42px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            outline: none;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.25s;
+        }
+
+        .formInput:focus {
+            border-color: #7b4dff;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(123,77,255,0.10);
+        }
+
+        /* Toggle password visibility */
+        #togglePwd {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            font-size: 16px;
+            user-select: none;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        #togglePwd:hover { color: #5E7CFF; }
+
+        /* ─── FORGOT PASSWORD ─── */
+        #forgotRow {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -6px;
+            margin-bottom: 18px;
+        }
+
+        #forgotLink {
+            font-size: 12px;
+            color: #7b4dff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        #forgotLink:hover { text-decoration: underline; }
+
+        /* ─── LOGIN BUTTON ─── */
+        #loginBtn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7b4dff, #5E7CFF, #49c6c6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(123,77,255,0.35);
+            transition: all 0.25s ease;
+            margin-bottom: 18px;
+        }
+
+        #loginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(123,77,255,0.40);
+        }
+
+        #loginBtn:active { transform: scale(0.98); }
+
+        /* ─── SIGNUP ROW ─── */
+        #signupRow {
+            font-size: 13px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #signupRow a {
+            color: #7b4dff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        #signupRow a:hover { text-decoration: underline; }
+
+        /* ─── LEGAL LINKS ─── */
+        #legalLinks {
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        #legalLinks a {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        #legalLinks a:hover {
+            color: #7b4dff;
+            text-decoration: underline;
+        }
+
+        /* ─── TOAST NOTIFICATION ─── */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            z-index: 9999;
+            white-space: nowrap;
+        }
+
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ─── LOADING SPINNER ─── */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #loginBtn.loading .btnText { opacity: 0.7; }
+        #loginBtn.loading .spinner { display: inline-block; }
+        #loginBtn { display: flex; justify-content: center; align-items: center; gap: 0; }
 
         /* ══════════════════════════════════════
-           RESPONSIVE BREAKPOINTS
+           RESPONSIVE
         ══════════════════════════════════════ */
 
-        /* ── SMALL MOBILE (≤ 380px) ── */
-        @media (max-width: 380px) {
-            body { padding-top: 66px; }
-            #nav { padding: 14px 16px; }
-            #hamburger { display: flex; }
-            #navLinks {
-                position: absolute;
-                top: 66px;
-                right: 0;
-                left: 0;
-                background: white;
+        /* Tablet & below: stack vertically — login box FIRST, branding SECOND */
+        @media (max-width: 900px) {
+            body { flex-direction: column; min-height: 100vh; }
+
+            /* Login box comes first on mobile */
+            #rightPanel {
+                order: 1;
                 width: 100%;
-                flex-direction: column;
-                align-items: center;
-                padding: 16px;
-                gap: 12px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-                display: none;
+                max-width: 100%;
+                border-radius: 0 0 32px 32px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+                padding: 40px clamp(20px, 6vw, 60px) 36px;
             }
-            #navLinks.active { display: flex; }
 
-            #mainbackground1 {
-                flex-direction: column;
-                text-align: center;
-                padding: 24px 16px 50px;
-                min-height: auto;
-                gap: 24px;
-            }
-            #row { justify-content: center; }
-            #h04 { margin-top: -8px; }
-            #loginBox { width: 100%; }
-
-            #sectionTwo { padding: 50px 16px; min-height: auto; }
-            #featureBox1, #featureBox2, #featureBox3 { width: 100%; }
-
-            #sectionThree { padding: 50px 16px; min-height: auto; }
-            #stepBox1, #stepBox2, #stepBox3 { width: 100%; }
-
-            #footerSection { padding: 40px 16px 24px; }
-            #footerContainer { flex-direction: column; align-items: center; text-align: center; }
-            #footerText { max-width: 100%; }
-        }
-
-        /* ── MOBILE (381px – 480px) ── */
-        @media (min-width: 381px) and (max-width: 480px) {
-            body { padding-top: 70px; }
-            #nav { padding: 14px 20px; }
-            #hamburger { display: flex; }
-            #navLinks {
-                position: absolute;
-                top: 70px;
-                right: 0;
-                left: 0;
-                background: white;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                padding: 18px;
-                gap: 14px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-                display: none;
-            }
-            #navLinks.active { display: flex; }
-
-            #mainbackground1 {
-                flex-direction: column;
-                text-align: center;
-                padding: 30px 24px 60px;
-                min-height: auto;
-                gap: 30px;
-            }
-            #row { justify-content: center; }
-            #loginBox { width: 100%; max-width: 400px; margin: 0 auto; }
-
-            #sectionTwo { padding: 60px 24px; min-height: auto; }
-            #featureBox1, #featureBox2, #featureBox3 { width: 100%; max-width: 360px; }
-
-            #sectionThree { padding: 60px 24px; min-height: auto; }
-            #stepBox1, #stepBox2, #stepBox3 { width: 100%; max-width: 340px; }
-
-            #footerSection { padding: 50px 24px 24px; }
-            #footerContainer { flex-direction: column; align-items: center; text-align: center; }
-            #footerText { max-width: 100%; }
-        }
-
-        /* ── TABLET PORTRAIT (481px – 768px) ── */
-        @media (min-width: 481px) and (max-width: 768px) {
-            body { padding-top: 72px; }
-            #nav { padding: 16px 30px; }
-            #hamburger { display: flex; }
-            #navLinks {
-                position: absolute;
-                top: 72px;
-                right: 0;
-                background: white;
-                width: 220px;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-                gap: 14px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-                display: none;
-            }
-            #navLinks.active { display: flex; }
-
-            #mainbackground1 {
-                flex-direction: column;
+            /* Branding panel comes below */
+            #leftPanel {
+                order: 2;
+                padding: clamp(36px, 5vw, 60px) clamp(24px, 5vw, 60px);
                 align-items: center;
                 text-align: center;
-                padding: 50px 40px 80px;
                 min-height: auto;
-                gap: 40px;
             }
-            #row { justify-content: center; }
-            #loginBox { width: 380px; margin: 0 auto; }
 
-            #sectionTwo { padding: 80px 40px; min-height: auto; }
-            #featureBox1, #featureBox2, #featureBox3 { width: calc(50% - 10px); min-width: 200px; }
-
-            #sectionThree { padding: 80px 40px; min-height: auto; }
-            #stepBox1, #stepBox2, #stepBox3 { width: calc(50% - 10px); min-width: 190px; }
-
-            #footerSection { padding: 60px 40px 30px; }
-            #footerContainer { flex-direction: column; align-items: center; text-align: center; }
-            #footerText { max-width: 100%; }
+            #brandLogo { margin-bottom: 20px; }
+            #brandTagline { font-size: clamp(28px, 7vw, 52px); }
+            #brandSub { max-width: 100%; }
+            #featurePills { flex-direction: row; flex-wrap: wrap; justify-content: center; }
         }
 
-        /* ── TABLET LANDSCAPE (769px – 1024px) ── */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            #nav { padding: 18px 40px; }
-            #mainbackground1 { padding: 60px 50px; gap: 30px; }
-            #loginBox { width: 290px; }
-
-            #sectionTwo { padding: 80px 50px; }
-            #featureBox1, #featureBox2, #featureBox3 { width: clamp(180px, 28vw, 240px); }
-
-            #sectionThree { padding: 80px 50px; }
-            #stepBox1, #stepBox2, #stepBox3 { width: clamp(170px, 26vw, 220px); }
-
-            #footerSection { padding: 60px 50px 30px; }
+        /* Small mobile */
+        @media (max-width: 480px) {
+            #rightPanel { padding: 32px 20px 28px; border-radius: 0 0 24px 24px; }
+            #leftPanel { padding: 28px 20px 40px; }
+            #brandTagline { font-size: clamp(24px, 8vw, 40px); }
+            #featurePills { gap: 8px; }
+            .pill { font-size: 11px; padding: 8px 14px; }
         }
 
-        /* ── LAPTOP (1025px – 1280px) ── */
-        @media (min-width: 1025px) and (max-width: 1280px) {
-            #nav { padding: 18px 60px; }
-            #mainbackground1 { padding: 60px 80px; }
-            #sectionTwo { padding: 80px 80px; }
-            #sectionThree { padding: 80px 80px; }
-            #footerSection { padding: 70px 80px 30px; }
+        /* Large screens */
+        @media (min-width: 1440px) {
+            #rightPanel { width: 520px; padding: 60px; }
+            #brandTagline { font-size: 72px; }
         }
 
-        /* ── LARGE DESKTOP / TV (1441px – 1920px) ── */
-        @media (min-width: 1441px) and (max-width: 1920px) {
-            #nav { padding: 22px 160px; }
-            #mainbackground1 { padding: 80px 160px; gap: 60px; }
-            #sectionTwo, #sectionThree { padding: 120px 160px; }
-            #footerSection { padding: 100px 160px 40px; }
-            #featureBox1, #featureBox2, #featureBox3 { width: 300px; }
-            #stepBox1, #stepBox2, #stepBox3 { width: 280px; }
-        }
-
-        /* ── 4K / ULTRA-WIDE TV (> 1920px) ── */
-        @media (min-width: 1921px) {
-            #nav { padding: 26px 240px; }
-            #logo { font-size: 38px; }
-
-            #mainbackground1 { padding: 100px 240px; gap: 80px; }
-            #container { max-width: 1300px; }
-
-            #sectionTwo, #sectionThree { padding: 160px 240px; }
-            #sectionTwoTitle, #sectionThreeTitle { font-size: 72px; }
-            #sectionTwoText { font-size: 22px; max-width: 900px; }
-
-            #featureBox1, #featureBox2, #featureBox3 { width: 360px; padding: 40px; }
-            #featureContainer { gap: 60px; }
-            #featureContainer h2 { font-size: 26px; }
-            #featureContainer p { font-size: 16px; }
-
-            #stepBox1, #stepBox2, #stepBox3 { width: 340px; padding: 40px; }
-            #timeLine { gap: 80px; }
-            #timeLine h2 { font-size: 24px; }
-            #timeLine p { font-size: 16px; }
-
-            #stepNumber1, #stepNumber2, #stepNumber3 { width: 58px; height: 58px; font-size: 22px; }
-
-            #loginBox { width: 480px; padding: 50px; }
-            #loginHeading { font-size: 38px; }
-
-            #footerSection { padding: 120px 240px 50px; }
-            #footerTitle { font-size: 34px; }
-            #footerText, #footerLinks p, #footerContact p { font-size: 16px; }
-            #footerLinksTitle, #contactTitle { font-size: 22px; }
+        @media (min-width: 1920px) {
+            #rightPanel { width: 580px; padding: 70px; }
+            .formInput { font-size: 15px; padding: 15px 18px 15px 44px; }
+            #loginBtn { font-size: 17px; padding: 17px; }
+            .socialBtn { font-size: 15px; padding: 15px 20px; }
         }
     </style>
 </head>
 <body>
-    <nav id="nav">
-        <h2 id="logo">Prolio AI</h2>
-        <div id="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div id="navLinks">
-            <a href="#mainbackground1" id="navHome">Home</a>
-            <a href="#" id="navDeveloper">Developer</a>
-            <a href="#" id="navSignup">Signup</a>
-            <a href="#" id="navLogin">Login</a>
-            <a href="#" id="navAbout">About</a>
-        </div>
-    </nav>
 
-    <section id="mainbackground1">
-        <div id="container">
-            <h1 id="h01">Empower</h1>
-            <div id="row">
-                <h2 id="h02">your resume</h2>
-                <h2 id="h03">BY</h2>
-            </div>
-            <h2 id="h04">Prolio Ai</h2>
-        </div>
-        <div id="loginBox">
-            <h2 id="loginHeading">Login</h2>
-            <input type="text" id="emailInput" placeholder="Mobile / Email">
-            <input type="password" id="passwordInput" placeholder="Password">
-            <button id="loginButton">Login</button>
-            <p id="forgotPassword">Forgot Password?</p>
-            <p id="signupText">Don't have an account? Sign up</p>
-        </div>
-    </section>
-
-    <section id="sectionTwo">
-        <h1 id="sectionTwoTitle">Build Your Professional Identity</h1>
-        <p id="sectionTwoText">
-            Prolio AI helps developers and professionals create modern resumes,
-            AI-powered portfolios and developer profiles in minutes.
+    <!-- ── LEFT BRANDING PANEL ──────────────────────────── -->
+    <div id="leftPanel">
+        <div id="brandLogo">Prolio AI</div>
+        <h1 id="brandTagline">
+            Empower<br>
+            <span class="accent-cyan">your resume</span><br>
+            <span class="accent-yellow">with AI.</span>
+        </h1>
+        <p id="brandSub">
+            Build AI-powered portfolios, professional resumes and developer profiles in minutes — all in one platform.
         </p>
-        <div id="featureContainer">
-            <div id="featureBox1">
-                <h2 id="featureTitle">AI Resume Builder</h2>
-                <p id="featureText1">Generate professional resumes instantly with AI suggestions and smart formatting.</p>
-            </div>
-            <div id="featureBox2">
-                <h2 id="featureTitle2">Portfolio Generator</h2>
-                <p id="featureText2">Create a beautiful personal portfolio website automatically from your resume.</p>
-            </div>
-            <div id="featureBox3">
-                <h2 id="featureTitle3">Developer API</h2>
-                <p id="featureText3">Integrate Prolio AI tools directly into your application using our API.</p>
-            </div>
+        <div id="featurePills">
+            <div class="pill"><div class="pill-icon">⚡</div> AI Resume Builder</div>
+            <div class="pill"><div class="pill-icon">🌐</div> Portfolio Generator</div>
+            <div class="pill"><div class="pill-icon">🔗</div> Shareable Links</div>
         </div>
-    </section>
+    </div>
 
-    <section id="sectionThree">
-        <h1 id="sectionThreeTitle">How Prolio AI Works</h1>
-        <div id="timeLine">
-            <div id="stepBox1">
-                <div id="stepNumber1">1</div>
-                <h2 id="stepTitle1">Enter Your Details</h2>
-                <p id="stepText1">Give your basic details asked by our AI. Prolio AI analyzes your skills, projects and experience.</p>
-            </div>
-            <div id="stepBox2">
-                <div id="stepNumber2">2</div>
-                <h2 id="stepTitle2">AI Enhancement</h2>
-                <p id="stepText2">Our AI improves your resume, suggests better wording and structures your professional profile.</p>
-            </div>
-            <div id="stepBox3">
-                <div id="stepNumber3">3</div>
-                <h2 id="stepTitle3">Generate Portfolio</h2>
-                <p id="stepText3">Instantly generate a professional portfolio website and developer profile powered by Prolio AI and share with a link.</p>
-            </div>
-        </div>
-    </section>
+    <!-- ── RIGHT LOGIN PANEL ────────────────────────────── -->
+    <div id="rightPanel">
 
-    <section id="footerSection">
-        <div id="footerContainer">
-            <div id="footerAbout">
-                <h2 id="footerTitle">Prolio AI</h2>
-                <p id="footerText">Prolio AI helps professionals and developers create AI-powered resumes and portfolio websites instantly.</p>
+        <div id="cardLogo">Prolio AI</div>
+        <h2 id="cardTitle">Welcome back</h2>
+        <p id="cardSubtitle">Sign in to continue to your account</p>
+
+        <!-- Google -->
+        <button class="socialBtn" onclick="handleSocial('Google')">
+            <svg class="googleIcon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#EA4335" d="M24 9.5c3.1 0 5.6 1.1 7.6 2.9l5.6-5.6C33.6 3.5 29.1 1.5 24 1.5 14.9 1.5 7.2 7.1 3.9 15l6.6 5.1C12.1 14 17.6 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.4c-.5 2.8-2.1 5.1-4.4 6.7l6.8 5.3c4-3.7 6.3-9.2 6.3-16z"/>
+                <path fill="#FBBC05" d="M10.5 28.6A14.4 14.4 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6l-6.6-5.1A23.4 23.4 0 0 0 1.5 24c0 3.8.9 7.3 2.5 10.4l6.5-5.8z"/>
+                <path fill="#34A853" d="M24 46.5c5.1 0 9.4-1.7 12.5-4.6l-6.8-5.3c-1.7 1.2-3.9 1.9-5.7 1.9-6.4 0-11.8-4.3-13.7-10.1l-6.5 5.8C7.2 40.9 14.9 46.5 24 46.5z"/>
+                <path fill="none" d="M1.5 1.5h45v45h-45z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <!-- Microsoft -->
+        <button class="socialBtn" onclick="handleSocial('Microsoft')">
+            <div class="msGrid">
+                <span></span><span></span>
+                <span></span><span></span>
             </div>
-            <div id="footerLinks">
-                <h3 id="footerLinksTitle">Company</h3>
-                <p id="aboutLink">About Us</p>
-                <p id="privacyLink">Privacy Policy</p>
-                <p id="privacyChoice">Your Privacy Choices</p>
-            </div>
-            <div id="footerContact">
-                <h3 id="contactTitle">Contact</h3>
-                <p id="emailContact">arun2551a@gmail.com</p>
-                <p id="phoneContact">+91 8124181771</p>
+            Continue with Microsoft
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">
+            <hr><span>or sign in with email</span><hr>
+        </div>
+
+        <!-- Email field -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="emailInput">Email address</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon">✉</span>
+                <input type="email" id="emailInput" class="formInput" placeholder="you@example.com" autocomplete="email">
             </div>
         </div>
-        <div id="copyright">
-            <p id="copyrightText">© 2026 Prolio AI. All Rights Reserved</p>
+
+        <!-- Password field -->
+        <div class="fieldGroup">
+            <label class="fieldLabel" for="passwordInput">Password</label>
+            <div class="fieldWrap">
+                <span class="fieldIcon">🔒</span>
+                <input type="password" id="passwordInput" class="formInput" placeholder="Enter your password" autocomplete="current-password">
+                <button id="togglePwd" type="button" onclick="togglePassword()" title="Show/hide password">👁</button>
+            </div>
         </div>
-    </section>
+
+        <!-- Forgot password -->
+        <div id="forgotRow">
+            <a href="#" id="forgotLink" onclick="handleForgot(event)">Forgot password?</a>
+        </div>
+
+        <!-- Login button -->
+        <button id="loginBtn" onclick="handleLogin()">
+            <span class="btnText">Sign In</span>
+            <span class="spinner"></span>
+        </button>
+
+        <!-- Sign up -->
+        <p id="signupRow">
+            Don't have an account? <a href="#">Create one free</a>
+        </p>
+
+        <!-- Legal -->
+        <p id="legalLinks">
+            By continuing, you agree to our
+            <a href="privacypolicy.html">Privacy Policy</a>
+            and
+            <a href="yourprivacypolicychoices.html">Privacy Choices</a>.<br>
+            Need help? <a href="mailto:arunravi2551a@gmail.com">Contact support</a>
+        </p>
+
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast"></div>
 
     <script>
-        function toggleMenu() {
-            var menu = document.getElementById("navLinks");
-            menu.classList.toggle("active");
+        /* ── Toggle password visibility ── */
+        function togglePassword() {
+            const inp = document.getElementById('passwordInput');
+            const btn = document.getElementById('togglePwd');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                inp.type = 'password';
+                btn.textContent = '👁';
+            }
         }
 
-        /* Close mobile menu when a link is clicked */
-        document.querySelectorAll("#navLinks a").forEach(function(link) {
-            link.addEventListener("click", function() {
-                document.getElementById("navLinks").classList.remove("active");
-            });
+        /* ── Toast helper ── */
+        function showToast(msg, duration = 3000) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), duration);
+        }
+
+        /* ── Social login handler ── */
+        function handleSocial(provider) {
+            showToast('Connecting to ' + provider + '...');
+            /* TODO: wire up real OAuth here */
+        }
+
+        /* ── Email login handler ── */
+        function handleLogin() {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            const btn = document.getElementById('loginBtn');
+
+            if (!email) { showToast('⚠️ Please enter your email address.'); return; }
+            if (!validateEmail(email)) { showToast('⚠️ Please enter a valid email.'); return; }
+            if (!password) { showToast('⚠️ Please enter your password.'); return; }
+            if (password.length < 6) { showToast('⚠️ Password must be at least 6 characters.'); return; }
+
+            /* Loading state */
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            /* Simulate API call — replace with real fetch */
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                showToast('✅ Login successful! Redirecting...');
+                /* window.location.href = 'dashboard.html'; */
+            }, 2000);
+        }
+
+        /* ── Forgot password ── */
+        function handleForgot(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+            if (!email || !validateEmail(email)) {
+                showToast('📧 Enter your email above first.');
+            } else {
+                showToast('📧 Reset link sent to ' + email);
+            }
+        }
+
+        /* ── Email validator ── */
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        /* ── Enter key triggers login ── */
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleLogin();
         });
     </script>
 </body>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Privacy Choices - Prolio AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        /* ─── CSS Variables ─────────────────────────────────── */
+        :root {
+            --bg:       #0d0f1a;
+            --card:     #13162b;
+            --accent1:  #7c3aed;
+            --accent2:  #06b6d4;
+            --accent3:  #f59e0b;
+            --text:     #e2e8f0;
+            --muted:    #94a3b8;
+            --border:   rgba(124, 58, 237, 0.25);
+
+            --space-xs:  clamp(8px,  1.5vw, 14px);
+            --space-sm:  clamp(12px, 2vw,   20px);
+            --space-md:  clamp(18px, 2.5vw, 32px);
+            --space-lg:  clamp(28px, 4vw,   56px);
+            --space-xl:  clamp(40px, 6vw,   88px);
+
+            --text-xs:   clamp(11px, 1.2vw, 13px);
+            --text-sm:   clamp(13px, 1.4vw, 15px);
+            --text-base: clamp(14px, 1.6vw, 16px);
+            --text-lg:   clamp(16px, 1.8vw, 19px);
+            --text-xl:   clamp(20px, 2.5vw, 26px);
+            --text-hero: clamp(26px, 5vw,   64px);
+
+            --radius-sm: clamp(8px,  1vw,   12px);
+            --radius-md: clamp(12px, 1.5vw, 20px);
+            --radius-lg: clamp(16px, 2vw,   28px);
+        }
+
+        /* ─── Reset & Base ──────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            font-size: var(--text-base);
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 12% 8%,  rgba(124,58,237,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse at 88% 85%, rgba(6,182,212,0.12)  0%, transparent 55%);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── Header ────────────────────────────────────────── */
+        header {
+            background: linear-gradient(135deg, #1a0a3c 0%, #0a1a2e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: var(--space-xl) var(--space-md);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 40px,
+                rgba(124,58,237,0.04) 40px,
+                rgba(124,58,237,0.04) 41px
+            );
+            pointer-events: none;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px clamp(12px, 2vw, 20px);
+            border-radius: 100px;
+            margin-bottom: clamp(10px, 1.5vw, 18px);
+        }
+
+        header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-hero);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .header-meta {
+            margin-top: clamp(8px, 1.2vw, 14px);
+            font-size: var(--text-sm);
+            color: var(--muted);
+            font-weight: 300;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px 16px;
+        }
+
+        /* ─── Layout ─────────────────────────────────────────── */
+        .container {
+            max-width: min(860px, 92vw);
+            margin: 0 auto;
+            padding: var(--space-lg) 0 var(--space-xl);
+        }
+
+        @media (min-width: 1800px) { .container { max-width: 1100px; } }
+
+        /* ─── Intro Card ─────────────────────────────────────── */
+        .intro-card {
+            background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(6,182,212,0.10));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            font-size: var(--text-sm);
+            line-height: 1.8;
+            color: #c4cfe3;
+        }
+
+        .intro-card strong { color: var(--accent2); }
+
+        /* ─── Section Cards ──────────────────────────────────── */
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: clamp(14px, 2vw, 28px);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 8px 40px rgba(124,58,237,0.20);
+            transform: translateY(-1px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: clamp(14px, 2vw, 24px) clamp(16px, 2.5vw, 30px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-number {
+            width:  clamp(30px, 3.5vw, 42px);
+            height: clamp(30px, 3.5vw, 42px);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: var(--text-xs);
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        /* Unique gradient per section */
+        .section:nth-child(1)  .section-number { background: linear-gradient(135deg,#7c3aed,#a855f7); }
+        .section:nth-child(2)  .section-number { background: linear-gradient(135deg,#0891b2,#06b6d4); }
+        .section:nth-child(3)  .section-number { background: linear-gradient(135deg,#b45309,#f59e0b); }
+        .section:nth-child(4)  .section-number { background: linear-gradient(135deg,#be185d,#ec4899); }
+        .section:nth-child(5)  .section-number { background: linear-gradient(135deg,#15803d,#22c55e); }
+        .section:nth-child(6)  .section-number { background: linear-gradient(135deg,#c2410c,#fb923c); }
+        .section:nth-child(7)  .section-number { background: linear-gradient(135deg,#7c3aed,#06b6d4); }
+        .section:nth-child(8)  .section-number { background: linear-gradient(135deg,#a21caf,#e879f9); }
+        .section:nth-child(9)  .section-number { background: linear-gradient(135deg,#1d4ed8,#60a5fa); }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .section-body {
+            padding: clamp(16px, 2.5vw, 28px) clamp(16px, 2.5vw, 30px);
+        }
+
+        .section-body > p {
+            font-size: var(--text-sm);
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-body > p:last-child { margin-bottom: 0; }
+
+        /* Sub-labels */
+        .sub-label {
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent2);
+            margin: var(--space-sm) 0 var(--space-xs);
+        }
+
+        .sub-label:first-child { margin-top: 0; }
+
+        /* ─── Lists ──────────────────────────────────────────── */
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 1vw, 10px);
+        }
+
+        ul li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: var(--text-sm);
+            color: #b0bccc;
+            line-height: 1.65;
+        }
+
+        ul li::before {
+            content: '▸';
+            color: var(--accent1);
+            font-size: 11px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Note box */
+        .note-box {
+            margin-top: var(--space-sm);
+            background: rgba(245,158,11,0.08);
+            border-left: 3px solid var(--accent3);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: clamp(10px, 1.5vw, 16px) clamp(12px, 2vw, 20px);
+            font-size: var(--text-sm);
+            color: #d4b483;
+            line-height: 1.7;
+        }
+
+        .note-box strong {
+            color: var(--accent3);
+            font-weight: 600;
+        }
+
+        /* ─── Contact Card ───────────────────────────────────── */
+        .contact-card {
+            background: linear-gradient(135deg, rgba(124,58,237,0.22), rgba(6,182,212,0.14));
+            border: 1px solid rgba(124,58,237,0.4);
+            border-radius: var(--radius-md);
+            padding: clamp(14px, 2vw, 22px) clamp(16px, 2.5vw, 26px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 1.2vw, 14px);
+            margin-top: var(--space-sm);
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            align-items: baseline;
+            font-size: var(--text-sm);
+        }
+
+        .contact-label {
+            font-family: 'Syne', sans-serif;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent2);
+            min-width: 80px;
+        }
+
+        .contact-value { color: #e2e8f0; }
+
+        .contact-value a {
+            color: var(--accent3);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .contact-value a:hover { text-decoration: underline; }
+
+        /* ─── Footer ─────────────────────────────────────────── */
+        footer {
+            text-align: center;
+            padding: var(--space-md) var(--space-sm);
+            border-top: 1px solid var(--border);
+            font-size: var(--text-xs);
+            color: var(--muted);
+        }
+
+        footer span { color: var(--accent1); }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE BREAKPOINTS
+        ═══════════════════════════════════════════════════════ */
+
+        /* Very small phones */
+        @media (max-width: 380px) {
+            header { padding: 28px 16px; }
+            .container { max-width: 96vw; }
+            .section-header { flex-wrap: wrap; }
+            .header-meta { flex-direction: column; align-items: center; gap: 4px; }
+        }
+
+        /* Tablets portrait */
+        @media (min-width: 600px) and (max-width: 899px) {
+            .container { max-width: 90vw; }
+        }
+
+        /* Laptops & Desktops */
+        @media (min-width: 900px) {
+            .section-header { padding: 22px 32px; }
+            .section-body   { padding: 26px 32px; }
+        }
+
+        /* Large screens / TV */
+        @media (min-width: 1800px) {
+            body { font-size: 18px; }
+            .container { max-width: 1140px; }
+            header h1 { font-size: 72px; }
+            .section-title { font-size: 22px; }
+            .section-body > p,
+            ul li,
+            .intro-card { font-size: 17px; }
+            .section-number {
+                width: 50px; height: 50px;
+                font-size: 14px;
+                border-radius: 14px;
+            }
+            .section-header { padding: 28px 40px; gap: 20px; }
+            .section-body   { padding: 32px 40px; }
+        }
+
+        /* Ultra-wide / 4K */
+        @media (min-width: 2400px) {
+            .container { max-width: 1400px; }
+            header h1 { font-size: 88px; }
+        }
+
+        /* Landscape phones */
+        @media (max-width: 767px) and (orientation: landscape) {
+            header { padding: 24px var(--space-md); }
+        }
+
+        /* Touch: remove hover lift */
+        @media (hover: none) {
+            .section:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────── -->
+<header>
+    <div class="badge">User Controls</div>
+    <h1>Your Privacy Choices</h1>
+    <div class="header-meta">
+        <span>Effective Date: 17 March 2026</span>
+        <span>·</span>
+        <span>Prolio AI by Bronzera</span>
+    </div>
+</header>
+
+<!-- ── MAIN CONTENT ────────────────────────────────────────── -->
+<div class="container">
+
+    <!-- Intro -->
+    <div class="intro-card">
+        At <strong>Prolio AI</strong>, operated by <strong>Bronzera</strong>, we believe in giving users clear control over their personal data. This page explains the choices and rights available to you regarding how your information is collected, used, and managed.
+    </div>
+
+    <!-- 01 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">01</div>
+            <div class="section-title">Managing Your Personal Information</div>
+        </div>
+        <div class="section-body">
+            <p>You have the right to:</p>
+            <ul>
+                <li>Access the personal data we hold about you</li>
+                <li>Update or correct inaccurate information</li>
+                <li>Request deletion of your data</li>
+                <li>Restrict how your data is processed</li>
+            </ul>
+            <p style="margin-top:var(--space-sm);">You can manage most of your information directly through your account settings or by contacting us.</p>
+        </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <div class="section-title">Opt-Out of Communications</div>
+        </div>
+        <div class="section-body">
+            <div class="sub-label">You may choose to stop receiving</div>
+            <ul>
+                <li>Promotional emails</li>
+                <li>Product updates</li>
+                <li>Marketing communications</li>
+            </ul>
+            <div class="sub-label">You can opt out by</div>
+            <ul>
+                <li>Clicking the "unsubscribe" link in emails</li>
+                <li>Contacting us directly</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">03</div>
+            <div class="section-title">Cookie Preferences</div>
+        </div>
+        <div class="section-body">
+            <p>We use cookies to enhance your experience. You have full control over how cookies are used:</p>
+            <ul>
+                <li>Disable cookies through your browser settings</li>
+                <li>Clear stored cookies at any time</li>
+                <li>Choose to block tracking technologies</li>
+            </ul>
+            <div class="note-box">
+                <strong>Note:</strong> Disabling cookies may affect certain features of the platform.
+            </div>
+        </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <div class="section-title">Data Sharing Preferences</div>
+        </div>
+        <div class="section-body">
+            <p>We do not sell your personal data. However, you may:</p>
+            <ul>
+                <li>Request information about third parties we share data with</li>
+                <li>Request restriction of certain data-sharing activities</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">05</div>
+            <div class="section-title">AI Data Usage Control</div>
+        </div>
+        <div class="section-body">
+            <p>Since Prolio AI uses your resume and professional data:</p>
+            <ul>
+                <li>You can choose what data you upload</li>
+                <li>You may request deletion of AI-processed data</li>
+                <li>You can stop using AI-based features at any time</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">06</div>
+            <div class="section-title">Your Rights Under Privacy Laws</div>
+        </div>
+        <div class="section-body">
+            <p>Depending on your location, you may have additional rights under laws such as:</p>
+            <ul>
+                <li>General Data Protection Regulation (GDPR)</li>
+                <li>California Consumer Privacy Act (CCPA)</li>
+            </ul>
+            <div class="sub-label" style="margin-top:var(--space-sm);">These rights may include</div>
+            <ul>
+                <li>Right to know what data is collected</li>
+                <li>Right to request deletion</li>
+                <li>Right to opt-out of data usage</li>
+                <li>Right to non-discrimination</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">07</div>
+            <div class="section-title">Data Retention Choices</div>
+        </div>
+        <div class="section-body">
+            <p>You may request:</p>
+            <ul>
+                <li>Immediate deletion of your account and data</li>
+                <li>Limitation on how long your data is stored</li>
+            </ul>
+            <p style="margin-top:var(--space-sm);">We will process such requests in accordance with applicable laws.</p>
+        </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">08</div>
+            <div class="section-title">Contact for Privacy Requests</div>
+        </div>
+        <div class="section-body">
+            <p>To exercise your privacy rights or make a request, contact us:</p>
+            <div class="contact-card">
+                <div class="contact-row">
+                    <span class="contact-label">Company</span>
+                    <span class="contact-value">Bronzera</span>
+                </div>
+                <div class="contact-row">
+                    <span class="contact-label">Product</span>
+                    <span class="contact-value">Prolio AI</span>
+                </div>
+                <div class="contact-row">
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value">
+                        <a href="mailto:arunravi2551a@gmail.com">arunravi2551a@gmail.com</a>
+                    </span>
+                </div>
+            </div>
+            <p style="margin-top:var(--space-sm);">We will respond within a reasonable timeframe as required by law.</p>
+        </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">09</div>
+            <div class="section-title">Updates to Your Choices</div>
+        </div>
+        <div class="section-body">
+            <p>We may update this page as our services evolve or legal requirements change. Please review it periodically to stay informed.</p>
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer>
+    &copy; 2026 <span>Bronzera</span> &nbsp;·&nbsp; Prolio AI &nbsp;·&nbsp; All rights reserved.
+</footer>
+
+</body>
+</html>
