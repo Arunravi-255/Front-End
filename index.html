@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prolio AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;600;700;800;900&family=Playball&family=Syne:wght@600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <style>
+  /* ═══════════════════════════════════════════════════
+     GLOBAL PAGE ROUTING SYSTEM
+  ═══════════════════════════════════════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+  #page-login.active, #page-signup.active { display: flex; }
+
+  /* ═══════════════════════════════════════════════════
+     HOME PAGE (index.html) STYLES
+  ═══════════════════════════════════════════════════ */
+  #page-home {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(180deg,#0d0120 0%,#1a0533 8%,#2d1b69 20%,#7b4dff 35%,#5E7CFF 50%,#49C6C6 65%,#2F8DA8 80%,#0a0f1e 100%);
+    padding-top: 72px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: white;
+  }
+  #page-home :root {
+    --purple:#7b4dff;--blue:#5E7CFF;--cyan:#49C6C6;--gold:#ffe066;--dark:#0a0f1e;
+    --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  }
+  #page-home section { margin:0; }
+  #particles { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+  .particle {
+    position:absolute;border-radius:50%;opacity:0;
+    animation:floatUp var(--dur) var(--delay) ease-in infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform:translateY(110vh) scale(0);opacity:0; }
+    10%  { opacity:var(--op); }
+    90%  { opacity:var(--op); }
+    100% { transform:translateY(-10vh) scale(1);opacity:0; }
+  }
+  .orb { position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:orbDrift var(--odur) ease-in-out infinite alternate; }
+  @keyframes orbDrift { from{transform:translate(0,0) scale(1);}to{transform:translate(var(--tx),var(--ty)) scale(var(--ts));} }
+
+  /* Home Navbar */
+  #page-home #nav {
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px clamp(20px,5vw,80px);
+    position:fixed;top:0;left:0;width:100%;
+    background:rgba(10,15,30,0.85);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    z-index:1000;border-bottom:1px solid rgba(123,77,255,0.18);
+    animation:navDrop 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes navDrop { from{transform:translateY(-100%);opacity:0;}to{transform:translateY(0);opacity:1;} }
+  #page-home #logo {
+    font-family:'Montserrat',sans-serif;font-size:clamp(18px,2.5vw,28px);font-weight:900;
+    letter-spacing:3px;font-style:italic;
+    background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    text-decoration:none;flex-shrink:0;position:relative;cursor:pointer;
+  }
+  #page-home #logo::after {
+    content:'Prolio AI';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.6) 50%,transparent 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    background-size:200%;animation:shimmer 4s 2s ease-in-out infinite;
+  }
+  @keyframes shimmer{0%{background-position:200%;}40%{background-position:-200%;}100%{background-position:-200%;}}
+  #page-home #navLinks { display:flex;gap:clamp(14px,2.5vw,36px);align-items:center; }
+  #page-home #navLinks a {
+    text-decoration:none;font-weight:600;color:rgba(255,255,255,0.65);
+    transition:color 0.25s;font-size:clamp(13px,1.1vw,15px);white-space:nowrap;cursor:pointer;
+  }
+  #page-home #navLinks a:hover { color:#7bedff; }
+  #page-home #navLinks a#navSignup {
+    background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white !important;
+    padding:8px 20px;border-radius:50px;font-weight:700;font-size:clamp(12px,1vw,14px);
+    transition:box-shadow 0.3s,transform 0.3s;
+  }
+  #page-home #navLinks a#navSignup:hover { box-shadow:0 0 22px rgba(123,77,255,0.6);transform:translateY(-2px); }
+  #page-home #hamburger {
+    display:none;flex-direction:column;cursor:pointer;gap:5px;padding:7px 8px;
+    background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);
+    border-radius:8px;flex-shrink:0;
+  }
+  #page-home #hamburger span { width:22px;height:2px;background:white;border-radius:2px;display:block;transition:all 0.3s ease; }
+  #page-home #hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+  #page-home #hamburger.open span:nth-child(2) { opacity:0; }
+  #page-home #hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+  /* Hero */
+  #mainbackground1 {
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(60px,8vw,120px) clamp(20px,6vw,100px) clamp(60px,8vw,100px);
+    gap:clamp(20px,3vw,44px);text-align:center;position:relative;z-index:1;
+  }
+  #mainbackground1::before {
+    content:'';position:absolute;width:clamp(300px,65vw,800px);height:clamp(300px,65vw,800px);
+    border-radius:50%;background:radial-gradient(circle,rgba(123,77,255,0.2) 0%,transparent 68%);
+    top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:pulseHalo 4s ease-in-out infinite;
+  }
+  @keyframes pulseHalo{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1;}50%{transform:translate(-50%,-50%) scale(1.12);opacity:0.65;}}
+  #container { max-width:980px;width:100%;position:relative;z-index:1; }
+  #h01 {
+    font-family:'Playfair Display',serif;font-size:clamp(52px,10vw,140px);font-weight:900;
+    color:#fff;line-height:0.92;letter-spacing:-2px;
+    text-shadow:0 4px 40px rgba(123,77,255,0.6);
+    opacity:0;animation:heroWord 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+  }
+  #row { display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:clamp(6px,1vw,12px);margin-top:clamp(6px,1vw,14px); }
+  #h02 {
+    font-family:'Playfair Display',serif;font-style:italic;font-weight:700;
+    font-size:clamp(28px,5.5vw,88px);color:#7bedff;text-shadow:0 2px 24px rgba(123,237,255,0.5);
+    opacity:0;animation:heroWord 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s forwards;
+  }
+  #h03 {
+    font-family:'Montserrat',sans-serif;font-size:clamp(24px,4vw,68px);font-weight:900;
+    color:rgba(255,255,255,0.28);font-style:italic;letter-spacing:2px;
+    opacity:0;animation:heroWord 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
+  }
+  #h04 {
+    font-family:'Playball',cursive;font-size:clamp(52px,11vw,180px);font-weight:400;color:#ffe066;
+    text-shadow:0 4px 40px rgba(255,224,102,0.55);margin-top:clamp(-6px,-0.8vw,-14px);
+    letter-spacing:2px;line-height:1;opacity:0;animation:heroWord 1s cubic-bezier(0.22,1,0.36,1) 1.05s forwards;
+  }
+  @keyframes heroWord{from{opacity:0;transform:translateY(44px) scale(0.96);filter:blur(6px);}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}}
+  #heroTagline {
+    font-size:clamp(14px,1.5vw,18px);color:rgba(255,255,255,0.5);max-width:520px;line-height:1.8;
+    opacity:0;animation:heroWord 0.9s cubic-bezier(0.22,1,0.36,1) 1.25s forwards;position:relative;z-index:1;
+  }
+  #ctaGroup {
+    display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,20px);flex-wrap:wrap;
+    opacity:0;animation:heroWord 0.9s cubic-bezier(0.22,1,0.36,1) 1.45s forwards;position:relative;z-index:1;
+  }
+  #getStartedBtn {
+    display:inline-flex;align-items:center;gap:10px;
+    padding:clamp(14px,2vw,20px) clamp(32px,5vw,64px);
+    font-size:clamp(14px,1.6vw,19px);font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:1.2px;
+    border:none;border-radius:60px;cursor:pointer;
+    background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white;
+    box-shadow:0 12px 36px rgba(123,77,255,0.5);transition:transform 0.3s ease,box-shadow 0.3s ease;
+    text-decoration:none;position:relative;overflow:hidden;
+  }
+  #getStartedBtn::before {
+    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);transition:left 0.5s ease;
+  }
+  #getStartedBtn:hover::before{left:160%;}
+  #getStartedBtn:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 22px 52px rgba(123,77,255,0.6),0 0 0 10px rgba(123,77,255,0.1);}
+  #getStartedBtn:active{transform:scale(0.97);}
+  .btn-arrow{font-size:clamp(14px,1.5vw,18px);transition:transform 0.3s;display:inline-block;}
+  #getStartedBtn:hover .btn-arrow{transform:translateX(5px);}
+  #loginBtnHome {
+    display:inline-flex;align-items:center;gap:10px;
+    padding:clamp(13px,1.9vw,19px) clamp(28px,4.5vw,56px);
+    font-size:clamp(14px,1.6vw,19px);font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:1px;
+    border-radius:60px;cursor:pointer;background:transparent;color:white;
+    border:2px solid rgba(255,255,255,0.35);transition:all 0.3s ease;text-decoration:none;backdrop-filter:blur(8px);
+  }
+  #loginBtnHome:hover{border-color:#7bedff;color:#7bedff;box-shadow:0 0 0 4px rgba(123,237,255,0.12),0 12px 32px rgba(0,0,0,0.25);transform:translateY(-5px);}
+  #trustRow {
+    display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:clamp(12px,2vw,28px);
+    opacity:0;animation:heroWord 0.9s ease 1.7s forwards;position:relative;z-index:1;
+  }
+  .trust-badge{display:flex;align-items:center;gap:7px;font-size:clamp(11px,1vw,13px);color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.5px;}
+  .trust-dot{width:6px;height:6px;border-radius:50%;background:#49C6C6;display:inline-block;}
+  #scrollHint {
+    position:absolute;bottom:clamp(20px,3vw,40px);left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    opacity:0;animation:fadeIn 1s 2.2s ease forwards;z-index:1;
+  }
+  #scrollHint span{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2.5px;text-transform:uppercase;}
+  .scroll-mouse{width:20px;height:32px;border:2px solid rgba(255,255,255,0.2);border-radius:12px;display:flex;justify-content:center;padding-top:5px;}
+  .scroll-mouse::after{content:'';width:3px;height:7px;background:rgba(255,255,255,0.45);border-radius:3px;animation:scrollBob 1.8s ease-in-out infinite;}
+  @keyframes scrollBob{0%,100%{transform:translateY(0);opacity:1;}80%{transform:translateY(9px);opacity:0;}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  /* Section Two */
+  #sectionTwo {
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(60px,8vw,130px) clamp(20px,6vw,120px);color:white;text-align:center;position:relative;z-index:1;
+  }
+  .section-eyebrow{display:inline-block;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#7bedff;margin-bottom:14px;}
+  #sectionTwoTitle {
+    font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,58px);font-weight:900;margin-bottom:clamp(14px,2vw,20px);
+    background:linear-gradient(135deg,#ffffff 40%,#7bedff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  #sectionTwoText{font-size:clamp(14px,1.4vw,18px);max-width:600px;margin-bottom:clamp(40px,5vw,68px);color:rgba(255,255,255,0.6);line-height:1.8;}
+  #featureContainer{display:flex;justify-content:center;gap:clamp(16px,2.5vw,36px);flex-wrap:wrap;width:100%;}
+  #featureBox1,#featureBox2,#featureBox3 {
+    width:clamp(220px,22vw,290px);padding:clamp(24px,3vw,38px);border-radius:22px;
+    background:rgba(255,255,255,0.055);backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.22);
+    color:white;text-align:center;transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),box-shadow 0.35s,border-color 0.3s;
+    position:relative;overflow:hidden;
+  }
+  #featureBox1::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7b4dff,#a78bff);}
+  #featureBox2::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#49C6C6,#7bedff);}
+  #featureBox3::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#5E7CFF,#818cf8);}
+  #featureBox1:hover,#featureBox2:hover,#featureBox3:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 28px 56px rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.22);}
+  .feat-icon{font-size:clamp(32px,4vw,46px);margin-bottom:16px;display:block;transition:transform 0.3s;filter:drop-shadow(0 4px 12px rgba(123,237,255,0.3));}
+  #featureBox1:hover .feat-icon,#featureBox2:hover .feat-icon,#featureBox3:hover .feat-icon{transform:scale(1.15) translateY(-4px);}
+  #featureContainer h2{font-size:clamp(15px,1.7vw,21px);margin-bottom:10px;font-weight:800;}
+  #featureContainer p{font-size:clamp(12px,1.1vw,14px);line-height:1.7;color:rgba(255,255,255,0.55);}
+
+  /* Section Three */
+  #sectionThree {
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:clamp(60px,8vw,130px) clamp(20px,6vw,100px);color:white;text-align:center;position:relative;z-index:1;
+  }
+  #sectionThreeTitle {
+    font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,58px);font-weight:900;margin-bottom:clamp(40px,5.5vw,80px);
+    background:linear-gradient(135deg,#ffffff 40%,#ffe066);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  #timeLine{display:flex;justify-content:center;align-items:stretch;flex-wrap:wrap;width:100%;position:relative;gap:0;}
+  #timeLine::before {
+    content:'';position:absolute;top:clamp(30px,4vw,48px);left:50%;transform:translateX(-50%);
+    width:min(600px,80%);height:2px;background:linear-gradient(90deg,rgba(123,77,255,0.5),rgba(73,198,198,0.5));z-index:0;
+  }
+  #stepBox1,#stepBox2,#stepBox3 {
+    width:clamp(200px,20vw,270px);padding:clamp(24px,3vw,38px);border-radius:22px;
+    background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.22);
+    transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),box-shadow 0.35s;
+    position:relative;z-index:1;margin:0 clamp(8px,1.5vw,24px);
+  }
+  #stepBox1:hover,#stepBox2:hover,#stepBox3:hover{transform:translateY(-12px) scale(1.03);box-shadow:0 28px 56px rgba(0,0,0,0.3);}
+  #stepNumber1,#stepNumber2,#stepNumber3 {
+    width:clamp(42px,5vw,56px);height:clamp(42px,5vw,56px);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(16px,1.8vw,22px);
+    margin:0 auto clamp(14px,1.8vw,20px);background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white;
+    box-shadow:0 6px 22px rgba(123,77,255,0.5);position:relative;
+  }
+  #stepNumber1::after,#stepNumber2::after,#stepNumber3::after {
+    content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(123,77,255,0.3);
+    animation:stepPulse 2.5s ease-in-out infinite;
+  }
+  #stepNumber2::after{animation-delay:0.8s;}#stepNumber3::after{animation-delay:1.6s;}
+  @keyframes stepPulse{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.35);opacity:0;}}
+  #timeLine h2{font-size:clamp(14px,1.5vw,20px);margin-bottom:10px;font-weight:800;}
+  #timeLine p{font-size:clamp(12px,1.1vw,14px);line-height:1.75;color:rgba(255,255,255,0.6);}
+
+  /* Home Footer */
+  #page-home #footerSection {
+    background:#06080f;color:white;padding:clamp(48px,6vw,80px) clamp(20px,8vw,120px) 28px;
+    border-top:1px solid rgba(123,77,255,0.18);position:relative;z-index:1;
+  }
+  #page-home #footerContainer{display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(28px,5vw,70px);margin-bottom:36px;}
+  #page-home #footerTitle{font-size:clamp(18px,2vw,26px);font-weight:900;margin-bottom:10px;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  #page-home #footerLinksTitle,#page-home #contactTitle{font-size:clamp(13px,1.3vw,16px);margin-bottom:12px;font-weight:800;color:rgba(255,255,255,0.85);}
+  #page-home #footerText{max-width:270px;font-size:clamp(12px,1vw,14px);line-height:1.75;color:rgba(255,255,255,0.4);}
+  .flink{font-size:clamp(12px,1vw,14px);color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:8px;display:block;transition:color 0.25s,transform 0.2s;}
+  .flink:hover{color:#7bedff;transform:translateX(4px);}
+  #page-home #footerContact p{font-size:clamp(12px,1vw,14px);color:rgba(255,255,255,0.4);margin-bottom:7px;}
+  #page-home #copyright{border-top:1px solid rgba(255,255,255,0.06);padding-top:20px;text-align:center;}
+  #page-home #copyrightText{font-size:12px;color:rgba(255,255,255,0.25);}
+
+  /* Home Scroll Reveal */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.75s cubic-bezier(0.22,1,0.36,1),transform 0.75s cubic-bezier(0.22,1,0.36,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* Home Responsive */
+  @media(max-width:768px){
+    #page-home{padding-top:64px;}
+    #page-home #nav{padding:14px 18px;}
+    #page-home #hamburger{display:flex;}
+    #page-home #navLinks{
+      position:fixed;top:64px;left:0;right:0;background:rgba(6,8,15,0.98);backdrop-filter:blur(20px);
+      flex-direction:column;align-items:center;padding:28px 24px 36px;gap:4px;
+      border-bottom:1px solid rgba(123,77,255,0.2);box-shadow:0 16px 40px rgba(0,0,0,0.7);display:none;z-index:998;
+    }
+    #page-home #navLinks.active{display:flex;}
+    #page-home #navLinks a{font-size:16px;color:rgba(255,255,255,0.8);width:100%;text-align:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-weight:600;}
+    #page-home #navLinks a:last-child{border-bottom:none;}
+    #page-home #navLinks a#navSignup{margin-top:10px;width:auto;padding:13px 44px;border-bottom:none;}
+    #mainbackground1{padding:40px 20px 64px;min-height:auto;gap:20px;}
+    #ctaGroup{flex-direction:column;align-items:center;gap:14px;}
+    #getStartedBtn,#loginBtnHome{width:100%;max-width:320px;justify-content:center;}
+    #sectionTwo,#sectionThree{padding:64px 20px;min-height:auto;}
+    #featureBox1,#featureBox2,#featureBox3{width:100%;max-width:420px;}
+    #stepBox1,#stepBox2,#stepBox3{width:100%;max-width:400px;margin:0 0 20px;}
+    #timeLine::before{display:none;}
+    #page-home #footerSection{padding:48px 20px 24px;}
+    #page-home #footerContainer{flex-direction:column;align-items:center;text-align:center;}
+    #page-home #footerText{max-width:100%;}
+    .flink:hover{transform:none;}
+    #scrollHint{display:none;}
+  }
+
+  /* ═══════════════════════════════════════════════════
+     LOGIN & SIGNUP SHARED STYLES
+  ═══════════════════════════════════════════════════ */
+  #page-login, #page-signup {
+    font-family:'Montserrat',sans-serif;min-height:100vh;
+    background:linear-gradient(135deg,#7b4dff 0%,#5E7CFF 35%,#49C6C6 70%,#2F8DA8 100%);
+  }
+  #leftPanel {
+    flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+    padding:clamp(40px,6vw,100px);position:relative;overflow:hidden;
+  }
+  #leftPanel::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,0.06);top:-120px;left:-120px;}
+  #leftPanel::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;background:rgba(255,255,255,0.06);bottom:-80px;right:-60px;}
+  #brandLogo {
+    font-family:'Montserrat',sans-serif;font-size:clamp(26px,3.5vw,44px);font-weight:900;letter-spacing:3px;font-style:italic;
+    color:#ffe066;text-shadow:0 2px 16px rgba(255,224,102,0.35);margin-bottom:clamp(40px,6vw,80px);z-index:1;
+    text-decoration:none;display:block;cursor:pointer;
+  }
+  #brandTagline {
+    font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,70px);font-weight:900;color:#fff;
+    text-shadow:0 3px 18px rgba(0,0,0,0.18);line-height:1.1;letter-spacing:-1px;z-index:1;margin-bottom:20px;
+  }
+  .accent-cyan{font-style:italic;font-weight:700;color:#7bedff;text-shadow:0 2px 20px rgba(123,237,255,0.45);}
+  .accent-yellow{font-style:normal;font-weight:900;color:#ffe066;text-shadow:0 2px 20px rgba(255,224,102,0.40);}
+  #brandSub{font-size:clamp(13px,1.4vw,17px);color:#d0eeff;max-width:420px;line-height:1.75;z-index:1;margin-bottom:clamp(30px,4vw,60px);}
+  #featurePills{display:flex;flex-direction:column;gap:12px;z-index:1;}
+  .pill{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.14);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.28);border-radius:50px;padding:10px 20px;color:#fff;font-size:clamp(12px,1vw,14px);font-weight:700;width:fit-content;letter-spacing:0.3px;}
+  .pill-icon{width:22px;height:22px;background:rgba(255,255,255,0.28);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;}
+  #rightPanel{width:clamp(340px,40vw,520px);background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(28px,3.5vw,52px) clamp(28px,4vw,56px);box-shadow:-10px 0 60px rgba(0,0,0,0.15);overflow-y:auto;}
+  #cardLogo{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:900;letter-spacing:2px;font-style:italic;background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
+  #cardTitle{font-size:clamp(18px,2.2vw,26px);font-weight:800;color:#0f172a;margin-bottom:4px;text-align:center;}
+  #cardSubtitle{font-size:13px;color:#64748b;margin-bottom:22px;text-align:center;}
+  .socialBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 20px;border-radius:12px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s ease;margin-bottom:12px;text-decoration:none;border:2px solid #e2e8f0;background:white;color:#1e293b;}
+  .socialBtn:hover{border-color:#cbd5e1;box-shadow:0 4px 14px rgba(0,0,0,0.10);transform:translateY(-1px);}
+  .socialBtn:active{transform:scale(0.98);}
+  .googleIcon{width:20px;height:20px;flex-shrink:0;}
+  .msGrid{width:20px;height:20px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;flex-shrink:0;}
+  .msGrid span:nth-child(1){background:#f25022;border-radius:1px;}
+  .msGrid span:nth-child(2){background:#7fba00;border-radius:1px;}
+  .msGrid span:nth-child(3){background:#00a4ef;border-radius:1px;}
+  .msGrid span:nth-child(4){background:#ffb900;border-radius:1px;}
+  .divider{display:flex;align-items:center;gap:12px;width:100%;margin:16px 0;}
+  .divider hr{flex:1;border:none;border-top:1px solid #e2e8f0;}
+  .divider span{font-size:12px;color:#94a3b8;font-weight:600;white-space:nowrap;}
+  .fieldGroup{width:100%;margin-bottom:14px;}
+  .fieldLabel{font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;display:block;letter-spacing:0.5px;}
+  .fieldWrap{position:relative;width:100%;}
+  .fieldIcon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px;pointer-events:none;}
+  .formInput{width:100%;padding:13px 16px 13px 42px;font-size:14px;font-family:'Montserrat',sans-serif;border-radius:10px;border:2px solid #e2e8f0;outline:none;color:#0f172a;background:#f8fafc;transition:all 0.25s;}
+  .formInput:focus{border-color:#7b4dff;background:#fff;box-shadow:0 0 0 4px rgba(123,77,255,0.10);}
+  .formInput.error{border-color:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,0.10);}
+  .formInput.success{border-color:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,0.10);}
+  .fieldError{font-size:11px;color:#ef4444;font-weight:600;margin-top:4px;display:none;}
+  .fieldError.show{display:block;}
+  .primaryBtn{width:100%;padding:14px;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:0.5px;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49c6c6);color:white;box-shadow:0 8px 20px rgba(123,77,255,0.35);transition:all 0.25s ease;margin-top:4px;margin-bottom:16px;display:flex;justify-content:center;align-items:center;gap:8px;}
+  .primaryBtn:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(123,77,255,0.40);}
+  .primaryBtn:active{transform:scale(0.98);}
+  .backBtn{width:100%;padding:12px;font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;border:2px solid #e2e8f0;border-radius:12px;background:white;color:#64748b;cursor:pointer;transition:all 0.2s;margin-bottom:16px;}
+  .backBtn:hover{border-color:#7b4dff;color:#7b4dff;}
+  .spinner{display:none;width:18px;height:18px;border:3px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .primaryBtn.loading .btnText{opacity:0.7;}
+  .primaryBtn.loading .spinner{display:inline-block;}
+  #legalLinks{font-size:11px;color:#94a3b8;text-align:center;line-height:1.8;}
+  #legalLinks a{color:#64748b;text-decoration:none;font-weight:600;transition:0.2s;}
+  #legalLinks a:hover{color:#7b4dff;text-decoration:underline;}
+  .toast-el{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#0f172a;color:white;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:9999;white-space:nowrap;}
+  .toast-el.show{transform:translateX(-50%) translateY(0);}
+
+  /* Login specific */
+  #forgotRow{width:100%;display:flex;justify-content:flex-end;margin-top:-6px;margin-bottom:18px;}
+  #forgotLink{font-size:12px;color:#7b4dff;text-decoration:none;font-weight:600;transition:0.2s;}
+  #forgotLink:hover{text-decoration:underline;}
+  #login-loginBtn{width:100%;padding:14px;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:0.5px;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49c6c6);color:white;box-shadow:0 8px 20px rgba(123,77,255,0.35);transition:all 0.25s ease;margin-bottom:18px;display:flex;justify-content:center;align-items:center;}
+  #login-loginBtn:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(123,77,255,0.40);}
+  #login-loginBtn.loading .btnText{opacity:0.7;}
+  #login-loginBtn.loading .spinner{display:inline-block;}
+  #signupRow{font-size:13px;color:#64748b;text-align:center;margin-bottom:20px;}
+  #signupRow a{color:#7b4dff;font-weight:700;text-decoration:none;cursor:pointer;}
+  #signupRow a:hover{text-decoration:underline;}
+  Now I have the full picture. Let me write the complete additions — CSS to add in the <style> block, HTML to replace the login right panel, and JS to add in the <script> block, with exact paste locations.
+
+✅ STEP 1 — Add this CSS
+Find this line in your <style> block:
+/* Login specific */
+Paste this ABOVE it:
+css/* ── LOGIN — METHOD TABS (Email / Mobile) ── */
+#login-methodTabs {
+  display: flex;
+  width: 100%;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 4px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  background: transparent;
+  color: #94a3b8;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  letter-spacing: 0.3px;
+}
+
+.login-tab.active {
+  background: #ffffff;
+  color: #7b4dff;
+  box-shadow: 0 2px 10px rgba(123, 77, 255, 0.15);
+}
+
+.login-tab:hover:not(.active) {
+  color: #475569;
+  background: rgba(255,255,255,0.5);
+}
+
+/* panels that switch */
+#login-emailPanel,
+#login-mobilePanel {
+  width: 100%;
+}
+
+#login-mobilePanel { display: none; }
+
+/* Country code + phone input row */
+#login-phoneRow {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+#login-countryCode {
+  width: 90px;
+  flex-shrink: 0;
+  padding: 13px 10px 13px 14px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  outline: none;
+  color: #0f172a;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.25s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 22px;
+}
+
+#login-countryCode:focus {
+  border-color: #7b4dff;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(123,77,255,0.10);
+}
+
+#login-phoneInput {
+  flex: 1;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  outline: none;
+  color: #0f172a;
+  background: #f8fafc;
+  transition: all 0.25s;
+}
+
+#login-phoneInput:focus {
+  border-color: #7b4dff;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(123,77,255,0.10);
+}
+
+#login-phoneInput.error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.10); }
+
+/* Send OTP button */
+#login-sendOtpBtn {
+  width: 100%;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7b4dff, #5E7CFF);
+  color: white;
+  box-shadow: 0 6px 18px rgba(123,77,255,0.30);
+  transition: all 0.25s;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#login-sendOtpBtn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(123,77,255,0.38); }
+#login-sendOtpBtn:active { transform: scale(0.98); }
+#login-sendOtpBtn.loading .btnText { opacity: 0.7; }
+#login-sendOtpBtn.loading .spinner { display: inline-block; }
+
+/* Mobile OTP section (hidden until OTP sent) */
+#login-otpSection {
+  display: none;
+  width: 100%;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+/* Demo OTP box for mobile login */
+#login-otpDemoBox {
+  width: 100%;
+  background: linear-gradient(135deg, #fef9c3, #fffbeb);
+  border: 2px dashed #f59e0b;
+  border-radius: 14px;
+  padding: 13px 16px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+#login-otpDemoBox .demo-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #92400e; margin-bottom: 5px; }
+#login-otpDemoBox .demo-code  { font-size: 28px; font-weight: 900; letter-spacing: 8px; color: #1e293b; font-family: 'Montserrat', monospace; }
+#login-otpDemoBox .demo-note  { font-size: 11px; color: #a16207; margin-top: 4px; font-weight: 500; }
+
+/* Mobile OTP boxes row */
+#login-otpContainer {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  margin: 14px 0 6px;
+}
+
+/* Resend row for mobile */
+#login-resendRow {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+#login-resendBtn {
+  background: none; border: none;
+  color: #7b4dff; font-weight: 700;
+  font-size: 12px; cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+}
+#login-resendBtn:disabled { color: #94a3b8; cursor: default; }
+#login-resendTimer { font-weight: 700; color: #0f172a; }
+
+/* Verify OTP button */
+#login-verifyOtpBtn {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7b4dff, #5E7CFF, #49c6c6);
+  color: white;
+  box-shadow: 0 8px 20px rgba(123,77,255,0.35);
+  transition: all 0.25s ease;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+#login-verifyOtpBtn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(123,77,255,0.40); }
+#login-verifyOtpBtn.loading .btnText { opacity: 0.7; }
+#login-verifyOtpBtn.loading .spinner { display: inline-block; }
+
+/* Change number link */
+#login-changeNum {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: #7b4dff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 6px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+}
+#login-changeNum:hover { text-decoration: underline; }
+
+  /* Signup specific */
+  #stepIndicator{display:flex;align-items:center;gap:0;margin-bottom:22px;width:100%;justify-content:center;}
+  .step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;border:2px solid #e2e8f0;background:white;color:#94a3b8;transition:all 0.3s ease;position:relative;z-index:1;}
+  .step-dot.active{background:linear-gradient(135deg,#7b4dff,#5E7CFF);border-color:#7b4dff;color:white;box-shadow:0 4px 12px rgba(123,77,255,0.35);}
+  .step-dot.done{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#22c55e;color:white;}
+  .step-dot.done::after{content:'✓';font-size:13px;}
+  .step-dot.done span{display:none;}
+  .step-line{flex:1;height:2px;background:#e2e8f0;max-width:50px;transition:background 0.3s;}
+  .step-line.done{background:linear-gradient(90deg,#7b4dff,#22c55e);}
+  .step-label{font-size:10px;color:#94a3b8;font-weight:600;text-align:center;margin-top:4px;letter-spacing:0.3px;}
+  .step-label.active-label{color:#7b4dff;}
+  #stepLabels{display:flex;justify-content:space-between;width:100%;padding:0 4px;margin-bottom:18px;}
+  #contactTypeRow{display:flex;gap:8px;margin-bottom:14px;width:100%;}
+  .typeBtn{flex:1;padding:9px 12px;border-radius:10px;border:2px solid #e2e8f0;background:white;font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;color:#64748b;transition:all 0.2s;}
+  .typeBtn.selected{border-color:#7b4dff;background:rgba(123,77,255,0.06);color:#7b4dff;}
+  #togglePwd{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:#94a3b8;font-size:16px;background:none;border:none;padding:0;}
+  #togglePwd:hover{color:#5E7CFF;}
+  #otpContainer{display:flex;gap:10px;justify-content:center;margin:18px 0;width:100%;}
+  .otpBox{width:52px;height:58px;border-radius:12px;border:2px solid #e2e8f0;font-size:24px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:center;outline:none;color:#0f172a;background:#f8fafc;transition:all 0.2s;caret-color:#7b4dff;}
+  .otpBox:focus{border-color:#7b4dff;background:white;box-shadow:0 0 0 4px rgba(123,77,255,0.12);transform:scale(1.05);}
+  .otpBox.filled{border-color:#7b4dff;background:rgba(123,77,255,0.05);}
+  #otpInfo{font-size:13px;color:#64748b;text-align:center;line-height:1.6;margin-bottom:6px;}
+  #otpInfo strong{color:#0f172a;}
+  #resendRow{text-align:center;font-size:12px;color:#94a3b8;margin-top:6px;}
+  #resendBtn{background:none;border:none;color:#7b4dff;font-weight:700;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;padding:0;}
+  #resendBtn:disabled{color:#94a3b8;cursor:default;}
+  #resendTimer{font-weight:700;color:#0f172a;}
+  #strengthBar{width:100%;height:4px;border-radius:4px;background:#e2e8f0;margin-top:8px;overflow:hidden;}
+  #strengthFill{height:100%;border-radius:4px;width:0%;transition:width 0.3s,background 0.3s;}
+  #strengthText{font-size:11px;font-weight:600;margin-top:4px;color:#94a3b8;}
+  #loginRow{font-size:13px;color:#64748b;text-align:center;margin-bottom:16px;}
+  #loginRow a{color:#7b4dff;font-weight:700;text-decoration:none;cursor:pointer;}
+  #loginRow a:hover{text-decoration:underline;}
+  #successView{display:none;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:20px 0;}
+  #successIcon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 24px rgba(34,197,94,0.35);animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+  @keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+  #successTitle{font-size:22px;font-weight:800;color:#0f172a;}
+  #successSub{font-size:14px;color:#64748b;line-height:1.6;}
+  #goLoginBtn{width:100%;padding:14px;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49c6c6);color:white;box-shadow:0 8px 20px rgba(123,77,255,0.35);transition:all 0.25s;text-decoration:none;display:block;text-align:center;margin-top:8px;}
+  #goLoginBtn:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(123,77,255,0.40);}
+  .stepView{display:none;width:100%;}
+  .stepView.active{display:block;}
+
+  /* Login/Signup responsive */
+  @media(max-width:900px){
+    #page-login,#page-signup{flex-direction:column;min-height:100vh;}
+    #rightPanel{order:1;width:100%;max-width:100%;border-radius:0 0 32px 32px;box-shadow:0 10px 40px rgba(0,0,0,0.18);padding:36px clamp(20px,6vw,60px) 32px;}
+    #leftPanel{order:2;padding:clamp(36px,5vw,60px) clamp(24px,5vw,60px);align-items:center;text-align:center;min-height:auto;}
+    #brandLogo{margin-bottom:20px;}
+    #brandTagline{font-size:clamp(28px,7vw,52px);}
+    #brandSub{max-width:100%;}
+    #featurePills{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+  }
+  @media(max-width:480px){
+    #rightPanel{padding:28px 18px 26px;border-radius:0 0 24px 24px;}
+    #leftPanel{padding:24px 18px 36px;}
+    #brandTagline{font-size:clamp(22px,8vw,36px);}
+    .otpBox{width:44px;height:50px;font-size:20px;}
+    .pill{font-size:11px;padding:8px 14px;}
+  }
+
+  /* ═══════════════════════════════════════════════════
+     ABOUT PAGE STYLES
+  ═══════════════════════════════════════════════════ */
+  #page-about {
+    font-family:'Montserrat',sans-serif;
+    background:#0f172a;color:white;overflow-x:hidden;
+    --purple:#7b4dff;--blue:#5E7CFF;--cyan:#49C6C6;--teal:#2F8DA8;--dark:#0f172a;
+    --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  }
+  #page-about::before {
+    content:'';position:fixed;inset:0;
+    background:radial-gradient(ellipse at 15% 20%,rgba(123,77,255,0.22) 0%,transparent 55%),
+               radial-gradient(ellipse at 85% 75%,rgba(73,198,198,0.18) 0%,transparent 55%),
+               radial-gradient(ellipse at 50% 50%,rgba(94,124,255,0.10) 0%,transparent 70%);
+    z-index:0;pointer-events:none;
+  }
+  .about-orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:0.18;pointer-events:none;z-index:0;animation:adrift 18s ease-in-out infinite;}
+  .aorb1{width:400px;height:400px;background:#7b4dff;top:-100px;left:-100px;animation-delay:0s;}
+  .aorb2{width:300px;height:300px;background:#49C6C6;bottom:10%;right:-80px;animation-delay:-6s;}
+  .aorb3{width:250px;height:250px;background:#5E7CFF;top:50%;left:40%;animation-delay:-12s;}
+  @keyframes adrift{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-40px) scale(1.05);}66%{transform:translate(-20px,30px) scale(0.95);}}
+
+  /* About Navbar */
+  #about-nav {
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px clamp(24px,6vw,100px);position:fixed;top:0;left:0;width:100%;
+    background:rgba(15,23,42,0.85);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,0.07);z-index:1000;
+  }
+  #about-logo{font-family:'Montserrat',sans-serif;font-size:clamp(18px,2.2vw,28px);font-weight:900;letter-spacing:3px;font-style:italic;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;cursor:pointer;}
+  #about-navLinks{display:flex;gap:clamp(14px,2.5vw,32px);}
+  #about-navLinks a{text-decoration:none;color:rgba(255,255,255,0.7);font-weight:600;font-size:clamp(13px,1.1vw,15px);transition:color 0.3s;cursor:pointer;}
+  #about-navLinks a:hover,#about-navLinks a.active{color:#7bedff;}
+  #about-hamburger{display:none;flex-direction:column;cursor:pointer;gap:5px;background:none;border:none;padding:4px;}
+  #about-hamburger span{width:25px;height:2px;background:rgba(255,255,255,0.8);border-radius:2px;display:block;transition:all 0.3s;}
+
+  /* About Hero */
+  #heroSection {
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:clamp(100px,12vw,160px) clamp(24px,6vw,120px) clamp(60px,8vw,100px);
+    position:relative;z-index:1;
+  }
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(123,77,255,0.15);border:1px solid rgba(123,77,255,0.35);border-radius:50px;padding:8px 20px;font-size:clamp(11px,1vw,13px);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a78bff;margin-bottom:clamp(20px,3vw,32px);opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+  .hero-eyebrow span{font-size:16px;}
+  #aboutTitle{font-family:'Playfair Display',serif;font-size:clamp(48px,9vw,130px);font-weight:900;line-height:0.95;letter-spacing:-2px;margin-bottom:clamp(16px,2vw,24px);opacity:0;animation:fadeUp 0.9s 0.4s ease forwards;}
+  #aboutTitle .word-us{background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-desc{font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.65);max-width:620px;line-height:1.75;opacity:0;animation:fadeUp 0.9s 0.6s ease forwards;}
+  .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fadeIn 1s 1.4s ease forwards;}
+  .scroll-hint span{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;}
+  .scroll-mouse{width:22px;height:36px;border:2px solid rgba(255,255,255,0.25);border-radius:12px;display:flex;justify-content:center;padding-top:6px;}
+  .scroll-mouse::after{content:'';width:4px;height:8px;background:rgba(255,255,255,0.5);border-radius:4px;animation:scrollBob 1.8s ease-in-out infinite;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(32px);}to{opacity:1;transform:translateY(0);}}
+
+  /* Stats Strip */
+  #statsStrip{position:relative;z-index:1;display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(12px,3vw,0px);padding:clamp(32px,5vw,60px) clamp(24px,8vw,120px);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.025);}
+  .stat-item{text-align:center;padding:clamp(16px,2.5vw,28px) clamp(28px,5vw,70px);flex:1;min-width:140px;border-right:1px solid rgba(255,255,255,0.07);}
+  .stat-item:last-child{border-right:none;}
+  .stat-num{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);font-weight:900;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+  .stat-label{font-size:clamp(11px,1vw,13px);color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:6px;}
+
+  /* Mission Section */
+  #missionSection{position:relative;z-index:1;padding:clamp(60px,8vw,120px) clamp(24px,8vw,120px);}
+  .section-label{display:inline-block;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#7bedff;margin-bottom:16px;}
+  #missionGrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;}
+  .mission-text h2{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.15;margin-bottom:20px;}
+  .mission-text h2 em{font-style:italic;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .mission-text p{font-size:clamp(14px,1.3vw,16px);color:rgba(255,255,255,0.65);line-height:1.85;margin-bottom:16px;}
+  .visual-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:clamp(28px,3.5vw,48px);backdrop-filter:blur(12px);position:relative;overflow:hidden;}
+  .visual-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(123,77,255,0.3),transparent 70%);}
+  .vc-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .vc-item:last-child{border-bottom:none;padding-bottom:0;}
+  .vc-item:first-child{padding-top:0;}
+  .vc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .vc-icon.purple{background:rgba(123,77,255,0.2);}
+  .vc-icon.cyan{background:rgba(73,198,198,0.2);}
+  .vc-icon.blue{background:rgba(94,124,255,0.2);}
+  .vc-text h4{font-size:14px;font-weight:700;margin-bottom:3px;}
+  .vc-text p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;}
+
+  /* Team Section */
+  #teamSection{position:relative;z-index:1;padding:clamp(60px,8vw,120px) clamp(24px,8vw,120px);}
+  .team-header{text-align:center;margin-bottom:clamp(40px,6vw,80px);}
+  .team-header h2{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,64px);font-weight:900;line-height:1.1;}
+  .team-header h2 .highlight{background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .team-header p{font-size:clamp(14px,1.3vw,16px);color:rgba(255,255,255,0.5);margin-top:14px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;}
+  #ownerCard{background:rgba(255,255,255,0.04);border:1px solid rgba(123,77,255,0.3);border-radius:28px;padding:clamp(32px,4vw,56px);margin-bottom:clamp(24px,3.5vw,40px);display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:center;position:relative;overflow:hidden;backdrop-filter:blur(12px);transition:transform 0.35s ease,box-shadow 0.35s ease,border-color 0.35s ease;}
+  #ownerCard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(123,77,255,0.08),transparent 60%);pointer-events:none;}
+  #ownerCard:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(123,77,255,0.28);border-color:rgba(123,77,255,0.6);}
+  .owner-avatar{width:clamp(80px,10vw,130px);height:clamp(80px,10vw,130px);border-radius:50%;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);display:flex;align-items:center;justify-content:center;font-size:clamp(28px,4vw,48px);font-weight:900;font-family:'Playfair Display',serif;color:white;box-shadow:0 0 0 4px rgba(123,77,255,0.25),0 0 40px rgba(123,77,255,0.3);flex-shrink:0;position:relative;}
+  .owner-avatar::after{content:'★';position:absolute;bottom:2px;right:2px;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ffe066);font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid #0f172a;}
+  .owner-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(123,77,255,0.18);border:1px solid rgba(123,77,255,0.35);border-radius:50px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#a78bff;margin-bottom:10px;}
+  .owner-name{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);font-weight:900;line-height:1;margin-bottom:6px;}
+  .owner-title{font-size:clamp(13px,1.2vw,15px);color:#7bedff;font-weight:700;margin-bottom:14px;letter-spacing:0.5px;}
+  .owner-bio{font-size:clamp(13px,1.2vw,15px);color:rgba(255,255,255,0.6);line-height:1.8;max-width:600px;}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+  .skill-tag{padding:5px 14px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:0.5px;}
+  .tag-purple{background:rgba(123,77,255,0.18);color:#c4b5fd;border:1px solid rgba(123,77,255,0.25);}
+  .tag-cyan{background:rgba(73,198,198,0.15);color:#7bedff;border:1px solid rgba(73,198,198,0.25);}
+  .tag-blue{background:rgba(94,124,255,0.15);color:#93c5fd;border:1px solid rgba(94,124,255,0.25);}
+  .tag-gold{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);}
+  #memberGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,28px);}
+  .memberCard{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:22px;padding:clamp(22px,3vw,36px);position:relative;overflow:hidden;backdrop-filter:blur(12px);transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s ease;}
+  .memberCard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:22px 22px 0 0;}
+  .memberCard:nth-child(1)::before{background:linear-gradient(90deg,#7b4dff,#5E7CFF);}
+  .memberCard:nth-child(2)::before{background:linear-gradient(90deg,#49C6C6,#2F8DA8);}
+  .memberCard:nth-child(3)::before{background:linear-gradient(90deg,#f59e0b,#ef4444);}
+  .memberCard:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,0.35);border-color:rgba(255,255,255,0.18);}
+  .member-avatar{width:clamp(52px,6vw,68px);height:clamp(52px,6vw,68px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(18px,2.2vw,24px);font-weight:900;font-family:'Playfair Display',serif;color:white;margin-bottom:clamp(14px,1.5vw,20px);flex-shrink:0;}
+  .memberCard:nth-child(1) .member-avatar{background:linear-gradient(135deg,#7b4dff,#5E7CFF);box-shadow:0 8px 20px rgba(123,77,255,0.3);}
+  .memberCard:nth-child(2) .member-avatar{background:linear-gradient(135deg,#0891b2,#49C6C6);box-shadow:0 8px 20px rgba(73,198,198,0.3);}
+  .memberCard:nth-child(3) .member-avatar{background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 8px 20px rgba(245,158,11,0.3);}
+  .memberName{font-family:'Playfair Display',serif;font-size:clamp(17px,1.8vw,22px);font-weight:900;margin-bottom:6px;}
+  .member-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+  .memberCard:nth-child(1) .member-title{color:#a78bff;}
+  .memberCard:nth-child(2) .member-title{color:#7bedff;}
+  .memberCard:nth-child(3) .member-title{color:#fbbf24;}
+  .memberRole{font-size:clamp(12px,1.1vw,13.5px);color:rgba(255,255,255,0.55);line-height:1.75;}
+
+  /* About Footer */
+  #page-about #footerSection{background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.06);color:white;padding:clamp(50px,6vw,80px) clamp(24px,8vw,120px) 30px;position:relative;z-index:1;}
+  #page-about #footerContainer{display:flex;justify-content:center;flex-wrap:wrap;gap:clamp(24px,4vw,60px);margin-bottom:40px;}
+  #page-about #footerTitle{font-size:clamp(18px,2vw,26px);font-weight:800;margin-bottom:10px;}
+  #page-about #footerLinksTitle,#page-about #contactTitle{font-size:clamp(13px,1.2vw,16px);margin-bottom:10px;font-weight:700;color:rgba(255,255,255,0.8);}
+  #page-about #footerText{max-width:280px;font-size:clamp(12px,1vw,13px);line-height:1.7;color:rgba(255,255,255,0.45);}
+  #page-about #footerLinks p,#page-about #footerContact p{font-size:clamp(12px,1vw,13px);color:rgba(255,255,255,0.45);margin-bottom:8px;cursor:pointer;transition:color 0.2s;}
+  #page-about #footerLinks p:hover{color:white;}
+  #page-about #copyright{border-top:1px solid rgba(255,255,255,0.07);padding-top:20px;text-align:center;}
+  #page-about #copyrightText{font-size:12px;color:rgba(255,255,255,0.3);}
+  .footer-link{font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:8px;display:block;transition:0.3s;}
+  .footer-link:hover{color:#7bedff;}
+
+  /* About scroll reveal */
+  .reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 0.7s ease,transform 0.7s ease;}
+  .reveal-right{opacity:0;transform:translateX(40px);transition:opacity 0.7s ease,transform 0.7s ease;}
+  .reveal-left.visible,.reveal-right.visible{opacity:1;transform:translateX(0);}
+  .about-reveal{opacity:0;transform:translateY(36px);transition:opacity 0.7s ease,transform 0.7s ease;}
+  .about-reveal.visible{opacity:1;transform:translateY(0);}
+
+  /* About responsive */
+  @media(max-width:900px){
+    #missionGrid{grid-template-columns:1fr;}
+    .mission-visual{order:-1;}
+    #ownerCard{grid-template-columns:1fr;text-align:center;}
+    .owner-avatar{margin:0 auto;}
+    .skill-tags{justify-content:center;}
+    .owner-badge{margin:0 auto 10px;}
+    #memberGrid{grid-template-columns:1fr;}
+  }
+  @media(max-width:768px){
+    #about-hamburger{display:flex;}
+    #about-navLinks{position:absolute;top:70px;right:0;left:0;background:rgba(15,23,42,0.97);flex-direction:column;align-items:center;padding:20px;gap:16px;backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);display:none;}
+    #about-navLinks.active{display:flex;}
+    .stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .stat-item:last-child{border-bottom:none;}
+    #statsStrip{flex-direction:column;align-items:center;}
+  }
+  @media(min-width:601px) and (max-width:900px){#memberGrid{grid-template-columns:1fr 1fr;}}
+
+  /* ═══════════════════════════════════════════════════
+     PRIVACY POLICY & PRIVACY CHOICES SHARED STYLES
+  ═══════════════════════════════════════════════════ */
+  #page-privacy, #page-choices {
+    font-family:'DM Sans',sans-serif;background-color:#0d0f1a;color:#e2e8f0;min-height:100vh;
+    background-image:radial-gradient(ellipse at 12% 8%,rgba(124,58,237,0.18) 0%,transparent 55%),
+                     radial-gradient(ellipse at 88% 85%,rgba(6,182,212,0.12) 0%,transparent 55%);
+    -webkit-font-smoothing:antialiased;
+  }
+  #page-privacy header,#page-choices header{background:linear-gradient(135deg,#1a0a3c 0%,#0a1a2e 100%);border-bottom:1px solid rgba(124,58,237,0.25);padding:clamp(40px,6vw,88px) clamp(18px,2.5vw,32px);text-align:center;position:relative;overflow:hidden;}
+  #page-privacy header::before,#page-choices header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(124,58,237,0.04) 40px,rgba(124,58,237,0.04) 41px);pointer-events:none;}
+  .badge{display:inline-block;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-family:'Syne',sans-serif;font-size:clamp(11px,1.2vw,13px);font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px clamp(12px,2vw,20px);border-radius:100px;margin-bottom:clamp(10px,1.5vw,18px);}
+  #page-privacy header h1,#page-choices header h1{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,64px);font-weight:800;background:linear-gradient(135deg,#ffffff 30%,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;}
+  .header-meta{margin-top:clamp(8px,1.2vw,14px);font-size:clamp(13px,1.4vw,15px);color:#94a3b8;font-weight:300;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;}
+  .priv-container{max-width:min(860px,92vw);margin:0 auto;padding:clamp(28px,4vw,56px) 0 clamp(40px,6vw,88px);}
+  .intro-card{background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(6,182,212,0.10));border:1px solid rgba(124,58,237,0.25);border-radius:clamp(16px,2vw,28px);padding:clamp(18px,2.5vw,32px);margin-bottom:clamp(18px,2.5vw,32px);font-size:clamp(13px,1.4vw,15px);line-height:1.8;color:#c4cfe3;}
+  .intro-card strong{color:#06b6d4;}
+  .priv-section{background:#13162b;border:1px solid rgba(124,58,237,0.25);border-radius:clamp(16px,2vw,28px);margin-bottom:clamp(14px,2vw,28px);overflow:hidden;transition:box-shadow 0.3s ease,transform 0.2s ease;}
+  .priv-section:hover{box-shadow:0 8px 40px rgba(124,58,237,0.20);transform:translateY(-1px);}
+  .priv-section-header{display:flex;align-items:center;gap:clamp(12px,2vw,20px);padding:clamp(14px,2vw,24px) clamp(16px,2.5vw,30px);border-bottom:1px solid rgba(124,58,237,0.25);}
+  .priv-section-number{width:clamp(30px,3.5vw,42px);height:clamp(30px,3.5vw,42px);border-radius:clamp(8px,1vw,12px);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(11px,1.2vw,13px);flex-shrink:0;color:#fff;}
+  .priv-section:nth-child(1) .priv-section-number{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+  .priv-section:nth-child(2) .priv-section-number{background:linear-gradient(135deg,#0891b2,#06b6d4);}
+  .priv-section:nth-child(3) .priv-section-number{background:linear-gradient(135deg,#b45309,#f59e0b);}
+  .priv-section:nth-child(4) .priv-section-number{background:linear-gradient(135deg,#be185d,#ec4899);}
+  .priv-section:nth-child(5) .priv-section-number{background:linear-gradient(135deg,#15803d,#22c55e);}
+  .priv-section:nth-child(6) .priv-section-number{background:linear-gradient(135deg,#c2410c,#fb923c);}
+  .priv-section:nth-child(7) .priv-section-number{background:linear-gradient(135deg,#7c3aed,#06b6d4);}
+  .priv-section:nth-child(8) .priv-section-number{background:linear-gradient(135deg,#a21caf,#e879f9);}
+  .priv-section:nth-child(9) .priv-section-number{background:linear-gradient(135deg,#1d4ed8,#60a5fa);}
+  .priv-section:nth-child(10) .priv-section-number{background:linear-gradient(135deg,#0f766e,#2dd4bf);}
+  .priv-section:nth-child(11) .priv-section-number{background:linear-gradient(135deg,#92400e,#fbbf24);}
+  .priv-section:nth-child(12) .priv-section-number{background:linear-gradient(135deg,#7c3aed,#f59e0b);}
+  .priv-section-title{font-family:'Syne',sans-serif;font-size:clamp(16px,1.8vw,19px);font-weight:700;color:#fff;line-height:1.3;}
+  .priv-section-body{padding:clamp(16px,2.5vw,28px) clamp(16px,2.5vw,30px);}
+  .priv-section-body>p{font-size:clamp(13px,1.4vw,15px);color:#94a3b8;line-height:1.8;margin-bottom:clamp(12px,2vw,20px);}
+  .priv-section-body>p:last-child{margin-bottom:0;}
+  .sub-label{font-family:'Syne',sans-serif;font-size:clamp(11px,1.2vw,13px);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#06b6d4;margin:clamp(12px,2vw,20px) 0 clamp(8px,1.5vw,14px);}
+  .sub-label:first-child{margin-top:0;}
+  #page-privacy ul,#page-choices ul{list-style:none;display:flex;flex-direction:column;gap:clamp(6px,1vw,10px);}
+  #page-privacy ul li,#page-choices ul li{display:flex;align-items:flex-start;gap:10px;font-size:clamp(13px,1.4vw,15px);color:#b0bccc;line-height:1.65;}
+  #page-privacy ul li::before,#page-choices ul li::before{content:'▸';color:#7c3aed;font-size:11px;margin-top:4px;flex-shrink:0;}
+  .note-box{margin-top:clamp(12px,2vw,20px);background:rgba(245,158,11,0.08);border-left:3px solid #f59e0b;border-radius:0 clamp(8px,1vw,12px) clamp(8px,1vw,12px) 0;padding:clamp(10px,1.5vw,16px) clamp(12px,2vw,20px);font-size:clamp(13px,1.4vw,15px);color:#d4b483;line-height:1.7;}
+  .note-box strong{color:#f59e0b;font-weight:600;}
+  .contact-card{background:linear-gradient(135deg,rgba(124,58,237,0.22),rgba(6,182,212,0.14));border:1px solid rgba(124,58,237,0.4);border-radius:clamp(12px,1.5vw,20px);padding:clamp(14px,2vw,22px) clamp(16px,2.5vw,26px);display:flex;flex-direction:column;gap:clamp(8px,1.2vw,14px);margin-top:clamp(12px,2vw,20px);}
+  .contact-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;font-size:clamp(13px,1.4vw,15px);}
+  .contact-label{font-family:'Syne',sans-serif;font-size:clamp(11px,1.2vw,13px);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#06b6d4;min-width:80px;}
+  .contact-value{color:#e2e8f0;}
+  .contact-value a{color:#f59e0b;text-decoration:none;word-break:break-all;}
+  .contact-value a:hover{text-decoration:underline;}
+  #page-privacy footer,#page-choices footer{text-align:center;padding:clamp(18px,2.5vw,32px) clamp(12px,2vw,20px);border-top:1px solid rgba(124,58,237,0.25);font-size:clamp(11px,1.2vw,13px);color:#94a3b8;}
+  #page-privacy footer span,#page-choices footer span{color:#7c3aed;}
+
+  @media(max-width:380px){
+    #page-privacy header,#page-choices header{padding:28px 16px;}
+    .priv-container{max-width:96vw;}
+    .priv-section-header{flex-wrap:wrap;}
+    .header-meta{flex-direction:column;align-items:center;gap:4px;}
+  }
+  @media(min-width:900px){
+    .priv-section-header{padding:22px 32px;}
+    .priv-section-body{padding:26px 32px;}
+  }
+  @media(hover:none){.priv-section:hover{transform:none;}}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: HOME (index.html)
+═══════════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div id="particles"></div>
+  <div class="orb" style="width:500px;height:500px;background:#7b4dff;opacity:0.12;top:-100px;left:-80px;--odur:16s;--tx:40px;--ty:60px;--ts:1.08;"></div>
+  <div class="orb" style="width:380px;height:380px;background:#49C6C6;opacity:0.10;bottom:5%;right:-60px;--odur:20s;--tx:-50px;--ty:-40px;--ts:0.93;"></div>
+  <div class="orb" style="width:280px;height:280px;background:#5E7CFF;opacity:0.09;top:55%;left:35%;--odur:13s;--tx:30px;--ty:-50px;--ts:1.12;"></div>
+
+  <nav id="nav">
+    <span id="logo" onclick="showPage('home')">Prolio AI</span>
+    <button id="hamburger" onclick="toggleHomeMenu()" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div id="navLinks">
+      <a onclick="showPage('home')">Home</a>
+      <a href="#">Developer</a>
+      <a onclick="showPage('signup')" id="navSignup">Signup</a>
+      <a onclick="showPage('login')">Login</a>
+      <a onclick="showPage('about')">About</a>
+    </div>
+  </nav>
+
+  <section id="mainbackground1">
+    <div id="container">
+      <h1 id="h01">Empower</h1>
+      <div id="row">
+        <h2 id="h02">your resume</h2>
+        <h2 id="h03">BY</h2>
+      </div>
+      <h2 id="h04">Prolio AI</h2>
+    </div>
+    <p id="heroTagline">Build AI-powered portfolios, stunning resumes and developer profiles — in minutes, not hours.</p>
+    <div id="ctaGroup">
+      <a onclick="showPage('signup')" id="getStartedBtn">Get Started <span class="btn-arrow">→</span></a>
+      <a onclick="showPage('login')" id="loginBtnHome">Sign In</a>
+    </div>
+    <div id="trustRow">
+      <span class="trust-badge"><span class="trust-dot"></span> Free to start</span>
+      <span class="trust-badge"><span class="trust-dot"></span> No card required</span>
+      <span class="trust-badge"><span class="trust-dot"></span> AI-powered</span>
+    </div>
+    <div id="scrollHint"><div class="scroll-mouse"></div><span>Scroll</span></div>
+  </section>
+
+  <section id="sectionTwo">
+    <span class="section-eyebrow reveal">What we offer</span>
+    <h1 id="sectionTwoTitle" class="reveal" style="transition-delay:0.1s">Build Your Professional Identity</h1>
+    <p id="sectionTwoText" class="reveal" style="transition-delay:0.2s">Prolio AI helps developers and professionals create modern resumes, AI-powered portfolios and developer profiles in minutes.</p>
+    <div id="featureContainer">
+      <div id="featureBox1" class="reveal" style="transition-delay:0.15s"><span class="feat-icon">⚡</span><h2>AI Resume Builder</h2><p>Generate professional resumes instantly with AI suggestions and smart formatting.</p></div>
+      <div id="featureBox2" class="reveal" style="transition-delay:0.3s"><span class="feat-icon">🌐</span><h2>Portfolio Generator</h2><p>Create a beautiful personal portfolio website automatically from your resume.</p></div>
+      <div id="featureBox3" class="reveal" style="transition-delay:0.45s"><span class="feat-icon">🔗</span><h2>Developer API</h2><p>Integrate Prolio AI tools directly into your application using our API.</p></div>
+    </div>
+  </section>
+
+  <section id="sectionThree">
+    <span class="section-eyebrow reveal">Simple process</span>
+    <h1 id="sectionThreeTitle" class="reveal" style="transition-delay:0.1s">How Prolio AI Works</h1>
+    <div id="timeLine">
+      <div id="stepBox1" class="reveal" style="transition-delay:0.1s"><div id="stepNumber1">1</div><h2>Enter Your Details</h2><p>Give your basic details asked by our AI. Prolio AI analyzes your skills, projects and experience.</p></div>
+      <div id="stepBox2" class="reveal" style="transition-delay:0.25s"><div id="stepNumber2">2</div><h2>AI Enhancement</h2><p>Our AI improves your resume, suggests better wording and structures your professional profile.</p></div>
+      <div id="stepBox3" class="reveal" style="transition-delay:0.4s"><div id="stepNumber3">3</div><h2>Generate Portfolio</h2><p>Instantly generate a professional portfolio website and share with a link.</p></div>
+    </div>
+  </section>
+
+  <section id="footerSection">
+    <div id="footerContainer">
+      <div id="footerAbout">
+        <h2 id="footerTitle">Prolio AI</h2>
+        <p id="footerText">Prolio AI helps professionals and developers create AI-powered resumes and portfolio websites instantly.</p>
+      </div>
+      <div id="footerLinks">
+        <h3 id="footerLinksTitle">Company</h3>
+        <a onclick="showPage('about')" class="flink" href="#">About Us</a>
+        <a onclick="showPage('privacy')" class="flink" href="#">Privacy Policy</a>
+        <a onclick="showPage('choices')" class="flink" href="#">Your Privacy Choices</a>
+      </div>
+      <div id="footerContact">
+        <h3 id="contactTitle">Contact</h3>
+        <p>support@prolioai.com</p>
+        <p>+91 8124181771</p>
+      </div>
+    </div>
+    <div id="copyright"><p id="copyrightText">© 2026 Prolio AI. All Rights Reserved</p></div>
+  </section>
+</div><!-- /page-home -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: LOGIN
+═══════════════════════════════════════════════════════════ -->
+<div id="page-login" class="page">
+  <div id="leftPanel">
+    <div id="brandLogo" onclick="showPage('home')">Prolio AI</div>
+    <h1 id="brandTagline">Empower<br><span class="accent-cyan">your resume</span><br><span class="accent-yellow">with AI.</span></h1>
+    <p id="brandSub">Build AI-powered portfolios, professional resumes and developer profiles in minutes — all in one platform.</p>
+    <div id="featurePills">
+      <div class="pill"><div class="pill-icon">⚡</div> AI Resume Builder</div>
+      <div class="pill"><div class="pill-icon">🌐</div> Portfolio Generator</div>
+      <div class="pill"><div class="pill-icon">🔗</div> Shareable Links</div>
+    </div>
+  </div>
+
+  <div id="rightPanel">
+    <div id="cardLogo">Prolio AI</div>
+    <h2 id="cardTitle">Welcome back</h2>
+    <p id="cardSubtitle">Sign in to continue to your account</p>
+
+    <!-- Google & Microsoft -->
+    <button class="socialBtn" onclick="loginShowToast('Connecting to Google...')">
+      <svg class="googleIcon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#EA4335" d="M24 9.5c3.1 0 5.6 1.1 7.6 2.9l5.6-5.6C33.6 3.5 29.1 1.5 24 1.5 14.9 1.5 7.2 7.1 3.9 15l6.6 5.1C12.1 14 17.6 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.4c-.5 2.8-2.1 5.1-4.4 6.7l6.8 5.3c4-3.7 6.3-9.2 6.3-16z"/>
+        <path fill="#FBBC05" d="M10.5 28.6A14.4 14.4 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6l-6.6-5.1A23.4 23.4 0 0 0 1.5 24c0 3.8.9 7.3 2.5 10.4l6.5-5.8z"/>
+        <path fill="#34A853" d="M24 46.5c5.1 0 9.4-1.7 12.5-4.6l-6.8-5.3c-1.7 1.2-3.9 1.9-5.7 1.9-6.4 0-11.8-4.3-13.7-10.1l-6.5 5.8C7.2 40.9 14.9 46.5 24 46.5z"/>
+        <path fill="none" d="M1.5 1.5h45v45h-45z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <button class="socialBtn" onclick="loginShowToast('Connecting to Microsoft...')">
+      <div class="msGrid"><span></span><span></span><span></span><span></span></div>
+      Continue with Microsoft
+    </button>
+
+    <div class="divider"><hr><span>or sign in with</span><hr></div>
+
+    <!-- ── METHOD TABS ── -->
+    <div id="login-methodTabs">
+      <button class="login-tab active" id="login-tabEmail" onclick="switchLoginMethod('email')">
+        ✉ Email
+      </button>
+      <button class="login-tab" id="login-tabMobile" onclick="switchLoginMethod('mobile')">
+        📱 Mobile
+      </button>
+    </div>
+
+    <!-- ── EMAIL PANEL ── -->
+    <div id="login-emailPanel">
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="login-emailInput">Email address</label>
+        <div class="fieldWrap">
+          <span class="fieldIcon">✉</span>
+          <input type="email" id="login-emailInput" class="formInput" placeholder="you@example.com" autocomplete="email">
+        </div>
+      </div>
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="login-passwordInput">Password</label>
+        <div class="fieldWrap">
+          <span class="fieldIcon">🔒</span>
+          <input type="password" id="login-passwordInput" class="formInput" placeholder="Enter your password" autocomplete="current-password">
+          <button id="login-togglePwd" type="button" onclick="loginTogglePwd()" title="Show/hide password">👁</button>
+        </div>
+      </div>
+      <div id="forgotRow"><a href="#" id="forgotLink" onclick="handleForgot(event)">Forgot password?</a></div>
+      <button id="login-loginBtn" onclick="handleLogin()">
+        <span class="btnText">Sign In</span>
+        <span class="spinner"></span>
+      </button>
+    </div>
+
+    <!-- ── MOBILE PANEL ── -->
+    <div id="login-mobilePanel">
+
+      <!-- Phone number row -->
+      <div class="fieldGroup">
+        <label class="fieldLabel">Mobile number</label>
+        <div id="login-phoneRow">
+          <select id="login-countryCode">
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+971">🇦🇪 +971</option>
+            <option value="+65">🇸🇬 +65</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+33">🇫🇷 +33</option>
+          </select>
+          <input type="tel" id="login-phoneInput" class="formInput" placeholder="9876543210" maxlength="10" style="padding-left:16px;" autocomplete="tel">
+        </div>
+        <div class="fieldError" id="login-phoneError">Enter a valid 10-digit mobile number.</div>
+      </div>
+
+      <!-- Send OTP button -->
+      <button id="login-sendOtpBtn" onclick="loginSendOtp()">
+        <span class="btnText">📨 Send OTP</span>
+        <span class="spinner"></span>
+      </button>
+
+      <!-- OTP section (hidden until OTP sent) -->
+      <div id="login-otpSection">
+
+        <!-- Demo OTP display box -->
+        <div id="login-otpDemoBox">
+          <div class="demo-label">🔐 Your Demo OTP Code</div>
+          <div class="demo-code" id="login-demoCodeDisplay">------</div>
+          <div class="demo-note">No backend connected — code shown here for demo</div>
+        </div>
+
+        <!-- 6 OTP boxes -->
+        <div id="login-otpContainer">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp1">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp2">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp3">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp4">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp5">
+          <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="lotp6">
+        </div>
+
+        <div id="login-resendRow">
+          Didn't get it?
+          <button id="login-resendBtn" onclick="loginResendOtp()" disabled>Resend</button>
+          <span id="login-resendTimer">in 30s</span>
+        </div>
+
+        <button id="login-verifyOtpBtn" onclick="loginVerifyOtp()">
+          <span class="btnText">Verify &amp; Sign In</span>
+          <span class="spinner"></span>
+        </button>
+
+        <button id="login-changeNum" onclick="loginResetPhone()">← Change number</button>
+      </div>
+    </div>
+    <!-- end mobile panel -->
+
+    <p id="signupRow">Don't have an account? <a onclick="showPage('signup')">Create one free</a></p>
+    <p id="legalLinks">By continuing, you agree to our <a onclick="showPage('privacy')" href="#">Privacy Policy</a> and <a onclick="showPage('choices')" href="#">Privacy Choices</a>.</p>
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: SIGNUP
+═══════════════════════════════════════════════════════════ -->
+<div id="page-signup" class="page">
+  <div id="leftPanel">
+    <a onclick="showPage('home')" id="brandLogo">Prolio AI</a>
+    <h1 id="brandTagline">Start your<br><span class="accent-cyan">career journey</span><br><span class="accent-yellow">today.</span></h1>
+    <p id="brandSub">Join thousands of professionals building AI-powered portfolios and resumes — in just a few clicks.</p>
+    <div id="featurePills">
+      <div class="pill"><div class="pill-icon">🚀</div> Free to get started</div>
+      <div class="pill"><div class="pill-icon">🔒</div> Secure &amp; private</div>
+      <div class="pill"><div class="pill-icon">⚡</div> Ready in minutes</div>
+    </div>
+  </div>
+
+  <div id="rightPanel">
+    <div id="cardLogo">Prolio AI</div>
+    <div id="stepIndicator">
+      <div class="step-dot active" id="dot1"><span>1</span></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2"><span>2</span></div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3"><span>3</span></div>
+    </div>
+    <div id="stepLabels">
+      <span class="step-label active-label" id="lbl1">Account</span>
+      <span class="step-label" id="lbl2">Verify</span>
+      <span class="step-label" id="lbl3">Profile</span>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="stepView active" id="step1">
+      <h2 id="cardTitle">Create account</h2>
+      <p id="cardSubtitle">Sign up with Google, Microsoft or email</p>
+      <button class="socialBtn" onclick="signupShowToast('Connecting to Google...')">
+        <svg class="googleIcon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.1 0 5.6 1.1 7.6 2.9l5.6-5.6C33.6 3.5 29.1 1.5 24 1.5 14.9 1.5 7.2 7.1 3.9 15l6.6 5.1C12.1 14 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.4c-.5 2.8-2.1 5.1-4.4 6.7l6.8 5.3c4-3.7 6.3-9.2 6.3-16z"/><path fill="#FBBC05" d="M10.5 28.6A14.4 14.4 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6l-6.6-5.1A23.4 23.4 0 0 0 1.5 24c0 3.8.9 7.3 2.5 10.4l6.5-5.8z"/><path fill="#34A853" d="M24 46.5c5.1 0 9.4-1.7 12.5-4.6l-6.8-5.3c-1.7 1.2-3.9 1.9-5.7 1.9-6.4 0-11.8-4.3-13.7-10.1l-6.5 5.8C7.2 40.9 14.9 46.5 24 46.5z"/><path fill="none" d="M1.5 1.5h45v45h-45z"/></svg>
+        Sign up with Google
+      </button>
+      <button class="socialBtn" onclick="signupShowToast('Connecting to Microsoft...')">
+        <div class="msGrid"><span></span><span></span><span></span><span></span></div>
+        Sign up with Microsoft
+      </button>
+      <div class="divider"><hr><span>or sign up with email / mobile</span><hr></div>
+      <div id="contactTypeRow">
+        <button class="typeBtn selected" id="btnEmail" onclick="switchType('email')">✉ Email</button>
+        <button class="typeBtn" id="btnPhone" onclick="switchType('phone')">📱 Mobile</button>
+      </div>
+      <div class="fieldGroup">
+        <label class="fieldLabel" id="contactLabel" for="contactInput">Email address</label>
+        <div class="fieldWrap">
+          <span class="fieldIcon" id="contactIcon">✉</span>
+          <input type="email" id="contactInput" class="formInput" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="fieldError" id="contactError">Please enter a valid email address.</div>
+      </div>
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="signup-passwordInput">Password</label>
+        <div class="fieldWrap">
+          <span class="fieldIcon">🔒</span>
+          <input type="password" id="signup-passwordInput" class="formInput" placeholder="Create a password" autocomplete="new-password" oninput="checkStrength(this.value)">
+          <button id="togglePwd" type="button" onclick="signupTogglePwd()" title="Show/hide">👁</button>
+        </div>
+        <div id="strengthBar"><div id="strengthFill"></div></div>
+        <div id="strengthText">Enter a password</div>
+        <div class="fieldError" id="passwordError">Password must be at least 8 characters.</div>
+      </div>
+      <button class="primaryBtn" id="step1Btn" onclick="goStep2()">
+        <span class="btnText">Continue</span><span class="spinner"></span>
+      </button>
+      <p id="loginRow">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
+      <p id="legalLinks">By signing up you agree to our <a onclick="showPage('privacy')" href="#">Privacy Policy</a> and <a onclick="showPage('choices')" href="#">Privacy Choices</a>.</p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="stepView" id="step2">
+      <h2 style="text-align:center;font-size:clamp(18px,2.2vw,26px);font-weight:800;color:#0f172a;margin-bottom:4px;">Verify your account</h2>
+      <p id="otpInfo">We sent a 6-digit code to<br><strong id="otpTarget">—</strong></p>
+      <div id="otpContainer">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp1">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp2">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp3">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp4">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp5">
+        <input class="otpBox" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]*" id="otp6">
+      </div>
+      <div id="resendRow">Didn't receive it? <button id="resendBtn" onclick="resendOTP()" disabled>Resend</button> in <span id="resendTimer">30s</span></div>
+      <button class="primaryBtn" id="step2Btn" onclick="verifyOTP()" style="margin-top:18px;"><span class="btnText">Verify &amp; Continue</span><span class="spinner"></span></button>
+      <button class="backBtn" onclick="setStep(1)">← Back</button>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="stepView" id="step3">
+      <h2 style="text-align:center;font-size:clamp(18px,2.2vw,26px);font-weight:800;color:#0f172a;margin-bottom:4px;">Complete your profile</h2>
+      <p style="font-size:13px;color:#64748b;margin-bottom:20px;text-align:center;">Just a few more details to personalise your experience.</p>
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="fullName">Full name</label>
+        <div class="fieldWrap"><span class="fieldIcon">👤</span><input type="text" id="fullName" class="formInput" placeholder="e.g. Arun Ravi" autocomplete="name"></div>
+        <div class="fieldError" id="nameError">Please enter your full name.</div>
+      </div>
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="jobRole">Role / Job title</label>
+        <div class="fieldWrap"><span class="fieldIcon">💼</span><input type="text" id="jobRole" class="formInput" placeholder="e.g. Frontend Developer" autocomplete="organization-title"></div>
+      </div>
+      <div class="fieldGroup">
+        <label class="fieldLabel" for="referral">How did you hear about us?</label>
+        <div class="fieldWrap">
+          <span class="fieldIcon" style="font-size:13px;">📣</span>
+          <select id="referral" class="formInput" style="appearance:none;cursor:pointer;">
+            <option value="">Select an option</option>
+            <option>Google / Search</option><option>LinkedIn</option>
+            <option>Friend / Colleague</option><option>Social media</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;">
+        <input type="checkbox" id="termsCheck" style="margin-top:3px;width:16px;height:16px;accent-color:#7b4dff;cursor:pointer;flex-shrink:0;">
+        <label for="termsCheck" style="font-size:12px;color:#64748b;line-height:1.6;cursor:pointer;">
+          I agree to the <a onclick="showPage('privacy')" href="#" style="color:#7b4dff;font-weight:700;text-decoration:none;">Privacy Policy</a> and <a onclick="showPage('choices')" href="#" style="color:#7b4dff;font-weight:700;text-decoration:none;">Privacy Choices</a>
+        </label>
+      </div>
+      <button class="primaryBtn" id="step3Btn" onclick="createAccount()"><span class="btnText">Create My Account 🎉</span><span class="spinner"></span></button>
+      <button class="backBtn" onclick="setStep(2)">← Back</button>
+    </div>
+
+    <!-- Success -->
+    <div id="successView">
+      <div id="successIcon">🎉</div>
+      <h2 id="successTitle">You're all set!</h2>
+      <p id="successSub">Welcome to Prolio AI. Your account has been created successfully. Start building your portfolio now.</p>
+      <a onclick="showPage('login')" href="#" id="goLoginBtn">Go to Login →</a>
+    </div>
+  </div>
+
+  <div id="signup-toast" class="toast-el"></div>
+</div><!-- /page-signup -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: ABOUT US
+═══════════════════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="about-orb aorb1"></div>
+  <div class="about-orb aorb2"></div>
+  <div class="about-orb aorb3"></div>
+
+  <nav id="about-nav">
+    <a onclick="showPage('home')" id="about-logo">Prolio AI</a>
+    <button id="about-hamburger" onclick="toggleAboutMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div id="about-navLinks">
+      <a onclick="showPage('home')">Home</a>
+      <a href="#">Developer</a>
+      <a onclick="showPage('signup')">Signup</a>
+      <a onclick="showPage('login')">Login</a>
+      <a class="active">About</a>
+    </div>
+  </nav>
+
+  <section id="heroSection">
+    <div class="hero-eyebrow"><span>👋</span> Meet the team behind the magic</div>
+    <h1 id="aboutTitle">About <span class="word-us">Us</span></h1>
+    <p class="hero-desc">A small but passionate team of students building the future of AI-powered resumes and portfolios. Real people, real vision, real impact.</p>
+    <div class="scroll-hint"><div class="scroll-mouse"></div><span>Scroll</span></div>
+  </section>
+
+  <div id="statsStrip">
+    <div class="stat-item about-reveal"><div class="stat-num">4</div><div class="stat-label">Team Members</div></div>
+    <div class="stat-item about-reveal" style="transition-delay:0.1s"><div class="stat-num">1</div><div class="stat-label">Live Product</div></div>
+    <div class="stat-item about-reveal" style="transition-delay:0.2s"><div class="stat-num">100%</div><div class="stat-label">Student Built</div></div>
+    <div class="stat-item about-reveal" style="transition-delay:0.3s"><div class="stat-num">AI</div><div class="stat-label">Powered</div></div>
+  </div>
+
+  <section id="missionSection">
+    <div id="missionGrid">
+      <div class="mission-text reveal-left">
+        <span class="section-label">Our Mission</span>
+        <h2>Built to <em>empower</em> every professional story.</h2>
+        <p>Prolio AI is a tech-based platform designed to help students, developers, and professionals create AI-powered resumes and portfolio websites. We believe every person's career story deserves a world-class presentation.</p>
+        <p>This project was developed as a mini project with a focus on real-world application, user experience, and scalable design — built by students, for the world.</p>
+      </div>
+      <div class="mission-visual reveal-right">
+        <div class="visual-card">
+          <div class="vc-item"><div class="vc-icon purple">⚡</div><div class="vc-text"><h4>AI Resume Builder</h4><p>Generate professional resumes with smart AI formatting</p></div></div>
+          <div class="vc-item"><div class="vc-icon cyan">🌐</div><div class="vc-text"><h4>Portfolio Generator</h4><p>Auto-create stunning portfolio websites from your data</p></div></div>
+          <div class="vc-item"><div class="vc-icon blue">🔗</div><div class="vc-text"><h4>Shareable Links</h4><p>Share your profile with a single click anywhere</p></div></div>
+          <div class="vc-item"><div class="vc-icon purple">🎓</div><div class="vc-text"><h4>Student Focused</h4><p>Tailored for learners entering the professional world</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="teamSection">
+    <div class="team-header about-reveal">
+      <span class="section-label">The Team</span>
+      <h2>The people <span class="highlight">who built this</span></h2>
+      <p>Four students, one shared goal — to make professional presence accessible to everyone.</p>
+    </div>
+    <div id="ownerCard" class="about-reveal">
+      <div class="owner-avatar">A</div>
+      <div class="owner-info">
+        <div class="owner-badge">⭐ Project Lead &amp; Developer</div>
+        <h2 class="owner-name">Arun R</h2>
+        <p class="owner-title">Full Stack Developer · 2nd Year IT · GRTIET</p>
+        <p class="owner-bio">Developer and owner of Prolio AI. A Full Stack Developer focused on building modern, responsive, and user-friendly web applications. This project reflects the practical implementation of frontend and backend concepts learned during the course — and a vision for what student projects can truly be.</p>
+        <div class="skill-tags">
+          <span class="skill-tag tag-purple">Full Stack</span>
+          <span class="skill-tag tag-cyan">UI/UX Design</span>
+          <span class="skill-tag tag-blue">JavaScript</span>
+          <span class="skill-tag tag-gold">Project Lead</span>
+          <span class="skill-tag tag-purple">AI Integration</span>
+        </div>
+      </div>
+    </div>
+    <div id="memberGrid">
+      <div class="memberCard about-reveal" style="transition-delay:0.1s">
+        <div class="member-avatar">S</div><h2 class="memberName">Satish Kumar</h2>
+        <p class="member-title">Team Member · Developer</p>
+        <p class="memberRole">A learner contributing to the development process and actively building knowledge in web technologies and software development. Brings dedication and fresh perspective to every task.</p>
+        <div class="skill-tags" style="margin-top:14px;"><span class="skill-tag tag-purple">Web Dev</span><span class="skill-tag tag-cyan">Learning</span></div>
+      </div>
+      <div class="memberCard about-reveal" style="transition-delay:0.2s">
+        <div class="member-avatar">B</div><h2 class="memberName">Bharath Raj</h2>
+        <p class="member-title">Team Member · Design &amp; Dev</p>
+        <p class="memberRole">A learner involved in understanding and supporting different aspects of the project, including design and development. Contributing creative ideas to the product's look and feel.</p>
+        <div class="skill-tags" style="margin-top:14px;"><span class="skill-tag tag-cyan">Design</span><span class="skill-tag tag-blue">Frontend</span></div>
+      </div>
+      <div class="memberCard about-reveal" style="transition-delay:0.3s">
+        <div class="member-avatar">Y</div><h2 class="memberName">Yuvanesh</h2>
+        <p class="member-title">Team Member · Developer</p>
+        <p class="memberRole">A learner contributing to the project while gaining experience in modern web development practices. Actively involved in building and testing different modules of the platform.</p>
+        <div class="skill-tags" style="margin-top:14px;"><span class="skill-tag tag-gold">Testing</span><span class="skill-tag tag-purple">Dev</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="footerSection">
+    <div id="footerContainer">
+      <div id="footerAbout"><h2 id="footerTitle">Prolio AI</h2><p id="footerText">Prolio AI helps professionals and developers create AI-powered resumes and portfolio websites instantly.</p></div>
+      <div id="footerLinks">
+        <h3 id="footerLinksTitle">Company</h3>
+        <p>About Us</p>
+        <a onclick="showPage('privacy')" href="#" class="footer-link">Privacy Policy</a>
+        <a onclick="showPage('choices')" href="#" class="footer-link">Your Privacy Choices</a>
+      </div>
+      <div id="footerContact">
+        <h3 id="contactTitle">Contact</h3>
+        <p>support@prolioai.com</p>
+        <p>+91 8124181771</p>
+      </div>
+    </div>
+    <div id="copyright"><p id="copyrightText">© 2026 Prolio AI · All Rights Reserved · A Bronzera Product</p></div>
+  </section>
+</div><!-- /page-about -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: PRIVACY POLICY
+═══════════════════════════════════════════════════════════ -->
+<div id="page-privacy" class="page">
+  <header>
+    <div class="badge">Legal Document</div>
+    <h1>Privacy Policy</h1>
+    <div class="header-meta"><span>Effective Date: 17 March 2026</span><span>·</span><span>Prolio AI by Bronzera</span></div>
+  </header>
+  <div class="priv-container">
+    <div class="intro-card"><strong>Prolio AI</strong> ("we", "our", or "us"), operated by <strong>Bronzera</strong>, values your privacy and is committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.<br><br>By accessing or using Prolio AI, you agree to the terms outlined in this Privacy Policy.</div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">01</div><div class="priv-section-title">Information We Collect</div></div><div class="priv-section-body"><div class="sub-label">A. Personal Information</div><ul><li>Name</li><li>Email address</li><li>Mobile number</li><li>Login credentials</li></ul><div class="sub-label">B. User Content</div><ul><li>Resume data</li><li>Skills, projects, and professional details you provide</li></ul><div class="sub-label">C. Technical Data</div><ul><li>IP address</li><li>Browser type and version</li><li>Device information</li><li>Usage data (pages visited, time spent, interactions)</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">02</div><div class="priv-section-title">How We Use Your Information</div></div><div class="priv-section-body"><ul><li>Provide and improve our services</li><li>Generate portfolio websites using AI</li><li>Personalize user experience</li><li>Enable secure login and authentication</li><li>Communicate updates, notifications, and support</li><li>Ensure platform security and prevent misuse</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">03</div><div class="priv-section-title">Legal Basis for Processing (GDPR)</div></div><div class="priv-section-body"><p>If you are located in regions governed by the General Data Protection Regulation (GDPR), we process your data based on:</p><ul><li>Your consent</li><li>Performance of a contract</li><li>Legal obligations</li><li>Legitimate business interests</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">04</div><div class="priv-section-title">Data Sharing and Disclosure</div></div><div class="priv-section-body"><p>We do not sell your personal data. However, we may share information with:</p><ul><li>Trusted third-party service providers (hosting, analytics, authentication)</li><li>Legal authorities if required by law</li><li>Internal teams for service improvement and security</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">05</div><div class="priv-section-title">Data Retention</div></div><div class="priv-section-body"><p>We retain your data only as long as necessary to:</p><ul><li>Provide services</li><li>Comply with legal obligations</li><li>Resolve disputes</li></ul><p style="margin-top:14px;">You may request deletion of your data at any time.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">06</div><div class="priv-section-title">Data Security</div></div><div class="priv-section-body"><p>We implement industry-standard security measures, including:</p><ul><li>Encryption</li><li>Secure servers</li><li>Access control mechanisms</li></ul><p style="margin-top:14px;">However, no system is completely secure, and we cannot guarantee absolute security.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">07</div><div class="priv-section-title">Your Rights</div></div><div class="priv-section-body"><p>Depending on your location, you may have the right to:</p><ul><li>Access your personal data</li><li>Correct inaccurate data</li><li>Request deletion</li><li>Restrict or object to processing</li><li>Data portability</li></ul><p style="margin-top:14px;">To exercise these rights, contact us at the details below.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">08</div><div class="priv-section-title">Cookies and Tracking Technologies</div></div><div class="priv-section-body"><p>We use cookies and similar technologies to:</p><ul><li>Improve user experience</li><li>Analyze website traffic</li><li>Remember user preferences</li></ul><p style="margin-top:14px;">You can manage cookie settings through your browser.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">09</div><div class="priv-section-title">Third-Party Services</div></div><div class="priv-section-body"><p>Our platform may integrate with third-party services (such as payment gateways or analytics tools). These services have their own privacy policies, and we are not responsible for their practices.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">10</div><div class="priv-section-title">Children's Privacy</div></div><div class="priv-section-body"><p>Prolio AI is not intended for users under the age of 13. We do not knowingly collect personal data from children.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">11</div><div class="priv-section-title">Changes to This Policy</div></div><div class="priv-section-body"><p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated effective date.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">12</div><div class="priv-section-title">Contact Us</div></div><div class="priv-section-body"><p>If you have any questions about this Privacy Policy, you can reach us at:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:support@prolioai.com">support@prolioai.com</a></span></div></div></div></div>
+  </div>
+  <footer>© 2026 <span>Prolio AI</span> by Bronzera · All Rights Reserved</footer>
+</div><!-- /page-privacy -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: YOUR PRIVACY CHOICES
+═══════════════════════════════════════════════════════════ -->
+<div id="page-choices" class="page">
+  <header>
+    <div class="badge">User Controls</div>
+    <h1>Your Privacy Choices</h1>
+    <div class="header-meta"><span>Effective Date: 17 March 2026</span><span>·</span><span>Prolio AI by Bronzera</span></div>
+  </header>
+  <div class="priv-container">
+    <div class="intro-card">At <strong>Prolio AI</strong>, operated by <strong>Bronzera</strong>, we believe in giving users clear control over their personal data. This page explains the choices and rights available to you regarding how your information is collected, used, and managed.</div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">01</div><div class="priv-section-title">Managing Your Personal Information</div></div><div class="priv-section-body"><p>You have the right to:</p><ul><li>Access the personal data we hold about you</li><li>Update or correct inaccurate information</li><li>Request deletion of your data</li><li>Restrict how your data is processed</li></ul><p style="margin-top:14px;">You can manage most of your information directly through your account settings or by contacting us.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">02</div><div class="priv-section-title">Opt-Out of Communications</div></div><div class="priv-section-body"><div class="sub-label">You may choose to stop receiving</div><ul><li>Promotional emails</li><li>Product updates</li><li>Marketing communications</li></ul><div class="sub-label">You can opt out by</div><ul><li>Clicking the "unsubscribe" link in emails</li><li>Contacting us directly</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">03</div><div class="priv-section-title">Cookie Preferences</div></div><div class="priv-section-body"><p>We use cookies to enhance your experience. You have full control over how cookies are used:</p><ul><li>Disable cookies through your browser settings</li><li>Clear stored cookies at any time</li><li>Choose to block tracking technologies</li></ul><div class="note-box"><strong>Note:</strong> Disabling cookies may affect certain features of the platform.</div></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">04</div><div class="priv-section-title">Data Sharing Preferences</div></div><div class="priv-section-body"><p>We do not sell your personal data. However, you may:</p><ul><li>Request information about third parties we share data with</li><li>Request restriction of certain data-sharing activities</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">05</div><div class="priv-section-title">AI Data Usage Control</div></div><div class="priv-section-body"><p>Since Prolio AI uses your resume and professional data:</p><ul><li>You can choose what data you upload</li><li>You may request deletion of AI-processed data</li><li>You can stop using AI-based features at any time</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">06</div><div class="priv-section-title">Your Rights Under Privacy Laws</div></div><div class="priv-section-body"><p>Depending on your location, you may have additional rights under laws such as:</p><ul><li>General Data Protection Regulation (GDPR)</li><li>California Consumer Privacy Act (CCPA)</li></ul><div class="sub-label" style="margin-top:14px;">These rights may include</div><ul><li>Right to know what data is collected</li><li>Right to request deletion</li><li>Right to opt-out of data usage</li><li>Right to non-discrimination</li></ul></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">07</div><div class="priv-section-title">Data Retention Choices</div></div><div class="priv-section-body"><p>You may request:</p><ul><li>Immediate deletion of your account and data</li><li>Limitation on how long your data is stored</li></ul><p style="margin-top:14px;">We will process such requests in accordance with applicable laws.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">08</div><div class="priv-section-title">Contact for Privacy Requests</div></div><div class="priv-section-body"><p>To exercise your privacy rights or make a request, contact us:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:support@prolioai.com">support@prolioai.com</a></span></div></div><p style="margin-top:14px;">We will respond within a reasonable timeframe as required by law.</p></div></div>
+
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">09</div><div class="priv-section-title">Updates to Your Choices</div></div><div class="priv-section-body"><p>We may update this page as our services evolve or legal requirements change. Please review it periodically to stay informed.</p></div></div>
+  </div>
+  <footer>© 2026 <span>Prolio AI</span> by Bronzera · All Rights Reserved</footer>
+</div><!-- /page-choices -->
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script>
+/* ══════════════════════════════════════
+   PAGE ROUTER
+══════════════════════════════════════ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  var page = document.getElementById('page-' + id);
+  if (page) {
+    page.classList.add('active');
+    window.scrollTo(0, 0);
+    // Re-run scroll-reveal observers for newly shown page
+    if (id === 'about') reinitAboutObservers();
+    if (id === 'home') reinitHomeObservers();
+  }
+}
+
+/* ══════════════════════════════════════
+   HOME PAGE SCRIPTS
+══════════════════════════════════════ */
+function toggleHomeMenu() {
+  document.getElementById('navLinks').classList.toggle('active');
+  document.getElementById('hamburger').classList.toggle('open');
+}
+document.querySelectorAll('#page-home #navLinks a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('navLinks').classList.remove('active');
+    document.getElementById('hamburger').classList.remove('open');
+  });
+});
+document.addEventListener('click', function(e) {
+  var nav = document.getElementById('nav');
+  var menu = document.getElementById('navLinks');
+  if (nav && menu && !nav.contains(e.target) && menu.classList.contains('active')) {
+    menu.classList.remove('active');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+});
+
+// Home scroll reveal
+var homeRevealObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+
+function reinitHomeObservers() {
+  document.querySelectorAll('#page-home .reveal').forEach(function(el) { homeRevealObserver.observe(el); });
+}
+reinitHomeObservers();
+
+// Home nav bg on scroll
+window.addEventListener('scroll', function() {
+  if (!document.getElementById('page-home').classList.contains('active')) return;
+  var nav = document.getElementById('nav');
+  if (window.scrollY > 20) {
+    nav.style.background = 'rgba(6,8,15,0.97)';
+    nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.55)';
+  } else {
+    nav.style.background = 'rgba(10,15,30,0.85)';
+    nav.style.boxShadow = 'none';
+  }
+});
+
+// Floating particles
+(function() {
+  var c = document.getElementById('particles');
+  var colors = ['#7b4dff','#5E7CFF','#49C6C6','#ffe066','#a78bff','#7bedff'];
+  for (var i = 0; i < 30; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    var size  = (Math.random() * 5 + 2).toFixed(1);
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    var dur   = (Math.random() * 14 + 10).toFixed(1) + 's';
+    var delay = (Math.random() * 15).toFixed(1) + 's';
+    var left  = (Math.random() * 100).toFixed(1) + '%';
+    var op    = (Math.random() * 0.22 + 0.06).toFixed(2);
+    p.style.cssText = 'width:'+size+'px;height:'+size+'px;background:'+color+';left:'+left+';--dur:'+dur+';--delay:'+delay+';--op:'+op+';';
+    c.appendChild(p);
+  }
+})();
+
+/* ══════════════════════════════════════
+   LOGIN PAGE SCRIPTS
+══════════════════════════════════════ */
+function loginShowToast(msg, duration) {
+  duration = duration || 3000;
+  var t = document.getElementById('login-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, duration);
+}
+/* ── Login method switcher ── */
+var loginMethod = 'email';
+var loginDemoOtp = '';
+var loginResendInterval = null;
+
+function switchLoginMethod(method) {
+  loginMethod = method;
+  var emailPanel  = document.getElementById('login-emailPanel');
+  var mobilePanel = document.getElementById('login-mobilePanel');
+  var tabEmail    = document.getElementById('login-tabEmail');
+  var tabMobile   = document.getElementById('login-tabMobile');
+
+  if (method === 'email') {
+    emailPanel.style.display  = 'block';
+    mobilePanel.style.display = 'none';
+    tabEmail.classList.add('active');
+    tabMobile.classList.remove('active');
+  } else {
+    emailPanel.style.display  = 'none';
+    mobilePanel.style.display = 'block';
+    tabMobile.classList.add('active');
+    tabEmail.classList.remove('active');
+    // Reset mobile panel to fresh state each time you switch
+    loginResetPhone();
+  }
+}
+
+/* ── Send OTP to mobile ── */
+function loginSendOtp() {
+  var phone = document.getElementById('login-phoneInput').value.trim();
+  var phoneErr = document.getElementById('login-phoneError');
+  phoneErr.classList.remove('show');
+  document.getElementById('login-phoneInput').classList.remove('error');
+
+  if (!/^\d{10}$/.test(phone)) {
+    phoneErr.classList.add('show');
+    document.getElementById('login-phoneInput').classList.add('error');
+    return;
+  }
+
+  var btn = document.getElementById('login-sendOtpBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  setTimeout(function () {
+    btn.classList.remove('loading'); btn.disabled = false;
+
+    // Generate demo OTP
+    loginDemoOtp = String(Math.floor(100000 + Math.random() * 900000));
+    document.getElementById('login-demoCodeDisplay').textContent = loginDemoOtp;
+
+    // Show OTP section, disable phone editing
+    document.getElementById('login-otpSection').style.display = 'block';
+    document.getElementById('login-phoneInput').disabled = true;
+    document.getElementById('login-countryCode').disabled = true;
+    btn.style.display = 'none';
+
+    loginStartResend();
+    document.getElementById('lotp1').focus();
+    loginShowToast('🔐 OTP generated! Check the yellow box.');
+  }, 1200);
+}
+
+/* ── Resend timer ── */
+function loginStartResend() {
+  var btn   = document.getElementById('login-resendBtn');
+  var timer = document.getElementById('login-resendTimer');
+  btn.disabled = true;
+  var sec = 30;
+  timer.textContent = 'in ' + sec + 's';
+  loginResendInterval = setInterval(function () {
+    sec--;
+    timer.textContent = sec > 0 ? 'in ' + sec + 's' : '';
+    if (sec <= 0) {
+      clearInterval(loginResendInterval);
+      btn.disabled = false;
+    }
+  }, 1000);
+}
+
+function loginResendOtp() {
+  loginDemoOtp = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('login-demoCodeDisplay').textContent = loginDemoOtp;
+  document.querySelectorAll('#login-otpContainer .otpBox').forEach(function (b) {
+    b.value = ''; b.classList.remove('filled');
+  });
+  loginStartResend();
+  document.getElementById('lotp1').focus();
+  loginShowToast('🔄 New OTP generated! Check the yellow box.');
+}
+
+/* ── Verify OTP and sign in ── */
+function loginVerifyOtp() {
+  var otp = ['lotp1','lotp2','lotp3','lotp4','lotp5','lotp6']
+    .map(function (id) { return document.getElementById(id).value; })
+    .join('');
+
+  if (otp.length < 6 || /\D/.test(otp)) {
+    loginShowToast('⚠️ Please enter the complete 6-digit OTP.');
+    return;
+  }
+  if (otp !== loginDemoOtp) {
+    loginShowToast('❌ Wrong OTP. Check the yellow box again.');
+    document.querySelectorAll('#login-otpContainer .otpBox').forEach(function (b) {
+      b.style.borderColor = '#ef4444';
+      setTimeout(function () { b.style.borderColor = ''; }, 1500);
+    });
+    return;
+  }
+
+  var btn = document.getElementById('login-verifyOtpBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function () {
+    btn.classList.remove('loading'); btn.disabled = false;
+    loginShowToast('✅ Login successful! Redirecting...');
+    clearInterval(loginResendInterval);
+    /* window.location.href = 'dashboard.html'; */
+  }, 1200);
+}
+
+/* ── Reset phone section ── */
+function loginResetPhone() {
+  clearInterval(loginResendInterval);
+  loginDemoOtp = '';
+  var phoneInput = document.getElementById('login-phoneInput');
+  var ccInput    = document.getElementById('login-countryCode');
+  if (phoneInput) { phoneInput.value = ''; phoneInput.disabled = false; phoneInput.classList.remove('error'); }
+  if (ccInput)    { ccInput.disabled = false; }
+  var otpSec  = document.getElementById('login-otpSection');
+  var sendBtn = document.getElementById('login-sendOtpBtn');
+  if (otpSec)  { otpSec.style.display = 'none'; }
+  if (sendBtn) { sendBtn.style.display = 'flex'; sendBtn.disabled = false; sendBtn.classList.remove('loading'); }
+  document.querySelectorAll('#login-otpContainer .otpBox').forEach(function (b) {
+    b.value = ''; b.classList.remove('filled'); b.style.borderColor = '';
+  });
+  var timerEl = document.getElementById('login-resendTimer');
+  if (timerEl) timerEl.textContent = '';
+}
+
+/* ── OTP box auto-advance for MOBILE LOGIN ── */
+document.querySelectorAll('#login-otpContainer .otpBox').forEach(function (box, idx, boxes) {
+  box.addEventListener('input', function () {
+    var val = box.value.replace(/\D/g, '');
+    box.value = val;
+    if (val) { box.classList.add('filled'); if (idx < 5) boxes[idx + 1].focus(); }
+    else { box.classList.remove('filled'); }
+  });
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'Backspace' && !box.value && idx > 0) boxes[idx - 1].focus();
+  });
+  box.addEventListener('paste', function (e) {
+    e.preventDefault();
+    var paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+    Array.from(paste).forEach(function (ch, i) {
+      if (boxes[i]) { boxes[i].value = ch; boxes[i].classList.add('filled'); }
+    });
+    boxes[Math.min(paste.length, 5)].focus();
+  });
+});
+
+function loginTogglePwd() {
+  var inp = document.getElementById('login-passwordInput');
+  var btn = document.getElementById('login-togglePwd');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+function handleLogin() {
+  var email    = document.getElementById('login-emailInput').value.trim();
+  var password = document.getElementById('login-passwordInput').value;
+  var btn      = document.getElementById('login-loginBtn');
+  if (!email)                 { loginShowToast('⚠️ Please enter your email address.'); return; }
+  if (!validateEmail(email))  { loginShowToast('⚠️ Please enter a valid email.'); return; }
+  if (!password)              { loginShowToast('⚠️ Please enter your password.'); return; }
+  if (password.length < 6)    { loginShowToast('⚠️ Password must be at least 6 characters.'); return; }
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    loginShowToast('✅ Login successful! Redirecting...');
+  }, 2000);
+}
+
+function handleForgot(e) {
+  e.preventDefault();
+  var email = document.getElementById('login-emailInput').value.trim();
+  if (!email || !validateEmail(email)) { loginShowToast('📧 Enter your email above first.'); }
+  else { loginShowToast('📧 Reset link sent to ' + email); }
+}
+
+document.getElementById('page-login').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
+});
+
+/* ══════════════════════════════════════
+   SIGNUP PAGE SCRIPTS
+══════════════════════════════════════ */
+var signupContactType = 'email';
+var signupResendInterval = null;
+
+function signupShowToast(msg, duration) {
+  duration = duration || 3200;
+  var t = document.getElementById('signup-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, duration);
+}
+
+function switchType(type) {
+  signupContactType = type;
+  var input = document.getElementById('contactInput');
+  var label = document.getElementById('contactLabel');
+  var icon  = document.getElementById('contactIcon');
+  var btnE  = document.getElementById('btnEmail');
+  var btnP  = document.getElementById('btnPhone');
+  if (type === 'email') {
+    input.type = 'email'; input.placeholder = 'you@example.com'; input.autocomplete = 'email';
+    label.textContent = 'Email address'; icon.textContent = '✉';
+    btnE.classList.add('selected'); btnP.classList.remove('selected');
+    document.getElementById('contactError').textContent = 'Please enter a valid email address.';
+  } else {
+    input.type = 'tel'; input.placeholder = '+91 9876543210'; input.autocomplete = 'tel';
+    label.textContent = 'Mobile number'; icon.textContent = '📱';
+    btnP.classList.add('selected'); btnE.classList.remove('selected');
+    document.getElementById('contactError').textContent = 'Please enter a valid 10-digit mobile number.';
+  }
+  input.value = ''; input.classList.remove('error','success');
+}
+
+function signupTogglePwd() {
+  var inp = document.getElementById('signup-passwordInput');
+  var btn = document.getElementById('togglePwd');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function checkStrength(val) {
+  var fill = document.getElementById('strengthFill');
+  var text = document.getElementById('strengthText');
+  var score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  var levels = [
+    { w:'0%',   bg:'#e2e8f0', label:'Enter a password' },
+    { w:'25%',  bg:'#ef4444', label:'⚠ Too weak' },
+    { w:'50%',  bg:'#f59e0b', label:'🔶 Fair' },
+    { w:'75%',  bg:'#3b82f6', label:'🔷 Good' },
+    { w:'100%', bg:'#22c55e', label:'✅ Strong' }
+  ];
+  var lvl = val.length === 0 ? levels[0] : levels[score];
+  fill.style.width = lvl.w; fill.style.background = lvl.bg;
+  text.textContent = lvl.label; text.style.color = lvl.bg;
+}
+
+function validatePhone(p) { return /^[+]?[\d\s\-()]{10,15}$/.test(p); }
+
+function setStep(n) {
+  document.querySelectorAll('#page-signup .stepView').forEach(function(v, i) {
+    v.classList.toggle('active', i + 1 === n);
+  });
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('dot' + i);
+    var lbl = document.getElementById('lbl' + i);
+    dot.classList.remove('active','done'); lbl.classList.remove('active-label');
+    if (i < n) { dot.classList.add('done'); }
+    else if (i === n) { dot.classList.add('active'); lbl.classList.add('active-label'); }
+  }
+  for (var j = 1; j <= 2; j++) {
+    document.getElementById('line' + j).classList.toggle('done', j < n);
+  }
+}
+
+function goStep2() {
+  var contact  = document.getElementById('contactInput').value.trim();
+  var password = document.getElementById('signup-passwordInput').value;
+  var cErr = document.getElementById('contactError');
+  var pErr = document.getElementById('passwordError');
+  var valid = true;
+  cErr.classList.remove('show'); document.getElementById('contactInput').classList.remove('error');
+  if (signupContactType === 'email' && !validateEmail(contact)) {
+    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); valid = false;
+  } else if (signupContactType === 'phone' && !validatePhone(contact)) {
+    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); valid = false;
+  }
+  pErr.classList.remove('show'); document.getElementById('signup-passwordInput').classList.remove('error');
+  if (password.length < 8) {
+    pErr.classList.add('show'); document.getElementById('signup-passwordInput').classList.add('error'); valid = false;
+  }
+  if (!valid) return;
+  var btn = document.getElementById('step1Btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    document.getElementById('otpTarget').textContent = contact;
+    setStep(2); startResendTimer();
+    document.getElementById('otp1').focus();
+    signupShowToast('📨 OTP sent to ' + contact);
+  }, 1200);
+}
+
+// OTP auto-advance
+document.querySelectorAll('.otpBox').forEach(function(box, idx, boxes) {
+  box.addEventListener('input', function() {
+    var val = box.value.replace(/\D/g,''); box.value = val;
+    if (val) { box.classList.add('filled'); if (idx < 5) boxes[idx+1].focus(); }
+    else { box.classList.remove('filled'); }
+  });
+  box.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && !box.value && idx > 0) boxes[idx-1].focus();
+  });
+  box.addEventListener('paste', function(e) {
+    e.preventDefault();
+    var paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+    Array.from(paste).forEach(function(ch, i) {
+      if (boxes[i]) { boxes[i].value = ch; boxes[i].classList.add('filled'); }
+    });
+    boxes[Math.min(paste.length, 5)].focus();
+  });
+});
+
+function startResendTimer() {
+  var btn = document.getElementById('resendBtn');
+  var timer = document.getElementById('resendTimer');
+  btn.disabled = true; var sec = 30; timer.textContent = sec + 's';
+  signupResendInterval = setInterval(function() {
+    sec--; timer.textContent = sec + 's';
+    if (sec <= 0) { clearInterval(signupResendInterval); btn.disabled = false; timer.textContent = ''; }
+  }, 1000);
+}
+
+function resendOTP() {
+  signupShowToast('📨 OTP resent!');
+  document.querySelectorAll('.otpBox').forEach(function(b) { b.value = ''; b.classList.remove('filled'); });
+  startResendTimer(); document.getElementById('otp1').focus();
+}
+
+function verifyOTP() {
+  var otp = ['otp1','otp2','otp3','otp4','otp5','otp6'].map(function(id) { return document.getElementById(id).value; }).join('');
+  if (otp.length < 6 || /\D/.test(otp)) { signupShowToast('⚠️ Please enter the complete 6-digit OTP.'); return; }
+  var btn = document.getElementById('step2Btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    setStep(3); clearInterval(signupResendInterval);
+  }, 1400);
+}
+
+function createAccount() {
+  var name  = document.getElementById('fullName').value.trim();
+  var terms = document.getElementById('termsCheck').checked;
+  var nErr  = document.getElementById('nameError');
+  nErr.classList.remove('show'); document.getElementById('fullName').classList.remove('error');
+  if (!name) { nErr.classList.add('show'); document.getElementById('fullName').classList.add('error'); return; }
+  if (!terms) { signupShowToast('⚠️ Please agree to the Privacy Policy to continue.'); return; }
+  var btn = document.getElementById('step3Btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    document.querySelectorAll('#page-signup .stepView').forEach(function(v) { v.style.display = 'none'; });
+    document.getElementById('stepIndicator').style.display = 'none';
+    document.getElementById('stepLabels').style.display = 'none';
+    document.querySelector('#page-signup #cardLogo').style.marginBottom = '20px';
+    var sv = document.getElementById('successView');
+    sv.style.display = 'flex';
+  }, 1600);
+}
+
+document.getElementById('page-signup').addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  var active = document.querySelector('#page-signup .stepView.active');
+  if (!active) return;
+  if (active.id === 'step1') goStep2();
+  else if (active.id === 'step2') verifyOTP();
+  else if (active.id === 'step3') createAccount();
+});
+
+/* ══════════════════════════════════════
+   ABOUT PAGE SCRIPTS
+══════════════════════════════════════ */
+function toggleAboutMenu() {
+  document.getElementById('about-navLinks').classList.toggle('active');
+}
+document.querySelectorAll('#about-navLinks a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('about-navLinks').classList.remove('active');
+  });
+});
+
+var aboutRevealObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.12 });
+
+function reinitAboutObservers() {
+  document.querySelectorAll('#page-about .about-reveal, #page-about .reveal-left, #page-about .reveal-right').forEach(function(el) {
+    aboutRevealObserver.observe(el);
+  });
+}
+reinitAboutObservers();
+
+// About nav scroll
+window.addEventListener('scroll', function() {
+  if (!document.getElementById('page-about').classList.contains('active')) return;
+  var nav = document.getElementById('about-nav');
+  if (window.scrollY > 20) {
+    nav.style.background = 'rgba(15,23,42,0.97)';
+    nav.style.boxShadow = '0 4px 24px rgba(0,0,0,0.4)';
+  } else {
+    nav.style.background = 'rgba(15,23,42,0.85)';
+    nav.style.boxShadow = 'none';
+  }
+});
+
+// Counter animation on stats
+var statsObserver = new IntersectionObserver(function(entries) {
+  if (entries[0].isIntersecting) {
+    document.querySelectorAll('.stat-num').forEach(function(el) {
+      var text = el.textContent;
+      if (!isNaN(parseInt(text))) {
+        var target = parseInt(text);
+        var current = 0;
+        var suffix = text.replace(/[0-9]/g,'');
+        var step = Math.max(1, Math.floor(target / 40));
+        var interval = setInterval(function() {
+          current = Math.min(current + step, target);
+          el.textContent = current + suffix;
+          if (current >= target) clearInterval(interval);
+        }, 30);
+      }
+    });
+    statsObserver.disconnect();
+  }
+}, { threshold: 0.3 });
+
+var statsEl = document.getElementById('statsStrip');
+if (statsEl) statsObserver.observe(statsEl);
+</script>
+</body>
+</html>
