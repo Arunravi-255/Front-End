@@ -1837,7 +1837,9 @@ function handleLogin() {
   setTimeout(function() {
     btn.classList.remove('loading'); btn.disabled = false;
     loginShowToast('✅ Login successful! Redirecting...');
-    /* TODO: replace with real backend auth */
+    setTimeout(function() {
+      window.location.href = './resume-builder.html';
+    }, 800);
   }, 1800);
 }
 document.getElementById('page-login').addEventListener('keydown', function(e) {
