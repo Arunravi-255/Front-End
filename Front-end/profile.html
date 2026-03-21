@@ -784,7 +784,7 @@ body::before {
                 <div class="fgroup"><label class="flabel">Location</label><div class="field-display" id="vd-location">Chennai, India</div></div>
               </div>
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Email</label><div class="field-display" id="vd-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="036271766d43667b626e736f662d606c6e">[email&#160;protected]</a></div></div>
+                <div class="fgroup"><label class="flabel">Email</label><div class="field-display" id="vd-email">arun@example.com</div></div>
                 <div class="fgroup"><label class="flabel">Phone</label><div class="field-display" id="vd-phone">+91 81241 81771</div></div>
               </div>
               <div class="form-row single">
@@ -992,7 +992,7 @@ body::before {
           <div class="card-body">
             <div class="connected-row">
               <div class="connected-icon ci-google">🔴</div>
-              <div class="connected-info"><h4>Google</h4><p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="29485b5c47694e44484045074a4644">[email&#160;protected]</a> · Connected 15 Mar 2026</p></div>
+              <div class="connected-info"><h4>Google</h4><p>arun@gmail.com · Connected 15 Mar 2026</p></div>
               <button class="connect-btn connected" onclick="toggleConnect(this,'Google')">✓ Connected</button>
             </div>
             <div class="connected-row">
@@ -1051,7 +1051,7 @@ body::before {
 
 <div id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ══════════════════════════════════════
    DATA MODEL
 ══════════════════════════════════════ */
@@ -1609,10 +1609,20 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-/* ── PLAN STATE ── */
 (function(){
   var plan='free';
   try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
   var isPro=plan==='pro'||plan==='team';
   var isTeam=plan==='team';
   var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+  var ul=document.getElementById('upgrade-link');
+  if(ul&&isPro)ul.style.display='none';
+})();
+</script>
+</body>
+</html>
