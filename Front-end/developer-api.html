@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer API — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#7b4dff; --purple-lt:#a78bff; --blue:#5E7CFF; --cyan:#49C6C6;
+  --green:#22c55e; --red:#ef4444; --gold:#ffe066; --orange:#f97316;
+  --bg:#080c18; --bg2:#0d1220; --card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08); --border-lt:rgba(255,255,255,0.14);
+  --text:#f1f5f9; --muted:rgba(255,255,255,0.45); --muted2:rgba(255,255,255,0.22);
+  --code-bg:#050810;
+  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  --sidebar-w:240px; --header-h:64px; --docs-nav-w:240px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 0% 0%,rgba(123,77,255,0.18) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.14) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 40%,rgba(94,124,255,0.08) 0%,transparent 55%);}
+
+/* SHELL */
+#shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:rgba(8,12,24,0.92);
+  border-right:1px solid var(--border);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);}
+#sb-logo{padding:22px 20px 18px;font-size:20px;font-weight:900;letter-spacing:3px;font-style:italic;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;flex-shrink:0;}
+#sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 10px 6px;}
+.sb-lbl:first-child{padding-top:4px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;
+  margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(123,77,255,0.18);color:#c4b5fd;border-color:rgba(123,77,255,0.25);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:15px;flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(123,77,255,0.25);}
+.nav-item:hover:not(.active) .nav-icon{background:rgba(255,255,255,0.07);}
+.nav-badge{margin-left:auto;background:var(--purple);color:white;font-size:10px;
+  font-weight:800;padding:2px 7px;border-radius:50px;}
+#sb-upgrade{margin:12px;padding:16px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));
+  border:1px solid rgba(123,77,255,0.3);flex-shrink:0;}
+#sb-upgrade h4{font-size:13px;font-weight:800;margin-bottom:4px;color:#c4b5fd;}
+#sb-upgrade p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+#sb-upgrade-btn{width:100%;padding:8px;border:none;border-radius:8px;background:var(--grad);
+  color:white;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+#sb-user{padding:14px;border-top:1px solid var(--border);display:flex;align-items:center;
+  gap:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+#sb-user:hover{background:rgba(255,255,255,0.04);}
+#sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;flex-shrink:0;}
+#sb-user-name{font-size:13px;font-weight:700;}
+#sb-user-role{font-size:11px;color:var(--muted);}
+#sb-user-arrow{margin-left:auto;color:var(--muted);font-size:12px;}
+#sb-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.6);}
+#sb-overlay.show{display:block;}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+#topbar{height:var(--header-h);background:rgba(8,12,24,0.8);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;
+  padding:0 32px;gap:16px;position:sticky;top:0;z-index:100;}
+#mob-menu{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+.tb-title{font-size:16px;font-weight:800;}
+.tb-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+#tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all 0.2s;position:relative;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;
+  background:#ef4444;border:1.5px solid var(--bg);}
+#tb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;cursor:pointer;border:2px solid rgba(123,77,255,0.4);}
+
+/* HERO */
+#api-hero{padding:48px 32px 36px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(123,77,255,0.08),rgba(73,198,198,0.04));
+  position:relative;overflow:hidden;}
+#api-hero::after{content:'{ }';position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  font-family:'Fira Code',monospace;font-size:120px;font-weight:500;
+  color:rgba(123,77,255,0.07);pointer-events:none;user-select:none;line-height:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(123,77,255,0.12);
+  border:1px solid rgba(123,77,255,0.28);border-radius:50px;padding:5px 14px;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--purple-lt);margin-bottom:14px;}
+.hero-badge span{width:7px;height:7px;border-radius:50%;background:var(--green);
+  display:inline-block;box-shadow:0 0 6px rgba(34,197,94,0.7);
+  animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+#api-hero h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;
+  margin-bottom:10px;line-height:1.1;}
+#api-hero h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#api-hero p{font-size:14px;color:var(--muted);line-height:1.7;max-width:580px;margin-bottom:24px;}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap;}
+.h-stat-val{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;line-height:1;margin-bottom:3px;}
+.h-stat-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+
+/* BODY LAYOUT */
+#api-body{display:flex;flex:1;align-items:start;}
+
+/* DOCS NAV */
+#docs-nav{width:var(--docs-nav-w);flex-shrink:0;position:sticky;top:var(--header-h);
+  height:calc(100vh - var(--header-h));overflow-y:auto;overflow-x:hidden;
+  border-right:1px solid var(--border);background:rgba(5,8,16,0.6);padding:16px 0;}
+#docs-nav::-webkit-scrollbar{width:3px;}
+#docs-nav::-webkit-scrollbar-thumb{background:rgba(123,77,255,0.3);border-radius:3px;}
+.dn-label{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted2);padding:12px 18px 5px;display:block;}
+.dn-item{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:12px;
+  font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s;
+  border-left:2px solid transparent;}
+.dn-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.dn-item.active{color:#c4b5fd;border-left-color:var(--purple);background:rgba(123,77,255,0.06);}
+.m-tag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;
+  font-family:'Fira Code',monospace;letter-spacing:0.5px;flex-shrink:0;}
+.get{background:rgba(34,197,94,0.15);color:#4ade80;}
+.post{background:rgba(94,124,255,0.15);color:#93c5fd;}
+.put{background:rgba(245,158,11,0.15);color:#fbbf24;}
+.del{background:rgba(239,68,68,0.15);color:#f87171;}
+.ws{background:rgba(168,85,247,0.15);color:#c084fc;}
+
+/* DOCS CONTENT */
+#docs-content{flex:1;min-width:0;padding:32px 36px;max-width:920px;}
+
+/* SECTIONS */
+.sec{display:none;flex-direction:column;gap:22px;animation:fadeUp 0.3s ease;}
+.sec.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.sec-head{padding-bottom:16px;border-bottom:1px solid var(--border);}
+.sec-head h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:6px;}
+.sec-head h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.sec-head p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-head{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border);}
+.card-head h3{font-size:13px;font-weight:800;}
+.card-body{padding:20px;}
+.card-body.np{padding:0;}
+
+/* CODE */
+.code-wrap{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.code-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.02);}
+.code-dots{display:flex;gap:5px;}
+.cd{width:10px;height:10px;border-radius:50%;}
+.cd-r{background:#ff5f56;}.cd-y{background:#ffbd2e;}.cd-g{background:#27c93f;}
+.code-lang{font-size:11px;color:var(--muted);font-family:'Fira Code',monospace;margin-left:8px;}
+.copy-btn{padding:4px 11px;border-radius:6px;background:rgba(123,77,255,0.18);
+  border:1px solid rgba(123,77,255,0.3);color:#c4b5fd;font-size:10px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.copy-btn:hover{background:rgba(123,77,255,0.32);}
+.copy-btn.ok{background:rgba(34,197,94,0.18);border-color:rgba(34,197,94,0.3);color:#4ade80;}
+pre{padding:16px 18px;font-family:'Fira Code',monospace;font-size:12px;
+  line-height:1.75;overflow-x:auto;tab-size:2;}
+pre::-webkit-scrollbar{height:4px;}
+pre::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
+/* syntax */
+.k{color:#c4b5fd;}.s{color:#86efac;}.n{color:#fbbf24;}.c{color:rgba(255,255,255,0.28);font-style:italic;}
+.p{color:#7bedff;}.f{color:#fb923c;}.u{color:#a5b4fc;}.b{color:#f472b6;}
+.m{color:rgba(255,255,255,0.4);}
+
+/* ENDPOINT CARDS */
+.ep{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.ep-head{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  cursor:pointer;user-select:none;transition:background 0.15s;}
+.ep-head:hover{background:rgba(255,255,255,0.02);}
+.ep-path{font-family:'Fira Code',monospace;font-size:13px;font-weight:500;flex:1;}
+.ep-summary{font-size:11px;color:var(--muted);white-space:nowrap;}
+.ep-chev{color:var(--muted);font-size:13px;transition:transform 0.22s;flex-shrink:0;}
+.ep.open .ep-chev{transform:rotate(90deg);}
+.ep-body{display:none;border-top:1px solid var(--border);padding:18px;}
+.ep.open .ep-body{display:block;}
+.ep-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+
+/* PARAMS TABLE */
+.ptable{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+.ptable th{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted2);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.ptable td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}
+.ptable tr:last-child td{border-bottom:none;}
+.pname{font-family:'Fira Code',monospace;color:#7bedff;}
+.ptype{font-family:'Fira Code',monospace;color:#fbbf24;font-size:11px;}
+.preq{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;
+  background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.popt{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;
+  background:rgba(255,255,255,0.06);color:var(--muted);}
+.pdesc{color:var(--muted);line-height:1.5;}
+code{font-family:'Fira Code',monospace;color:#c4b5fd;background:rgba(123,77,255,0.1);
+  padding:1px 5px;border-radius:4px;font-size:11px;}
+
+/* LANG TABS */
+.lang-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;}
+.ltab{padding:9px 16px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;
+  color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;
+  transition:all 0.2s;white-space:nowrap;}
+.ltab:hover{color:var(--text);}
+.ltab.active{color:#c4b5fd;border-bottom-color:var(--purple);}
+.lang-panel{display:none;}
+.lang-panel.active{display:block;}
+
+/* KEY ROWS */
+.key-row{display:flex;align-items:center;gap:10px;padding:13px 18px;
+  border-bottom:1px solid var(--border);transition:background 0.15s;}
+.key-row:last-child{border-bottom:none;}
+.key-row:hover{background:rgba(255,255,255,0.02);}
+.env-tag{font-size:9px;font-weight:800;padding:3px 8px;border-radius:5px;
+  font-family:'Fira Code',monospace;letter-spacing:1px;flex-shrink:0;}
+.live{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.25);}
+.test{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);}
+.key-name{font-size:13px;font-weight:700;}
+.key-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.key-val{font-family:'Fira Code',monospace;font-size:12px;color:var(--muted);
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;
+  padding:6px 11px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.key-btns{display:flex;gap:6px;flex-shrink:0;}
+.kbtn{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.kbtn-copy{background:rgba(123,77,255,0.2);border:1px solid rgba(123,77,255,0.3);color:#c4b5fd;}
+.kbtn-copy:hover{background:rgba(123,77,255,0.35);}
+.kbtn-show{background:rgba(255,255,255,0.07);border:1px solid var(--border);color:var(--muted);}
+.kbtn-show:hover{border-color:var(--border-lt);color:var(--text);}
+.kbtn-rot{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.22);color:#fbbf24;}
+.kbtn-rot:hover{background:rgba(245,158,11,0.2);}
+.kbtn-del{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);color:#f87171;}
+.kbtn-del:hover{background:rgba(239,68,68,0.2);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:16px;position:relative;overflow:hidden;}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;}
+.sb-p::before{background:linear-gradient(90deg,#7b4dff,#a78bff);}
+.sb-c::before{background:linear-gradient(90deg,#49C6C6,#7bedff);}
+.sb-g::before{background:linear-gradient(90deg,#22c55e,#4ade80);}
+.sb-o::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+.stat-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:4px;}
+.sb-p .stat-val{color:#c4b5fd;}.sb-c .stat-val{color:#7bedff;}
+.sb-g .stat-val{color:#4ade80;}.sb-o .stat-val{color:#fbbf24;}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:600;}
+.stat-note{font-size:10px;font-weight:700;margin-top:6px;color:#4ade80;}
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:26px;margin-top:8px;}
+.spark-bar{flex:1;border-radius:2px;min-height:2px;}
+
+/* USAGE BARS */
+.ubar-wrap{margin-bottom:14px;}
+.ubar-wrap:last-child{margin-bottom:0;}
+.ubar-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;}
+.ubar-head span:first-child{font-weight:700;}
+.ubar-head span:last-child{color:var(--muted);font-size:11px;}
+.ubar{height:7px;background:rgba(255,255,255,0.07);border-radius:8px;overflow:hidden;}
+.ubar-fill{height:100%;border-radius:8px;transition:width 0.9s cubic-bezier(0.22,1,0.36,1);}
+.uf-p{background:linear-gradient(90deg,#7b4dff,#a78bff);}
+.uf-c{background:linear-gradient(90deg,#49C6C6,#7bedff);}
+.uf-g{background:linear-gradient(90deg,#22c55e,#4ade80);}
+.uf-o{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+
+/* WEBHOOK ROWS */
+.wh-row{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;
+  border-bottom:1px solid var(--border);}
+.wh-row:last-child{border-bottom:none;}
+.wh-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.wh-on{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.5);}
+.wh-off{background:var(--muted);}
+.wh-info{flex:1;min-width:0;}
+.wh-url{font-family:'Fira Code',monospace;font-size:12px;margin-bottom:2px;}
+.wh-meta{font-size:11px;color:var(--muted);}
+.wh-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.wh-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;
+  background:rgba(123,77,255,0.12);border:1px solid rgba(123,77,255,0.22);
+  color:#c4b5fd;font-family:'Fira Code',monospace;}
+
+/* SDK GRID */
+.sdk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.sdk-card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:18px;display:flex;flex-direction:column;gap:10px;
+  transition:all 0.22s;cursor:pointer;}
+.sdk-card:hover{border-color:rgba(123,77,255,0.4);transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(0,0,0,0.3);}
+.sdk-icon{font-size:26px;}
+.sdk-name{font-size:13px;font-weight:800;}
+.sdk-ver{font-size:11px;color:var(--muted);font-family:'Fira Code',monospace;}
+.sdk-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.sdk-cmd{background:var(--code-bg);border:1px solid var(--border);border-radius:7px;
+  padding:7px 11px;font-family:'Fira Code',monospace;font-size:11px;color:#86efac;}
+.sdk-links{display:flex;gap:7px;margin-top:2px;}
+.sdk-a{padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;
+  font-family:'Montserrat',sans-serif;transition:all 0.2s;}
+.sdk-a.pri{background:rgba(123,77,255,0.2);border:1px solid rgba(123,77,255,0.3);color:#c4b5fd;}
+.sdk-a.sec{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);}
+
+/* RATE TABLE */
+.rtable{width:100%;border-collapse:collapse;font-size:12px;}
+.rtable th{background:rgba(255,255,255,0.04);font-size:10px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted2);
+  padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
+.rtable td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.rtable tr:last-child td{border-bottom:none;}
+.rtable tr:hover td{background:rgba(255,255,255,0.02);}
+.plan-chip{font-size:10px;font-weight:800;padding:3px 9px;border-radius:50px;}
+.pc-free{background:rgba(255,255,255,0.07);color:var(--muted);}
+.pc-pro{background:rgba(123,77,255,0.18);color:#c4b5fd;}
+.pc-team{background:rgba(255,224,102,0.12);color:#ffe066;}
+
+/* CHANGELOG */
+.cl-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);}
+.cl-item:last-child{border-bottom:none;}
+.cl-date{font-size:11px;font-weight:700;color:var(--muted);
+  white-space:nowrap;min-width:76px;font-family:'Fira Code',monospace;padding-top:2px;}
+.cl-right{flex:1;}
+.cl-ver{font-size:12px;font-weight:800;color:#c4b5fd;font-family:'Fira Code',monospace;
+  margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.cl-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;}
+.tag-new{background:rgba(34,197,94,0.15);color:#4ade80;}
+.tag-fix{background:rgba(239,68,68,0.12);color:#f87171;}
+.tag-imp{background:rgba(123,77,255,0.15);color:#c4b5fd;}
+.tag-brk{background:rgba(245,158,11,0.12);color:#fbbf24;}
+.cl-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.cl-list li{font-size:12px;color:var(--muted);display:flex;gap:7px;line-height:1.5;}
+.cl-list li::before{content:'›';color:var(--purple-lt);font-weight:700;flex-shrink:0;}
+
+/* INFO BOXES */
+.info-box{border-radius:10px;padding:13px 15px;font-size:13px;line-height:1.7;
+  display:flex;gap:10px;align-items:flex-start;}
+.ib-info{background:rgba(94,124,255,0.1);border:1px solid rgba(94,124,255,0.22);color:#93c5fd;}
+.ib-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.22);color:#fbbf24;}
+.ib-icon{font-size:15px;flex-shrink:0;}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:9px;font-size:12px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:6px;border:none;}
+.btn-grad{background:var(--grad);color:white;}
+.btn-grad:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,77,255,0.4);}
+.btn-ghost{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--border-lt);color:var(--text);}
+.btn-danger{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);color:#f87171;}
+.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;
+  border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+.btn.loading .spinner{display:inline-block;}
+.btn.loading .bt{opacity:0.7;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* PLAYGROUND */
+.fgroup{display:flex;flex-direction:column;gap:5px;}
+.flabel{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);
+  letter-spacing:0.8px;text-transform:uppercase;}
+.finput,.fselect,.ftextarea{background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;font-size:13px;font-family:'Montserrat',sans-serif;
+  color:var(--text);outline:none;transition:border-color 0.2s;width:100%;}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:rgba(123,77,255,0.6);}
+.fselect{appearance:none;cursor:pointer;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;}
+.fselect option{background:#0f172a;}
+.ftextarea{resize:vertical;min-height:100px;line-height:1.6;
+  font-family:'Fira Code',monospace;font-size:12px;}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.status-badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:5px;
+  font-family:'Fira Code',monospace;}
+
+/* MODAL */
+#modal-ov{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;}
+#modal-ov.open{display:flex;}
+#modal-box{background:#0f172a;border:1px solid rgba(123,77,255,0.25);border-radius:18px;
+  padding:32px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  animation:mIn 0.3s cubic-bezier(0.22,1,0.36,1);}
+@keyframes mIn{from{opacity:0;transform:scale(0.95)translateY(14px);}to{opacity:1;transform:scale(1)translateY(0);}}
+#m-icon{font-size:32px;margin-bottom:12px;}
+#m-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:8px;}
+#m-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
+#m-fields{margin-bottom:4px;}
+.m-field{margin-bottom:12px;}
+.m-actions{display:flex;gap:10px;}
+.m-confirm{flex:1;padding:12px;border-radius:9px;border:none;background:var(--grad);
+  color:white;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+.m-confirm.danger{background:rgba(239,68,68,0.85);}
+.m-cancel{padding:12px 20px;border-radius:9px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:700;
+  font-family:'Montserrat',sans-serif;cursor:pointer;}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;
+  font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;
+  border:1px solid rgba(255,255,255,0.08);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:1100px){#docs-nav{width:200px;}.sdk-grid{grid-template-columns:1fr 1fr;}.stats-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}#docs-nav{display:none;}.sdk-grid{grid-template-columns:1fr;}}
+@media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;}#api-hero::after{display:none;}#docs-content{padding:20px;}.form-2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div id="shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
+    <nav id="sb-nav">
+      <div class="sb-lbl">Main</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
+      <div class="sb-lbl">Manage</div>
+      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
+      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
+      <div class="nav-item active"><div class="nav-icon">🔗</div>Developer API</div>
+      <div class="sb-lbl">Support</div>
+      <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div>Help &amp; Docs</div>
+    </nav>
+    <div id="sb-upgrade">
+      <h4>✨ Go Pro</h4>
+      <p>Unlock unlimited API calls, webhooks and advanced endpoints.</p>
+      <button id="sb-upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
+    </div>
+    <div id="sb-user" onclick="location.href='profile.html'">
+      <div id="sb-avatar">A</div>
+      <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+      <span id="sb-user-arrow">›</span>
+    </div>
+  </aside>
+  <div id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+      <button id="mob-menu" onclick="toggleSidebar()">☰</button>
+      <div>
+        <div class="tb-title">Developer API</div>
+        <div class="tb-sub">v2.1.0 · REST + WebSocket · api.prolioai.com/v2</div>
+      </div>
+      <div id="tb-right"><span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
+        <div class="tb-btn" onclick="toast('No new notifications')">🔔<span class="notif-dot"></span></div>
+        <div class="tb-btn" onclick="location.href='help-docs.html'">💡</div>
+        <div id="tb-avatar">A</div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <div id="api-hero">
+      <div class="hero-badge"><span></span> API Status: All Systems Operational</div>
+      <h1>Build with <em>Prolio AI</em></h1>
+      <p>A powerful RESTful API to create resumes, generate portfolios, enhance content with AI, manage user data and stream real-time events — all in one integration.</p>
+      <div class="hero-stats">
+        <div><div class="h-stat-val" id="hs-calls">342</div><div class="h-stat-lbl">API Calls Today</div></div>
+        <div><div class="h-stat-val">99.98%</div><div class="h-stat-lbl">Uptime (30d)</div></div>
+        <div><div class="h-stat-val">~48ms</div><div class="h-stat-lbl">Avg Response</div></div>
+        <div><div class="h-stat-val">v2.1.0</div><div class="h-stat-lbl">Version</div></div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div id="api-body">
+
+      <!-- DOCS NAV -->
+      <nav id="docs-nav">
+        <span class="dn-label">Getting Started</span>
+        <div class="dn-item active" id="dn-overview"   onclick="show('overview')">🚀 Overview</div>
+        <div class="dn-item"        id="dn-keys"       onclick="show('keys')">🔑 API Keys</div>
+        <div class="dn-item"        id="dn-auth"       onclick="show('auth')">🔒 Authentication</div>
+        <div class="dn-item"        id="dn-quickstart" onclick="show('quickstart')">⚡ Quickstart</div>
+        <span class="dn-label">Endpoints</span>
+        <div class="dn-item" id="dn-resumes"   onclick="show('resumes')"><span class="m-tag get">GET</span> Resumes</div>
+        <div class="dn-item" id="dn-portfolio" onclick="show('portfolio')"><span class="m-tag post">POST</span> Portfolio</div>
+        <div class="dn-item" id="dn-ai"        onclick="show('ai')"><span class="m-tag post">POST</span> AI Enhance</div>
+        <div class="dn-item" id="dn-users"     onclick="show('users')"><span class="m-tag get">GET</span> Users</div>
+        <div class="dn-item" id="dn-analytics" onclick="show('analytics')"><span class="m-tag get">GET</span> Analytics</div>
+        <span class="dn-label">Advanced</span>
+        <div class="dn-item" id="dn-webhooks"   onclick="show('webhooks')"><span class="m-tag ws">WS</span> Webhooks</div>
+        <div class="dn-item" id="dn-sdks"       onclick="show('sdks')">📦 SDKs &amp; Libraries</div>
+        <div class="dn-item" id="dn-ratelimits" onclick="show('ratelimits')">🚦 Rate Limits</div>
+        <div class="dn-item" id="dn-errors"     onclick="show('errors')">⚠️ Error Codes</div>
+        <div class="dn-item" id="dn-changelog"  onclick="show('changelog')">📋 Changelog</div>
+        <span class="dn-label">Usage</span>
+        <div class="dn-item" id="dn-usage"      onclick="show('usage')">📊 Usage &amp; Billing</div>
+        <div class="dn-item" id="dn-playground" onclick="show('playground')">🧪 Playground</div>
+      </nav>
+
+      <!-- DOCS CONTENT -->
+      <div id="docs-content">
+
+        <!-- ══ OVERVIEW ══ -->
+        <div class="sec active" id="sec-overview">
+          <div class="sec-head">
+            <h2>🚀 <em>Overview</em></h2>
+            <p>Programmatic access to all Prolio AI features. Build integrations, automate resume creation, generate portfolios and leverage AI at scale.</p>
+          </div>
+          <div class="info-box ib-info">
+            <span class="ib-icon">ℹ️</span>
+            <div>Base URL: <code>https://api.prolioai.com/v2</code> &nbsp;·&nbsp; All requests must use HTTPS &nbsp;·&nbsp; All responses are JSON</div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>⚡ Quick Example</h3><button class="btn btn-ghost" style="font-size:11px;padding:6px 12px;" onclick="show('quickstart')">Full Quickstart →</button></div>
+            <div class="card-body" style="padding:0;">
+              <div class="code-wrap" style="border:none;border-radius:0;">
+                <div class="code-bar">
+                  <div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">bash</span></div>
+                  <button class="copy-btn" onclick="copyPre(this,'pre-quick')">Copy</button>
+                </div>
+                <pre id="pre-quick"><span class="c"># Create a resume with AI enhancement</span>
+<span class="f">curl</span> <span class="s">-X POST https://api.prolioai.com/v2/resumes</span> \
+  <span class="k">-H</span> <span class="s">"Authorization: Bearer sk-prolio-your_key"</span> \
+  <span class="k">-H</span> <span class="s">"Content-Type: application/json"</span> \
+  <span class="k">-d</span> <span class="s">'{"name":"Arun Ravi","role":"Full Stack Developer","ai_enhance":true}'</span>
+
+<span class="c"># Response</span>
+<span class="m">{</span>
+  <span class="p">"id"</span><span class="m">:</span> <span class="s">"res_9kXm3pQr"</span><span class="m">,</span>
+  <span class="p">"status"</span><span class="m">:</span> <span class="s">"created"</span><span class="m">,</span>
+  <span class="p">"url"</span><span class="m">:</span> <span class="s">"https://prolioai.com/r/res_9kXm3pQr"</span>
+<span class="m">}</span></pre>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            <div class="card" style="padding:18px;cursor:pointer;" onclick="show('auth')">
+              <div style="font-size:24px;margin-bottom:8px;">🔒</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:4px;">Authentication</div>
+              <div style="font-size:12px;color:var(--muted);">Bearer tokens, API keys and OAuth flows.</div>
+            </div>
+            <div class="card" style="padding:18px;cursor:pointer;" onclick="show('resumes')">
+              <div style="font-size:24px;margin-bottom:8px;">📄</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:4px;">Resumes API</div>
+              <div style="font-size:12px;color:var(--muted);">Create, update, export and list resumes.</div>
+            </div>
+            <div class="card" style="padding:18px;cursor:pointer;" onclick="show('ai')">
+              <div style="font-size:24px;margin-bottom:8px;">✨</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:4px;">AI Enhance API</div>
+              <div style="font-size:12px;color:var(--muted);">Rewrite and improve content with AI.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ API KEYS ══ -->
+        <div class="sec" id="sec-keys">
+          <div class="sec-head">
+            <h2>🔑 API <em>Keys</em></h2>
+            <p>Manage your secret and publishable keys. Never expose secret keys in client-side code or version control.</p>
+          </div>
+          <div class="info-box ib-warn">
+            <span class="ib-icon">⚠️</span>
+            <div>Your secret key grants full account access. Never commit it to Git. Rotate it immediately if compromised.</div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>🔑 Your API Keys</h3><button class="btn btn-grad" onclick="openModal('new-key')">＋ Create Key</button></div>
+            <div class="card-body np">
+              <div class="key-row">
+                <span class="env-tag live">Live</span>
+                <div style="flex:1;min-width:0;"><div class="key-name">Default Secret Key</div><div class="key-desc">Created 15 Mar 2026 · Last used 2m ago</div></div>
+                <div class="key-val" id="kv-secret">sk-prolio-••••••••••••••••••••••••••••</div>
+                <div class="key-btns">
+                  <button class="kbtn kbtn-show" onclick="toggleKey('kv-secret','sk-prolio-b3jX9mQpTkLrN2wVc5aY8uHdEo',this)">👁 Show</button>
+                  <button class="kbtn kbtn-copy" onclick="copyKey('sk-prolio-b3jX9mQpTkLrN2wVc5aY8uHdEo',this)">Copy</button>
+                  <button class="kbtn kbtn-rot"  onclick="openModal('regen-key')">↺ Rotate</button>
+                </div>
+              </div>
+              <div class="key-row">
+                <span class="env-tag test">Test</span>
+                <div style="flex:1;min-width:0;"><div class="key-name">Test Secret Key</div><div class="key-desc">Created 15 Mar 2026 · No real data affected</div></div>
+                <div class="key-val" id="kv-test">sk-prolio-test-••••••••••••••••••••</div>
+                <div class="key-btns">
+                  <button class="kbtn kbtn-show" onclick="toggleKey('kv-test','sk-prolio-test-T3stK3yF0rD3v3l0pm3nt',this)">👁 Show</button>
+                  <button class="kbtn kbtn-copy" onclick="copyKey('sk-prolio-test-T3stK3yF0rD3v3l0pm3nt',this)">Copy</button>
+                  <button class="kbtn kbtn-del"  onclick="toast('Test key deleted')">Delete</button>
+                </div>
+              </div>
+              <div class="key-row">
+                <span class="env-tag live">Live</span>
+                <div style="flex:1;min-width:0;"><div class="key-name">Publishable Key</div><div class="key-desc">Safe for client-side · Read-only</div></div>
+                <div class="key-val">pk-prolio-a8Bn2XcVd9eYfZgWhIjK</div>
+                <div class="key-btns">
+                  <button class="kbtn kbtn-copy" onclick="copyKey('pk-prolio-a8Bn2XcVd9eYfZgWhIjK',this)">Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ AUTH ══ -->
+        <div class="sec" id="sec-auth">
+          <div class="sec-head">
+            <h2>🔒 <em>Authentication</em></h2>
+            <p>Pass your API key as a Bearer token in the Authorization header with every request.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Bearer Token</h3></div>
+            <div class="card-body" style="padding:0;">
+              <div class="code-wrap" style="border:none;border-radius:0;">
+                <div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">http</span></div><button class="copy-btn" onclick="copyPre(this,'pre-auth-hdr')">Copy</button></div>
+                <pre id="pre-auth-hdr"><span class="k">Authorization:</span> <span class="s">Bearer sk-prolio-your_secret_key_here</span></pre>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Code Examples</h3></div>
+            <div class="card-body" style="padding:0;">
+              <div class="lang-tabs">
+                <button class="ltab active" onclick="switchLang('node',this)">Node.js</button>
+                <button class="ltab" onclick="switchLang('python',this)">Python</button>
+                <button class="ltab" onclick="switchLang('curl',this)">cURL</button>
+                <button class="ltab" onclick="switchLang('go',this)">Go</button>
+              </div>
+              <div id="lang-node" class="lang-panel active">
+                <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">javascript</span></div><button class="copy-btn" onclick="copyPre(this,'pre-node')">Copy</button></div>
+                <pre id="pre-node"><span class="k">import</span> ProlioAI <span class="k">from</span> <span class="s">'@prolio/sdk'</span><span class="m">;</span>
+<span class="k">const</span> client <span class="m">=</span> <span class="k">new</span> <span class="f">ProlioAI</span><span class="m">({</span> <span class="p">apiKey</span><span class="m">:</span> process<span class="m">.</span>env<span class="m">.</span>PROLIO_API_KEY <span class="m">});</span>
+<span class="k">const</span> resume <span class="m">=</span> <span class="k">await</span> client<span class="m">.</span>resumes<span class="m">.</span><span class="f">create</span><span class="m">({</span>
+  <span class="p">name</span><span class="m">:</span> <span class="s">'Arun Ravi'</span><span class="m">,</span> <span class="p">role</span><span class="m">:</span> <span class="s">'Full Stack Developer'</span><span class="m">,</span> <span class="p">ai_enhance</span><span class="m">:</span> <span class="b">true</span>
+<span class="m">});</span>
+console<span class="m">.</span><span class="f">log</span><span class="m">(</span>resume<span class="m">.</span>id<span class="m">);</span> <span class="c">// res_9kXm3pQr</span></pre></div>
+              </div>
+              <div id="lang-python" class="lang-panel">
+                <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">python</span></div><button class="copy-btn" onclick="copyPre(this,'pre-python')">Copy</button></div>
+                <pre id="pre-python"><span class="k">import</span> prolio_ai
+client <span class="m">=</span> prolio_ai<span class="m">.</span><span class="f">Client</span><span class="m">(</span>api_key<span class="m">=</span><span class="s">"sk-prolio-your_key"</span><span class="m">)</span>
+resume <span class="m">=</span> client<span class="m">.</span>resumes<span class="m">.</span><span class="f">create</span><span class="m">(</span>name<span class="m">=</span><span class="s">"Arun Ravi"</span><span class="m">,</span> role<span class="m">=</span><span class="s">"Full Stack Developer"</span><span class="m">,</span> ai_enhance<span class="m">=</span><span class="b">True</span><span class="m">)</span>
+<span class="f">print</span><span class="m">(</span>resume<span class="m">.</span>id<span class="m">)</span>  <span class="c"># res_9kXm3pQr</span></pre></div>
+              </div>
+              <div id="lang-curl" class="lang-panel">
+                <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">bash</span></div><button class="copy-btn" onclick="copyPre(this,'pre-curl')">Copy</button></div>
+                <pre id="pre-curl"><span class="f">curl</span> <span class="s">-X POST https://api.prolioai.com/v2/resumes</span> \
+  <span class="k">-H</span> <span class="s">"Authorization: Bearer sk-prolio-your_key"</span> \
+  <span class="k">-H</span> <span class="s">"Content-Type: application/json"</span> \
+  <span class="k">-d</span> <span class="s">'{"name":"Arun Ravi","ai_enhance":true}'</span></pre></div>
+              </div>
+              <div id="lang-go" class="lang-panel">
+                <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">go</span></div><button class="copy-btn" onclick="copyPre(this,'pre-go')">Copy</button></div>
+                <pre id="pre-go"><span class="k">import</span> <span class="s">"github.com/prolioai/go-sdk"</span>
+client <span class="m">:=</span> prolio<span class="m">.</span><span class="f">NewClient</span><span class="m">(</span><span class="s">"sk-prolio-your_key"</span><span class="m">)</span>
+resume<span class="m">,</span> err <span class="m">:=</span> client<span class="m">.</span>Resumes<span class="m">.</span><span class="f">Create</span><span class="m">(</span>ctx<span class="m">,</span> <span class="m">&amp;</span>prolio<span class="m">.</span>ResumeParams<span class="m">{</span>
+  Name<span class="m">:</span> <span class="s">"Arun Ravi"</span><span class="m">,</span> AIEnhance<span class="m">:</span> <span class="b">true</span><span class="m">,</span>
+<span class="m">})</span></pre></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ QUICKSTART ══ -->
+        <div class="sec" id="sec-quickstart">
+          <div class="sec-head"><h2>⚡ <em>Quickstart</em></h2><p>From zero to first API call in under 5 minutes.</p></div>
+          <div class="card">
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:20px;">
+                <div style="display:flex;gap:14px;">
+                  <div style="width:30px;height:30px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;">1</div>
+                  <div><div style="font-size:13px;font-weight:800;margin-bottom:3px;">Get your API key</div><div style="font-size:12px;color:var(--muted);">Copy your secret key from API Keys. Store it as <code>PROLIO_API_KEY</code> environment variable.</div></div>
+                </div>
+                <div style="display:flex;gap:14px;">
+                  <div style="width:30px;height:30px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;">2</div>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:800;margin-bottom:8px;">Install the SDK</div>
+                    <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">bash</span></div><button class="copy-btn" onclick="copyPre(this,'pre-install')">Copy</button></div>
+                    <pre id="pre-install"><span class="f">npm</span> install @prolio/sdk    <span class="c"># Node.js</span>
+<span class="f">pip</span> install prolio-ai      <span class="c"># Python</span>
+<span class="f">go get</span> github.com/prolioai/go-sdk  <span class="c"># Go</span></pre></div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:14px;">
+                  <div style="width:30px;height:30px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;">3</div>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:800;margin-bottom:8px;">Make your first call</div>
+                    <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">javascript</span></div><button class="copy-btn" onclick="copyPre(this,'pre-first')">Copy</button></div>
+                    <pre id="pre-first"><span class="k">const</span> <span class="m">{</span> ProlioAI <span class="m">} =</span> <span class="f">require</span><span class="m">(</span><span class="s">'@prolio/sdk'</span><span class="m">);</span>
+<span class="k">const</span> client <span class="m">=</span> <span class="k">new</span> <span class="f">ProlioAI</span><span class="m">({</span> <span class="p">apiKey</span><span class="m">:</span> process<span class="m">.</span>env<span class="m">.</span>PROLIO_API_KEY <span class="m">});</span>
+<span class="c">// List resumes</span>
+<span class="k">const</span> resumes <span class="m">=</span> <span class="k">await</span> client<span class="m">.</span>resumes<span class="m">.</span><span class="f">list</span><span class="m">();</span>
+console<span class="m">.</span><span class="f">log</span><span class="m">(</span>resumes<span class="m">.</span>data<span class="m">.</span>length<span class="m">);</span>
+<span class="c">// Enhance content with AI</span>
+<span class="k">const</span> enhanced <span class="m">=</span> <span class="k">await</span> client<span class="m">.</span>ai<span class="m">.</span><span class="f">enhance</span><span class="m">({</span> <span class="p">text</span><span class="m">:</span> <span class="s">'Worked on web apps'</span><span class="m">,</span> <span class="p">type</span><span class="m">:</span> <span class="s">'experience'</span> <span class="m">});</span>
+console<span class="m">.</span><span class="f">log</span><span class="m">(</span>enhanced<span class="m">.</span>result<span class="m">);</span></pre></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ RESUMES ══ -->
+        <div class="sec" id="sec-resumes">
+          <div class="sec-head"><h2>📄 Resumes <em>API</em></h2><p>Create, retrieve, update, export and delete resumes programmatically.</p></div>
+          <div class="ep open">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/resumes</span><span class="ep-summary">List all resumes</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns a paginated list of all resumes for the authenticated user.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">limit</span></td><td><span class="ptype">integer</span></td><td><span class="popt">optional</span></td><td class="pdesc">Results per page. Default 20, max 100.</td></tr>
+                <tr><td><span class="pname">status</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>draft</code> or <code>published</code></td></tr>
+              </tbody></table>
+              <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · 200 OK</span></div><button class="copy-btn" onclick="copyPre(this,'pre-res-list')">Copy</button></div>
+              <pre id="pre-res-list"><span class="m">{</span> <span class="p">"object"</span><span class="m">:</span><span class="s">"list"</span><span class="m">,</span> <span class="p">"total"</span><span class="m">:</span><span class="n">3</span><span class="m">,</span> <span class="p">"has_more"</span><span class="m">:</span><span class="b">false</span><span class="m">,</span>
+  <span class="p">"data"</span><span class="m">: [{</span>
+    <span class="p">"id"</span><span class="m">:</span><span class="s">"res_9kXm3pQr"</span><span class="m">,</span> <span class="p">"name"</span><span class="m">:</span><span class="s">"Frontend Dev Resume"</span><span class="m">,</span>
+    <span class="p">"status"</span><span class="m">:</span><span class="s">"published"</span><span class="m">,</span> <span class="p">"template"</span><span class="m">:</span><span class="s">"midnight"</span><span class="m">,</span>
+    <span class="p">"url"</span><span class="m">:</span><span class="s">"https://prolioai.com/r/res_9kXm3pQr"</span>
+  <span class="m">}]</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag post">POST</span><span class="ep-path">/resumes</span><span class="ep-summary">Create a resume</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Creates a new resume. Pass <code>ai_enhance: true</code> to auto-improve all descriptions using AI.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">name</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">Full name of the owner.</td></tr>
+                <tr><td><span class="pname">role</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">Job title / professional role.</td></tr>
+                <tr><td><span class="pname">template</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Template ID. Default <code>minimal</code>.</td></tr>
+                <tr><td><span class="pname">ai_enhance</span></td><td><span class="ptype">boolean</span></td><td><span class="popt">optional</span></td><td class="pdesc">Run AI enhancement on all fields. Default <code>false</code>.</td></tr>
+                <tr><td><span class="pname">skills</span></td><td><span class="ptype">array</span></td><td><span class="popt">optional</span></td><td class="pdesc">Array of skill strings.</td></tr>
+                <tr><td><span class="pname">experience</span></td><td><span class="ptype">array</span></td><td><span class="popt">optional</span></td><td class="pdesc">Array of experience objects with <code>role, company, start, end, desc</code>.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/resumes/{id}/export</span><span class="ep-summary">Export as PDF / DOCX</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Exports a resume as a file. Returns a signed download URL valid for 15 minutes.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">format</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>pdf</code> | <code>docx</code> | <code>json</code>. Default <code>pdf</code>.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag del">DELETE</span><span class="ep-path">/resumes/{id}</span><span class="ep-summary">Delete a resume</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Permanently deletes a resume. This action cannot be undone. Returns <code>204 No Content</code> on success.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ PORTFOLIO ══ -->
+        <div class="sec" id="sec-portfolio">
+          <div class="sec-head"><h2>🌐 Portfolio <em>API</em></h2><p>Generate, publish, theme and manage portfolio websites programmatically.</p></div>
+          <div class="ep open">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag post">POST</span><span class="ep-path">/portfolio/generate</span><span class="ep-summary">Generate from resume</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Generates a complete portfolio website from an existing resume. Returns a live URL within seconds.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">resume_id</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">ID of the resume to generate from.</td></tr>
+                <tr><td><span class="pname">theme</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>midnight</code> | <code>pure-white</code> | <code>cyberpunk</code> | <code>ocean</code> + 26 more. Default <code>midnight</code>.</td></tr>
+                <tr><td><span class="pname">slug</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Custom URL slug → <code>prolioai.com/u/yourslug</code>.</td></tr>
+                <tr><td><span class="pname">publish</span></td><td><span class="ptype">boolean</span></td><td><span class="popt">optional</span></td><td class="pdesc">Make publicly accessible immediately. Default <code>false</code>.</td></tr>
+              </tbody></table>
+              <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · 201 Created</span></div><button class="copy-btn" onclick="copyPre(this,'pre-pf-gen')">Copy</button></div>
+              <pre id="pre-pf-gen"><span class="m">{</span>
+  <span class="p">"id"</span><span class="m">:</span><span class="s">"pf_7xNm2kQr"</span><span class="m">,</span> <span class="p">"status"</span><span class="m">:</span><span class="s">"published"</span><span class="m">,</span>
+  <span class="p">"theme"</span><span class="m">:</span><span class="s">"midnight"</span><span class="m">,</span> <span class="p">"slug"</span><span class="m">:</span><span class="s">"arunr"</span><span class="m">,</span>
+  <span class="p">"url"</span><span class="m">:</span><span class="s">"https://prolioai.com/u/arunr"</span><span class="m">,</span>
+  <span class="p">"resume_id"</span><span class="m">:</span><span class="s">"res_9kXm3pQr"</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/portfolio</span><span class="ep-summary">Get portfolio details</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns full portfolio details including theme, publish status, live URL and SEO metadata.</p>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag put">PUT</span><span class="ep-path">/portfolio/theme</span><span class="ep-summary">Change theme</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Updates the portfolio theme. Changes reflect on the live URL instantly.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">theme</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">Theme ID to apply. 35 themes available.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ AI ══ -->
+        <div class="sec" id="sec-ai">
+          <div class="sec-head"><h2>✨ AI <em>Enhance API</em></h2><p>Use Prolio AI's language model to enhance, rewrite and generate professional content.</p></div>
+          <div class="ep open">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag post">POST</span><span class="ep-path">/ai/enhance</span><span class="ep-summary">Enhance existing text</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Rewrites and improves any professional text. Supports experience descriptions, summaries, project descriptions and bios.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">text</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">Text to enhance. Max 2,000 chars.</td></tr>
+                <tr><td><span class="pname">type</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc"><code>summary</code> | <code>experience</code> | <code>project</code> | <code>bio</code></td></tr>
+                <tr><td><span class="pname">tone</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>professional</code> | <code>friendly</code> | <code>bold</code>. Default <code>professional</code>.</td></tr>
+                <tr><td><span class="pname">language</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">ISO 639-1 code. Default <code>en</code>. 12 languages supported.</td></tr>
+              </tbody></table>
+              <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · 200 OK</span></div><button class="copy-btn" onclick="copyPre(this,'pre-ai-enh')">Copy</button></div>
+              <pre id="pre-ai-enh"><span class="m">{</span>
+  <span class="p">"id"</span><span class="m">:</span><span class="s">"enh_4rT8qPmN"</span><span class="m">,</span>
+  <span class="p">"original"</span><span class="m">:</span><span class="s">"Worked on web apps"</span><span class="m">,</span>
+  <span class="p">"result"</span><span class="m">:</span><span class="s">"Engineered responsive web applications using React.js and Node.js, improving performance by 40%."</span><span class="m">,</span>
+  <span class="p">"tokens_used"</span><span class="m">:</span><span class="n">84</span><span class="m">,</span> <span class="p">"credits_remaining"</span><span class="m">:</span><span class="n">916</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag post">POST</span><span class="ep-path">/ai/generate</span><span class="ep-summary">Generate from scratch</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Generate professional content from scratch. Provide a role and context — AI writes a full summary, bio or cover letter.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">role</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc">Job title to generate content for.</td></tr>
+                <tr><td><span class="pname">type</span></td><td><span class="ptype">string</span></td><td><span class="preq">required</span></td><td class="pdesc"><code>summary</code> | <code>bio</code> | <code>cover_letter</code></td></tr>
+                <tr><td><span class="pname">context</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Skills, years of experience, achievements to personalise output.</td></tr>
+                <tr><td><span class="pname">tone</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>professional</code> | <code>friendly</code> | <code>bold</code>. Default <code>professional</code>.</td></tr>
+                <tr><td><span class="pname">words</span></td><td><span class="ptype">integer</span></td><td><span class="popt">optional</span></td><td class="pdesc">Target word count. Default 80, max 300.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ USERS ══ -->
+        <div class="sec" id="sec-users">
+          <div class="sec-head"><h2>👤 Users <em>API</em></h2><p>Retrieve and manage user profile data, skills and experience.</p></div>
+          <div class="ep open">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/users/me</span><span class="ep-summary">Get current user</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns the authenticated user's full profile including plan, usage limits and account details.</p>
+              <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · 200 OK</span></div><button class="copy-btn" onclick="copyPre(this,'pre-user')">Copy</button></div>
+              <pre id="pre-user"><span class="m">{</span>
+  <span class="p">"id"</span><span class="m">:</span><span class="s">"usr_aRv3mBqP"</span><span class="m">,</span> <span class="p">"name"</span><span class="m">:</span><span class="s">"Arun Ravi"</span><span class="m">,</span>
+  <span class="p">"email"</span><span class="m">:</span><span class="s">"arun@example.com"</span><span class="m">,</span> <span class="p">"plan"</span><span class="m">:</span><span class="s">"free"</span><span class="m">,</span>
+  <span class="p">"usage"</span><span class="m">: {</span> <span class="p">"api_calls_today"</span><span class="m">:</span><span class="n">342</span><span class="m">,</span> <span class="p">"ai_credits_used"</span><span class="m">:</span><span class="n">47</span><span class="m">,</span> <span class="p">"ai_credits_limit"</span><span class="m">:</span><span class="n">100</span> <span class="m">}</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag put">PUT</span><span class="ep-path">/users/me</span><span class="ep-summary">Update profile</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Updates profile fields. Only provided fields are changed — others remain unchanged (PATCH semantics).</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">name</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Full display name.</td></tr>
+                <tr><td><span class="pname">role</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Professional job title.</td></tr>
+                <tr><td><span class="pname">bio</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Short profile bio. Max 500 chars.</td></tr>
+                <tr><td><span class="pname">skills</span></td><td><span class="ptype">array</span></td><td><span class="popt">optional</span></td><td class="pdesc">Array of skill strings. Replaces existing list.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/users/me/skills</span><span class="ep-summary">List skills with AI scores</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns the skill list with optional AI-inferred proficiency scores (0–100) based on your resume data.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">with_scores</span></td><td><span class="ptype">boolean</span></td><td><span class="popt">optional</span></td><td class="pdesc">Include AI proficiency scores. Default <code>false</code>.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ ANALYTICS ══ -->
+        <div class="sec" id="sec-analytics">
+          <div class="sec-head"><h2>📊 Analytics <em>API</em></h2><p>Retrieve view counts, referral sources, device breakdown and engagement data.</p></div>
+          <div class="ep open">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/analytics/portfolio</span><span class="ep-summary">Portfolio analytics</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns daily views, unique visitors, top referral sources and device breakdown for your portfolio page.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">period</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>7d</code> | <code>30d</code> | <code>90d</code>. Default <code>30d</code>.</td></tr>
+                <tr><td><span class="pname">granularity</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>day</code> | <code>week</code>. Default <code>day</code>.</td></tr>
+              </tbody></table>
+              <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · 200 OK</span></div><button class="copy-btn" onclick="copyPre(this,'pre-analytics')">Copy</button></div>
+              <pre id="pre-analytics"><span class="m">{</span>
+  <span class="p">"views_total"</span><span class="m">:</span><span class="n">124</span><span class="m">,</span> <span class="p">"unique_visitors"</span><span class="m">:</span><span class="n">89</span><span class="m">,</span> <span class="p">"avg_time"</span><span class="m">:</span><span class="s">"2m 34s"</span><span class="m">,</span>
+  <span class="p">"top_referrers"</span><span class="m">: [</span>
+    <span class="m">{</span><span class="p">"source"</span><span class="m">:</span><span class="s">"linkedin.com"</span><span class="m">,</span><span class="p">"visits"</span><span class="m">:</span><span class="n">52</span><span class="m">},</span>
+    <span class="m">{</span><span class="p">"source"</span><span class="m">:</span><span class="s">"direct"</span><span class="m">,</span><span class="p">"visits"</span><span class="m">:</span><span class="n">38</span><span class="m">}</span>
+  <span class="m">],</span>
+  <span class="p">"devices"</span><span class="m">: {</span><span class="p">"desktop"</span><span class="m">:</span><span class="n">68</span><span class="m">,</span><span class="p">"mobile"</span><span class="m">:</span><span class="n">49</span><span class="m">,</span><span class="p">"tablet"</span><span class="m">:</span><span class="n">7</span><span class="m">}</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+          <div class="ep">
+            <div class="ep-head" onclick="toggleEp(this)"><span class="m-tag get">GET</span><span class="ep-path">/analytics/resumes</span><span class="ep-summary">Resume download stats</span><span class="ep-chev">›</span></div>
+            <div class="ep-body">
+              <p class="ep-desc">Returns download counts and link-share stats for all resumes. Filter by <code>resume_id</code> for a specific one.</p>
+              <table class="ptable"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+                <tr><td><span class="pname">resume_id</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc">Filter analytics for a specific resume.</td></tr>
+                <tr><td><span class="pname">period</span></td><td><span class="ptype">string</span></td><td><span class="popt">optional</span></td><td class="pdesc"><code>7d</code> | <code>30d</code> | <code>90d</code>. Default <code>30d</code>.</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ WEBHOOKS ══ -->
+        <div class="sec" id="sec-webhooks">
+          <div class="sec-head"><h2>⚡ <em>Webhooks</em></h2><p>Receive real-time HTTP POST events. Failed deliveries are retried up to 5 times with exponential backoff.</p></div>
+          <div class="info-box ib-info"><span class="ib-icon">ℹ️</span><div>All payloads are signed with HMAC-SHA256. Verify the <code>X-Prolio-Signature</code> header to ensure authenticity.</div></div>
+          <div class="card">
+            <div class="card-head"><h3>📡 Endpoints</h3><button class="btn btn-grad" onclick="openModal('new-webhook')">＋ Add Endpoint</button></div>
+            <div class="card-body np">
+              <div class="wh-row">
+                <div class="wh-dot wh-on"></div>
+                <div class="wh-info">
+                  <div class="wh-url">https://yourapp.com/webhooks/prolio</div>
+                  <div class="wh-meta">Created 15 Mar 2026 · Last delivery: 2min ago · 100% success</div>
+                  <div class="wh-tags"><span class="wh-tag">portfolio.viewed</span><span class="wh-tag">resume.downloaded</span><span class="wh-tag">user.updated</span></div>
+                </div>
+                <div style="display:flex;gap:6px;flex-shrink:0;"><button class="kbtn kbtn-copy" onclick="toast('Webhook secret copied!')">🔑 Secret</button><button class="kbtn kbtn-del" onclick="toast('Webhook deleted')">Delete</button></div>
+              </div>
+              <div class="wh-row">
+                <div class="wh-dot wh-off"></div>
+                <div class="wh-info">
+                  <div class="wh-url" style="color:var(--muted);">https://staging.yourapp.com/webhooks</div>
+                  <div class="wh-meta">Disabled · Last delivery: 5 days ago</div>
+                  <div class="wh-tags"><span class="wh-tag">*</span></div>
+                </div>
+                <div style="display:flex;gap:6px;flex-shrink:0;"><button class="kbtn kbtn-show" onclick="toast('Webhook enabled!')">Enable</button><button class="kbtn kbtn-del" onclick="toast('Webhook deleted')">Delete</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>📋 Available Events</h3></div>
+            <div class="card-body np">
+              <table class="rtable"><thead><tr><th>Event</th><th>Description</th></tr></thead><tbody>
+                <tr><td><code>portfolio.viewed</code></td><td style="color:var(--muted);font-size:12px;">Someone visits your public portfolio</td></tr>
+                <tr><td><code>resume.created</code></td><td style="color:var(--muted);font-size:12px;">A new resume was created</td></tr>
+                <tr><td><code>resume.downloaded</code></td><td style="color:var(--muted);font-size:12px;">Your resume PDF was downloaded</td></tr>
+                <tr><td><code>user.updated</code></td><td style="color:var(--muted);font-size:12px;">Profile data was changed</td></tr>
+                <tr><td><code>ai.enhanced</code></td><td style="color:var(--muted);font-size:12px;">AI enhancement completed</td></tr>
+                <tr><td><code>billing.upgraded</code></td><td style="color:var(--muted);font-size:12px;">Account plan was upgraded</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>🔐 Verify Signature (Node.js)</h3></div>
+            <div class="card-body" style="padding:0;">
+              <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">javascript</span></div><button class="copy-btn" onclick="copyPre(this,'pre-wh-verify')">Copy</button></div>
+              <pre id="pre-wh-verify"><span class="k">const</span> crypto <span class="m">=</span> <span class="f">require</span><span class="m">(</span><span class="s">'crypto'</span><span class="m">);</span>
+<span class="k">function</span> <span class="f">verifyWebhook</span><span class="m">(</span>payload<span class="m">,</span> sig<span class="m">,</span> secret<span class="m">) {</span>
+  <span class="k">const</span> expected <span class="m">=</span> crypto<span class="m">.</span><span class="f">createHmac</span><span class="m">(</span><span class="s">'sha256'</span><span class="m">,</span> secret<span class="m">).</span><span class="f">update</span><span class="m">(</span>payload<span class="m">).</span><span class="f">digest</span><span class="m">(</span><span class="s">'hex'</span><span class="m">);</span>
+  <span class="k">return</span> crypto<span class="m">.</span><span class="f">timingSafeEqual</span><span class="m">(</span>Buffer<span class="m">.</span><span class="f">from</span><span class="m">(</span>expected<span class="m">),</span> Buffer<span class="m">.</span><span class="f">from</span><span class="m">(</span>sig<span class="m">));</span>
+<span class="m">}</span></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ SDKS ══ -->
+        <div class="sec" id="sec-sdks">
+          <div class="sec-head"><h2>📦 SDKs &amp; <em>Libraries</em></h2><p>Official client libraries maintained by the Prolio AI team.</p></div>
+          <div class="sdk-grid">
+            <div class="sdk-card"><div class="sdk-icon">🟨</div><div><div class="sdk-name">Node.js / TypeScript</div><div class="sdk-ver">v2.1.0 · MIT</div></div><div class="sdk-desc">Full TypeScript support, automatic retries, streaming and webhook helpers.</div><div class="sdk-cmd">npm install @prolio/sdk</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('Opening npm...')">📦 npm</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+            <div class="sdk-card"><div class="sdk-icon">🐍</div><div><div class="sdk-name">Python</div><div class="sdk-ver">v2.0.4 · MIT</div></div><div class="sdk-desc">Async/await support, Pydantic models and all API endpoints covered.</div><div class="sdk-cmd">pip install prolio-ai</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('Opening PyPI...')">🐍 PyPI</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+            <div class="sdk-card"><div class="sdk-icon">🐹</div><div><div class="sdk-name">Go</div><div class="sdk-ver">v2.0.1 · MIT</div></div><div class="sdk-desc">Idiomatic Go with context support and full test coverage.</div><div class="sdk-cmd">go get github.com/prolioai/go-sdk</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('Opening pkg.go.dev...')">📦 pkg.go</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+            <div class="sdk-card"><div class="sdk-icon">☕</div><div><div class="sdk-name">Java / Kotlin</div><div class="sdk-ver">v1.3.0 · Apache 2.0</div></div><div class="sdk-desc">Maven and Gradle compatible. Spring Boot integration included.</div><div class="sdk-cmd">implementation 'com.prolioai:sdk:1.3.0'</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('Maven Central...')">📦 Maven</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+            <div class="sdk-card"><div class="sdk-icon">🦋</div><div><div class="sdk-name">PHP</div><div class="sdk-ver">v1.1.2 · MIT</div></div><div class="sdk-desc">Laravel-ready. PSR-18 HTTP client interface support.</div><div class="sdk-cmd">composer require prolio/sdk</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('Packagist...')">📦 Packagist</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+            <div class="sdk-card"><div class="sdk-icon">💎</div><div><div class="sdk-name">Ruby</div><div class="sdk-ver">v1.0.0 · MIT</div></div><div class="sdk-desc">Rails compatible. Faraday HTTP adapter.</div><div class="sdk-cmd">gem install prolio_ai</div><div class="sdk-links"><button class="sdk-a pri" onclick="toast('RubyGems...')">💎 Gems</button><button class="sdk-a sec" onclick="toast('GitHub...')">🐙 GitHub</button></div></div>
+          </div>
+        </div>
+
+        <!-- ══ RATE LIMITS ══ -->
+        <div class="sec" id="sec-ratelimits">
+          <div class="sec-head"><h2>🚦 Rate <em>Limits</em></h2><p>Rate limits are applied per API key. Exceeding them returns <code>429 Too Many Requests</code> with a <code>Retry-After</code> header.</p></div>
+          <div class="card">
+            <div class="card-body np">
+              <table class="rtable"><thead><tr><th>Plan</th><th>Req / min</th><th>Req / day</th><th>AI Credits / mo</th><th>Webhooks</th></tr></thead>
+              <tbody>
+                <tr><td><span class="plan-chip pc-free">Free</span></td><td>60</td><td>1,000</td><td>100</td><td>2</td></tr>
+                <tr><td><span class="plan-chip pc-pro">Pro</span></td><td>300</td><td>10,000</td><td>Unlimited</td><td>20</td></tr>
+                <tr><td><span class="plan-chip pc-team">Team</span></td><td>1,000</td><td>100,000</td><td>Unlimited</td><td>Unlimited</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="info-box ib-info"><span class="ib-icon">💡</span><div>Monitor <code>X-RateLimit-Remaining</code> and <code>X-RateLimit-Reset</code> response headers in real time to avoid hitting limits.</div></div>
+        </div>
+
+        <!-- ══ ERRORS ══ -->
+        <div class="sec" id="sec-errors">
+          <div class="sec-head"><h2>⚠️ Error <em>Codes</em></h2><p>All errors follow a consistent JSON format. Use the <code>code</code> field for machine-readable error handling.</p></div>
+          <div class="card">
+            <div class="card-body" style="padding:0;">
+              <div class="code-wrap" style="border:none;border-radius:0;"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json · Error format</span></div></div>
+              <pre><span class="m">{</span> <span class="p">"error"</span><span class="m">: {</span> <span class="p">"code"</span><span class="m">:</span><span class="s">"invalid_api_key"</span><span class="m">,</span> <span class="p">"status"</span><span class="m">:</span><span class="n">401</span><span class="m">,</span> <span class="p">"message"</span><span class="m">:</span><span class="s">"API key is invalid or revoked."</span> <span class="m">} }</span></pre></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body np">
+              <table class="rtable"><thead><tr><th>HTTP Status</th><th>Code</th><th>Meaning</th></tr></thead><tbody>
+                <tr><td style="color:#4ade80;font-family:'Fira Code',monospace;font-weight:700;">200</td><td><code>ok</code></td><td style="color:var(--muted);font-size:12px;">Request succeeded</td></tr>
+                <tr><td style="color:#4ade80;font-family:'Fira Code',monospace;font-weight:700;">201</td><td><code>created</code></td><td style="color:var(--muted);font-size:12px;">Resource created</td></tr>
+                <tr><td style="color:#fbbf24;font-family:'Fira Code',monospace;font-weight:700;">400</td><td><code>invalid_request</code></td><td style="color:var(--muted);font-size:12px;">Missing or malformed parameters</td></tr>
+                <tr><td style="color:#f87171;font-family:'Fira Code',monospace;font-weight:700;">401</td><td><code>invalid_api_key</code></td><td style="color:var(--muted);font-size:12px;">Key is missing, invalid or revoked</td></tr>
+                <tr><td style="color:#f87171;font-family:'Fira Code',monospace;font-weight:700;">403</td><td><code>insufficient_plan</code></td><td style="color:var(--muted);font-size:12px;">Your plan doesn't support this endpoint</td></tr>
+                <tr><td style="color:#f87171;font-family:'Fira Code',monospace;font-weight:700;">404</td><td><code>not_found</code></td><td style="color:var(--muted);font-size:12px;">Resource doesn't exist</td></tr>
+                <tr><td style="color:#c084fc;font-family:'Fira Code',monospace;font-weight:700;">429</td><td><code>rate_limit_exceeded</code></td><td style="color:var(--muted);font-size:12px;">Too many requests — check Retry-After header</td></tr>
+                <tr><td style="color:#f87171;font-family:'Fira Code',monospace;font-weight:700;">500</td><td><code>internal_error</code></td><td style="color:var(--muted);font-size:12px;">Server error — auto-notified</td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ CHANGELOG ══ -->
+        <div class="sec" id="sec-changelog">
+          <div class="sec-head"><h2>📋 <em>Changelog</em></h2><p>API version history and breaking change notices.</p></div>
+          <div class="card">
+            <div class="card-body">
+              <div class="cl-item">
+                <div class="cl-date">2026-03-15</div>
+                <div class="cl-right">
+                  <div class="cl-ver">v2.1.0 <span class="cl-tag tag-new">New</span><span class="cl-tag tag-imp">Improved</span></div>
+                  <ul class="cl-list">
+                    <li>Added <code>POST /ai/generate</code> endpoint for content generation from scratch</li>
+                    <li>Added <code>language</code> param to all AI endpoints — 12 languages supported</li>
+                    <li>Response time improved 35% for resume export endpoints</li>
+                    <li>Webhook retry logic: now 5 attempts with exponential backoff</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="cl-item">
+                <div class="cl-date">2026-02-01</div>
+                <div class="cl-right">
+                  <div class="cl-ver">v2.0.0 <span class="cl-tag tag-new">Major</span><span class="cl-tag tag-brk">Breaking</span></div>
+                  <ul class="cl-list">
+                    <li>Base URL changed from <code>api.prolioai.com/v1</code> to <code>/v2</code></li>
+                    <li>Auth moved from query param to Authorization header</li>
+                    <li>Added Analytics API and HMAC-SHA256 webhook signatures</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="cl-item">
+                <div class="cl-date">2025-11-10</div>
+                <div class="cl-right">
+                  <div class="cl-ver">v1.4.2 <span class="cl-tag tag-fix">Bugfix</span></div>
+                  <ul class="cl-list">
+                    <li>Fixed PDF export returning corrupted files for custom-font templates</li>
+                    <li>Fixed rate limit headers missing on cached responses</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ USAGE ══ -->
+        <div class="sec" id="sec-usage">
+          <div class="sec-head"><h2>📊 Usage &amp; <em>Billing</em></h2><p>Real-time API usage, credit consumption and plan limits.</p></div>
+          <div class="stats-row">
+            <div class="stat-box sb-p"><div class="stat-val" id="hs2">342</div><div class="stat-lbl">API Calls Today</div><div class="stat-note">↑ 12% vs yesterday</div><div class="sparkline" id="sp1"></div></div>
+            <div class="stat-box sb-c"><div class="stat-val">47</div><div class="stat-lbl">AI Credits Used</div><div class="stat-note">53 remaining</div><div class="sparkline" id="sp2"></div></div>
+            <div class="stat-box sb-g"><div class="stat-val">100%</div><div class="stat-lbl">Success Rate</div><div class="stat-note">↑ 0.2% this week</div><div class="sparkline" id="sp3"></div></div>
+            <div class="stat-box sb-o"><div class="stat-val">~48ms</div><div class="stat-lbl">Avg Latency</div><div class="stat-note">↓ 6ms faster</div><div class="sparkline" id="sp4"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>📈 Monthly Quotas</h3></div>
+            <div class="card-body">
+              <div class="ubar-wrap"><div class="ubar-head"><span>API Calls</span><span>342 / 1,000 today</span></div><div class="ubar"><div class="ubar-fill uf-p" id="ub1" style="width:0%"></div></div></div>
+              <div class="ubar-wrap"><div class="ubar-head"><span>AI Credits</span><span>47 / 100 this month</span></div><div class="ubar"><div class="ubar-fill uf-c" id="ub2" style="width:0%"></div></div></div>
+              <div class="ubar-wrap"><div class="ubar-head"><span>PDF Exports</span><span>18 / 50 this month</span></div><div class="ubar"><div class="ubar-fill uf-o" id="ub3" style="width:0%"></div></div></div>
+              <div class="ubar-wrap"><div class="ubar-head"><span>Webhook Deliveries</span><span>1,204 · Unlimited</span></div><div class="ubar"><div class="ubar-fill uf-g" style="width:100%"></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ PLAYGROUND ══ -->
+        <div class="sec" id="sec-playground">
+          <div class="sec-head"><h2>🧪 API <em>Playground</em></h2><p>Test real API calls from the browser. Uses your test key automatically.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>🧪 Request Builder</h3><span style="font-size:11px;font-weight:800;padding:3px 9px;border-radius:5px;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);">TEST MODE</span></div>
+            <div class="card-body">
+              <div class="form-2" style="margin-bottom:12px;">
+                <div class="fgroup"><label class="flabel">Method</label>
+                  <select class="fselect" id="pg-method" onchange="pgUpdate()"><option>GET</option><option selected>POST</option><option>PUT</option><option>DELETE</option></select>
+                </div>
+                <div class="fgroup"><label class="flabel">Endpoint</label>
+                  <select class="fselect" id="pg-ep" onchange="pgUpdate()">
+                    <option value="/resumes">/resumes — List resumes</option>
+                    <option value="/resumes" selected>/resumes — Create resume</option>
+                    <option value="/ai/enhance">/ai/enhance — Enhance text</option>
+                    <option value="/users/me">/users/me — Get profile</option>
+                    <option value="/analytics/portfolio">/analytics/portfolio</option>
+                  </select>
+                </div>
+              </div>
+              <div class="fgroup" style="margin-bottom:12px;">
+                <label class="flabel">Request Body (JSON)</label>
+                <textarea class="ftextarea" id="pg-body" style="min-height:110px;">{
+  "name": "Arun Ravi",
+  "role": "Full Stack Developer",
+  "ai_enhance": true,
+  "template": "midnight"
+}</textarea>
+              </div>
+              <div style="display:flex;gap:10px;margin-bottom:16px;">
+                <button class="btn btn-grad" id="pg-run-btn" onclick="pgRun()"><span class="bt">▶ Send Request</span><div class="spinner"></div></button>
+                <button class="btn btn-ghost" onclick="pgReset()">↺ Reset</button>
+              </div>
+              <div id="pg-resp" style="display:none;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Response</span>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <span id="pg-status" class="status-badge"></span>
+                    <span id="pg-time" style="font-size:11px;color:var(--muted);"></span>
+                  </div>
+                </div>
+                <div class="code-wrap"><div class="code-bar"><div style="display:flex;align-items:center;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-lang" style="margin-left:8px;">json</span></div><button class="copy-btn" onclick="copyPre(this,'pg-out')">Copy</button></div>
+                <pre id="pg-out" style="max-height:280px;overflow-y:auto;"></pre></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /docs-content -->
+    </div><!-- /api-body -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- MODAL -->
+<div id="modal-ov">
+  <div id="modal-box">
+    <div id="m-icon">🔑</div>
+    <div id="m-title">Create API Key</div>
+    <div id="m-body">Give your new key a descriptive name.</div>
+    <div id="m-fields"></div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-confirm" id="m-confirm" onclick="doModal()">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── NAV ── */
+function show(id) {
+  document.querySelectorAll('.dn-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(el => el.classList.remove('active'));
+  var dn = document.getElementById('dn-' + id);
+  var sc = document.getElementById('sec-' + id);
+  if (dn) dn.classList.add('active');
+  if (sc) sc.classList.add('active');
+  if (id === 'usage') setTimeout(animBars, 200);
+}
+
+/* ── ENDPOINT ACCORDION ── */
+function toggleEp(head) { head.closest('.ep').classList.toggle('open'); }
+
+/* ── LANG TABS ── */
+function switchLang(lang, btn) {
+  btn.closest('.card').querySelectorAll('.ltab').forEach(b => b.classList.remove('active'));
+  btn.closest('.card').querySelectorAll('.lang-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  var panel = document.getElementById('lang-' + lang);
+  if (panel) panel.classList.add('active');
+}
+
+/* ── COPY ── */
+function copyPre(btn, preId) {
+  var el = document.getElementById(preId);
+  if (!el) return;
+  try { navigator.clipboard.writeText(el.innerText); } catch(e) {}
+  btn.textContent = '✓ Copied!'; btn.classList.add('ok');
+  setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000);
+}
+function copyKey(key, btn) {
+  try { navigator.clipboard.writeText(key); } catch(e) {}
+  var orig = btn.textContent; btn.textContent = '✓ Copied!'; btn.classList.add('ok');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 2000);
+  toast('🔑 API key copied!');
+}
+
+/* ── KEY VISIBILITY ── */
+var kv = {};
+function toggleKey(elId, realKey, btn) {
+  kv[elId] = !kv[elId];
+  document.getElementById(elId).textContent = kv[elId] ? realKey : realKey.slice(0,12) + '••••••••••••••••••••••••';
+  btn.textContent = kv[elId] ? '🙈 Hide' : '👁 Show';
+}
+
+/* ── PLAYGROUND ── */
+var PG = {
+  '/resumes': { GET:{object:'list',total:3,data:[{id:'res_9kXm3pQr',name:'Frontend Dev Resume',status:'published',url:'https://prolioai.com/r/res_9kXm3pQr'}]}, POST:{id:'res_newXm4qR',status:'created',url:'https://prolioai.com/r/res_newXm4qR'} },
+  '/ai/enhance': { POST:{id:'enh_4rT8qPmN',original:'Worked on web apps',result:'Engineered responsive web applications using React.js and Node.js, improving performance by 40%.',tokens_used:84,credits_remaining:916} },
+  '/users/me': { GET:{id:'usr_aRv3mBqP',name:'Arun Ravi',email:'arun@example.com',plan:'free',usage:{api_calls_today:342,ai_credits_used:47}} },
+  '/analytics/portfolio': { GET:{views_total:124,unique_visitors:89,avg_time:'2m 34s',top_referrers:[{source:'linkedin.com',visits:52}]} }
+};
+function pgRun() {
+  var method = document.getElementById('pg-method').value;
+  var ep = document.getElementById('pg-ep').value;
+  var btn = document.getElementById('pg-run-btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  if (['POST','PUT'].includes(method)) {
+    try { JSON.parse(document.getElementById('pg-body').value); } catch(e) {
+      toast('⚠️ Invalid JSON'); btn.classList.remove('loading'); btn.disabled = false; return;
+    }
+  }
+  var delay = 350 + Math.random() * 600;
+  setTimeout(() => {
+    btn.classList.remove('loading'); btn.disabled = false;
+    var data = (PG[ep] || {})[method];
+    var status = data ? (method === 'POST' ? 201 : 200) : 404;
+    if (!data) data = {error:{code:'not_found',status:404,message:'Endpoint not available in test mode.'}};
+    var sb = document.getElementById('pg-status');
+    sb.textContent = status + (status===200?' OK':status===201?' Created':' Error');
+    sb.style.background = status < 300 ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.12)';
+    sb.style.color = status < 300 ? '#4ade80' : '#f87171';
+    sb.style.border = '1px solid ' + (status < 300 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.2)');
+    document.getElementById('pg-time').textContent = Math.round(delay) + 'ms';
+    document.getElementById('pg-out').innerHTML = hlJson(JSON.stringify(data, null, 2));
+    document.getElementById('pg-resp').style.display = 'block';
+  }, delay);
+}
+function hlJson(j) {
+  return j.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
+      var cls = 'n';
+      if (/^"/.test(m)) cls = /:$/.test(m) ? 'p' : 's';
+      else if (/true|false/.test(m)) cls = 'b';
+      else if (/null/.test(m)) cls = 'k';
+      return '<span class="' + cls + '">' + m + '</span>';
+    });
+}
+function pgReset() {
+  document.getElementById('pg-method').value = 'POST';
+  document.getElementById('pg-body').value = '{\n  "name": "Arun Ravi",\n  "role": "Full Stack Developer",\n  "ai_enhance": true,\n  "template": "midnight"\n}';
+  document.getElementById('pg-resp').style.display = 'none';
+  document.getElementById('pg-body').disabled = false;
+  document.getElementById('pg-body').style.opacity = '1';
+}
+function pgUpdate() {
+  var m = document.getElementById('pg-method').value;
+  var b = document.getElementById('pg-body');
+  b.disabled = (m === 'GET' || m === 'DELETE');
+  b.style.opacity = b.disabled ? '0.4' : '1';
+}
+
+/* ── USAGE BARS ── */
+function animBars() {
+  var bars = [{id:'ub1',w:34.2},{id:'ub2',w:47},{id:'ub3',w:36}];
+  bars.forEach(b => { var el = document.getElementById(b.id); if(el) el.style.width = b.w + '%'; });
+}
+
+/* ── SPARKLINES ── */
+(function() {
+  var sets = {sp1:[20,45,32,60,55,80,70,90,75,100,85,95],sp2:[10,15,8,20,25,18,30,22,35,28,40,47],sp3:[98,99,100,99,98,100,100,99,100,100,99,100],sp4:[60,55,70,52,48,58,44,50,46,52,48,48]};
+  var cols = {sp1:'#7b4dff',sp2:'#49C6C6',sp3:'#22c55e',sp4:'#f59e0b'};
+  Object.keys(sets).forEach(id => {
+    var el = document.getElementById(id); if(!el) return;
+    var d = sets[id], mx = Math.max(...d);
+    el.innerHTML = d.map(v => `<div class="spark-bar" style="height:${Math.round(v/mx*100)}%;background:${cols[id]};opacity:0.7;"></div>`).join('');
+  });
+})();
+
+/* ── HERO COUNTER ── */
+(function() {
+  var el = document.getElementById('hs-calls'), t = 342, cur = 0;
+  if (!el) return;
+  var iv = setInterval(() => { cur = Math.min(cur + 9, t); el.textContent = cur; if(cur >= t) clearInterval(iv); }, 20);
+})();
+
+/* ── MODAL ── */
+var MA = '';
+function openModal(a) {
+  MA = a;
+  var cfg = {
+    'new-key':     {icon:'🔑',title:'Create New API Key',body:'Give your key a name so you can identify it.',confirm:'Create Key',
+      html:'<div class="m-field"><label class="flabel" style="margin-bottom:5px;">Key Name</label><input class="finput" id="mk-name" placeholder="e.g. Production Server"></div><div class="m-field"><label class="flabel" style="margin-bottom:5px;">Environment</label><select class="fselect" id="mk-env"><option>Live</option><option>Test</option></select></div>'},
+    'new-webhook': {icon:'⚡',title:'Add Webhook Endpoint',body:'Enter your endpoint URL and choose events to listen for.',confirm:'Add Endpoint',
+      html:'<div class="m-field"><label class="flabel" style="margin-bottom:5px;">URL</label><input class="finput" id="mw-url" placeholder="https://yourapp.com/webhooks/prolio"></div>'},
+    'regen-key':  {icon:'⚠️',title:'Rotate API Key',body:'Your current key will be immediately invalidated. Update all services before rotating.',confirm:'Rotate Now',danger:true},
+    'upgrade':    {icon:'💎',title:'Upgrade to Pro',body:'Unlock unlimited API calls, advanced endpoints, webhooks and SDKs for ₹299/month.',confirm:'Notify Me'},
+  };
+  var c = cfg[a] || {icon:'⚠️',title:'Confirm',body:'Are you sure?',confirm:'Confirm'};
+  document.getElementById('m-icon').textContent  = c.icon;
+  document.getElementById('m-title').textContent = c.title;
+  document.getElementById('m-body').textContent  = c.body;
+  document.getElementById('m-fields').innerHTML  = c.html || '';
+  var btn = document.getElementById('m-confirm');
+  btn.textContent = c.confirm;
+  btn.className = 'm-confirm' + (c.danger ? ' danger' : '');
+  document.getElementById('modal-ov').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-ov').classList.remove('open'); }
+function doModal() {
+  var msgs = {'new-key':() => '🔑 Key "' + (document.getElementById('mk-name')?.value||'New Key') + '" created!','new-webhook':() => '⚡ Webhook added','regen-key':'🔄 Key rotated','upgrade':'🚀 We\'ll notify you when payments go live!'};
+  var m = msgs[MA]; if (typeof m === 'function') m = m();
+  if (m) toast(m);
+  closeModal();
+}
+document.getElementById('modal-ov').addEventListener('click', e => { if(e.target === document.getElementById('modal-ov')) closeModal(); });
+
+/* ── SIDEBAR ── */
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sb-overlay').classList.toggle('show'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sb-overlay').classList.remove('show'); }
+
+/* ── TOAST ── */
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── PLAN STATE ── */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+})();
+</script>
+</body>
+</html>

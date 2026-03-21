@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS & RESET
+══════════════════════════════════════════ */
+:root {
+  --purple:    #7b4dff;
+  --purple-lt: #a78bff;
+  --blue:      #5E7CFF;
+  --cyan:      #49C6C6;
+  --green:     #22c55e;
+  --red:       #ef4444;
+  --gold:      #ffe066;
+  --bg:        #080c18;
+  --bg2:       #0d1220;
+  --card:      rgba(255,255,255,0.04);
+  --border:    rgba(255,255,255,0.08);
+  --border-lt: rgba(255,255,255,0.14);
+  --text:      #f1f5f9;
+  --muted:     rgba(255,255,255,0.45);
+  --muted2:    rgba(255,255,255,0.22);
+  --grad:      linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  --sidebar-w: 240px;
+  --header-h:  64px;
+  --settings-nav-w: 220px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Montserrat',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; overflow-x:hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 0% 0%,   rgba(123,77,255,0.18) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.14) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 40%,  rgba(94,124,255,0.08) 0%,transparent 55%);
+}
+
+/* ══════════════════════════════════════════
+   SHELL
+══════════════════════════════════════════ */
+#shell { display:flex; min-height:100vh; position:relative; z-index:1; }
+
+/* ══════════════════════════════════════════
+   SIDEBAR (identical to dashboard)
+══════════════════════════════════════════ */
+#sidebar {
+  width:var(--sidebar-w); min-height:100vh;
+  background:rgba(8,12,24,0.92); border-right:1px solid var(--border);
+  backdrop-filter:blur(20px); display:flex; flex-direction:column;
+  position:fixed; left:0; top:0; bottom:0; z-index:200;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+#sb-logo {
+  padding:22px 20px 18px; font-family:'Montserrat',sans-serif;
+  font-size:20px; font-weight:900; letter-spacing:3px; font-style:italic;
+  background:var(--grad); -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent; background-clip:text;
+  border-bottom:1px solid var(--border); cursor:pointer; user-select:none; flex-shrink:0;
+}
+#sb-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+.sb-section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:14px 10px 6px; }
+.sb-section-label:first-child { padding-top:4px; }
+.nav-item {
+  display:flex; align-items:center; gap:12px; padding:10px 12px;
+  border-radius:10px; font-size:13px; font-weight:600; color:var(--muted);
+  cursor:pointer; transition:all 0.2s; text-decoration:none; margin-bottom:2px;
+}
+.nav-item:hover { background:rgba(255,255,255,0.06); color:var(--text); }
+.nav-item.active { background:rgba(123,77,255,0.18); color:#c4b5fd; border:1px solid rgba(123,77,255,0.25); }
+.nav-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.nav-item.active .nav-icon { background:rgba(123,77,255,0.25); }
+.nav-item:hover:not(.active) .nav-icon { background:rgba(255,255,255,0.07); }
+.nav-badge { margin-left:auto; background:var(--purple); color:white; font-size:10px; font-weight:800; padding:2px 7px; border-radius:50px; }
+#sb-upgrade {
+  margin:12px; padding:16px; border-radius:14px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));
+  border:1px solid rgba(123,77,255,0.3); flex-shrink:0;
+}
+#sb-upgrade h4 { font-size:13px; font-weight:800; margin-bottom:4px; color:#c4b5fd; }
+#sb-upgrade p  { font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:12px; }
+#sb-upgrade-btn {
+  width:100%; padding:8px; border:none; border-radius:8px; background:var(--grad);
+  color:white; font-size:12px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer;
+}
+#sb-upgrade-btn:hover { opacity:0.88; }
+#sb-user {
+  padding:14px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; cursor:pointer; transition:background 0.2s; flex-shrink:0;
+}
+#sb-user:hover { background:rgba(255,255,255,0.04); }
+#sb-avatar {
+  width:36px; height:36px; border-radius:50%; background:var(--grad);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; font-family:'Playfair Display',serif; flex-shrink:0;
+}
+#sb-user-name { font-size:13px; font-weight:700; }
+#sb-user-role { font-size:11px; color:var(--muted); }
+#sb-user-arrow { margin-left:auto; color:var(--muted); font-size:12px; }
+#sb-overlay { display:none; position:fixed; inset:0; z-index:150; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); }
+#sb-overlay.show { display:block; }
+
+/* ══════════════════════════════════════════
+   MAIN AREA
+══════════════════════════════════════════ */
+#main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+
+/* ══════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════ */
+#topbar {
+  height:var(--header-h); background:rgba(8,12,24,0.8);
+  backdrop-filter:blur(16px); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 clamp(20px,3vw,40px); gap:16px;
+  position:sticky; top:0; z-index:100;
+}
+#mobile-menu-btn { display:none; background:none; border:none; color:var(--text); font-size:20px; cursor:pointer; padding:4px; }
+#topbar-title { font-size:16px; font-weight:800; }
+#topbar-sub   { font-size:12px; color:var(--muted); margin-top:1px; }
+#topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.topbar-icon-btn {
+  width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,0.06);
+  border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+  font-size:16px; cursor:pointer; transition:all 0.2s; position:relative;
+}
+.topbar-icon-btn:hover { background:rgba(255,255,255,0.1); }
+.notif-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:#ef4444; border:1.5px solid var(--bg); }
+#topbar-avatar {
+  width:36px; height:36px; border-radius:50%; background:var(--grad);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900; font-family:'Playfair Display',serif;
+  cursor:pointer; border:2px solid rgba(123,77,255,0.4);
+}
+
+/* ══════════════════════════════════════════
+   SETTINGS LAYOUT
+══════════════════════════════════════════ */
+#settings-shell {
+  display:flex; flex:1; align-items:start;
+  padding:clamp(24px,3vw,40px) clamp(20px,3vw,40px);
+  gap:28px;
+}
+
+/* ── Settings Left Nav ── */
+#settings-nav {
+  width:var(--settings-nav-w); flex-shrink:0;
+  position:sticky; top:calc(var(--header-h) + 24px);
+}
+.sn-group { margin-bottom:20px; }
+.sn-group-label {
+  font-size:9px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--muted2); padding:0 12px 6px;
+}
+.sn-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:10px;
+  font-size:12px; font-weight:700; color:var(--muted);
+  cursor:pointer; transition:all 0.18s; margin-bottom:2px;
+  border:1px solid transparent;
+}
+.sn-item:hover { background:rgba(255,255,255,0.05); color:var(--text); }
+.sn-item.active {
+  background:rgba(123,77,255,0.15); color:#c4b5fd;
+  border-color:rgba(123,77,255,0.22);
+}
+.sn-icon { font-size:14px; width:24px; text-align:center; flex-shrink:0; }
+.sn-badge {
+  margin-left:auto; font-size:9px; font-weight:800;
+  padding:2px 7px; border-radius:50px;
+}
+.sn-badge.new { background:rgba(34,197,94,0.2); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+.sn-badge.pro { background:rgba(255,224,102,0.15); color:#ffe066; border:1px solid rgba(255,224,102,0.25); }
+
+/* ── Settings Content ── */
+#settings-content { flex:1; min-width:0; display:flex; flex-direction:column; gap:0; }
+
+/* Section anchor targets */
+.settings-section {
+  display:none; flex-direction:column; gap:20px;
+  animation:secIn 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.settings-section.active { display:flex; }
+@keyframes secIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+/* Section page title */
+.sec-page-title {
+  margin-bottom:4px;
+}
+.sec-page-title h2 {
+  font-family:'Playfair Display',serif; font-size:clamp(20px,2.5vw,28px);
+  font-weight:900; margin-bottom:4px;
+}
+.sec-page-title h2 em { font-style:italic; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.sec-page-title p { font-size:12px; color:var(--muted); line-height:1.6; }
+
+/* ══════════════════════════════════════════
+   CARD BASE
+══════════════════════════════════════════ */
+.card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+  transition:border-color 0.2s;
+}
+.card:hover { border-color:var(--border-lt); }
+.card-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid var(--border);
+}
+.card-head-left { display:flex; align-items:center; gap:10px; }
+.card-head-icon {
+  width:34px; height:34px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;
+}
+.card-head h3 { font-size:13px; font-weight:800; }
+.card-head p  { font-size:11px; color:var(--muted); margin-top:1px; }
+.card-body { padding:20px; }
+.card-body.no-pad { padding:0; }
+
+/* Setting row inside card */
+.setting-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  gap:16px; transition:background 0.15s;
+}
+.setting-row:last-child { border-bottom:none; }
+.setting-row:hover { background:rgba(255,255,255,0.02); }
+.setting-info { flex:1; min-width:0; }
+.setting-info h4 { font-size:13px; font-weight:700; margin-bottom:3px; }
+.setting-info p  { font-size:11px; color:var(--muted); line-height:1.5; }
+.setting-badge { font-size:9px; font-weight:800; padding:2px 8px; border-radius:50px; margin-left:8px; background:rgba(255,224,102,0.12); color:#ffe066; border:1px solid rgba(255,224,102,0.2); }
+
+/* ══════════════════════════════════════════
+   FORM ELEMENTS
+══════════════════════════════════════════ */
+.finput, .fselect, .ftextarea {
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  border-radius:9px; padding:10px 13px; font-size:13px;
+  font-family:'Montserrat',sans-serif; color:var(--text); outline:none;
+  transition:border-color 0.2s,background 0.2s; width:100%;
+}
+.finput::placeholder,.ftextarea::placeholder { color:var(--muted2); }
+.finput:focus,.fselect:focus,.ftextarea:focus { border-color:rgba(123,77,255,0.6); background:rgba(255,255,255,0.09); box-shadow:0 0 0 3px rgba(123,77,255,0.1); }
+.fselect { appearance:none; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px; }
+.fselect option { background:#0f172a; }
+.ftextarea { resize:vertical; min-height:80px; line-height:1.6; }
+.flabel { font-size:11px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.8px; text-transform:uppercase; margin-bottom:5px; display:block; }
+
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-grid.single { grid-template-columns:1fr; }
+.form-grid.triple { grid-template-columns:1fr 1fr 1fr; }
+.fgroup { display:flex; flex-direction:column; }
+
+/* ══════════════════════════════════════════
+   TOGGLE SWITCH
+══════════════════════════════════════════ */
+.tog-switch { position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; }
+.tog-switch input { opacity:0; width:0; height:0; }
+.tog-track {
+  position:absolute; inset:0; border-radius:24px;
+  background:rgba(255,255,255,0.1); cursor:pointer; transition:background 0.25s;
+  border:1px solid var(--border);
+}
+.tog-track::before {
+  content:''; position:absolute; left:3px; top:50%; transform:translateY(-50%);
+  width:18px; height:18px; border-radius:50%;
+  background:rgba(255,255,255,0.45); transition:left 0.25s,background 0.25s;
+}
+.tog-switch input:checked + .tog-track { background:rgba(123,77,255,0.55); border-color:rgba(123,77,255,0.4); }
+.tog-switch input:checked + .tog-track::before { left:23px; background:white; }
+.tog-switch input:disabled + .tog-track { opacity:0.4; cursor:not-allowed; }
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn-primary {
+  padding:9px 20px; border-radius:9px; background:var(--grad);
+  border:none; color:white; font-size:12px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(123,77,255,0.4); }
+.btn-ghost {
+  padding:8px 16px; border-radius:9px; background:rgba(255,255,255,0.05);
+  border:1px solid var(--border); color:var(--muted);
+  font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn-ghost:hover { border-color:var(--border-lt); color:var(--text); }
+.btn-danger {
+  padding:8px 16px; border-radius:9px; background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.22); color:#f87171;
+  font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn-danger:hover { background:rgba(239,68,68,0.2); }
+.btn-warning {
+  padding:8px 16px; border-radius:9px; background:rgba(245,158,11,0.1);
+  border:1px solid rgba(245,158,11,0.22); color:#fbbf24;
+  font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn-warning:hover { background:rgba(245,158,11,0.2); }
+.spinner {
+  width:14px; height:14px; border:2px solid rgba(255,255,255,0.3);
+  border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none;
+}
+.btn-primary.loading .spinner { display:inline-block; }
+.btn-primary.loading .btn-text { opacity:0.7; }
+@keyframes spin { to{transform:rotate(360deg);} }
+
+/* ══════════════════════════════════════════
+   THEME PICKER
+══════════════════════════════════════════ */
+#theme-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+}
+.theme-opt {
+  border-radius:12px; overflow:hidden; border:2px solid var(--border);
+  cursor:pointer; transition:all 0.22s; position:relative;
+}
+.theme-opt:hover { border-color:rgba(123,77,255,0.5); transform:translateY(-2px); }
+.theme-opt.active { border-color:var(--purple); box-shadow:0 0 0 3px rgba(123,77,255,0.2); }
+.theme-swatch { height:56px; position:relative; }
+.theme-label {
+  padding:6px 8px; font-size:10px; font-weight:800; letter-spacing:0.3px;
+  text-align:center; background:rgba(0,0,0,0.4); color:rgba(255,255,255,0.6);
+}
+.theme-opt.active .theme-label { color:#c4b5fd; }
+.theme-check {
+  position:absolute; top:4px; right:4px; width:16px; height:16px;
+  border-radius:50%; background:var(--purple); display:none;
+  align-items:center; justify-content:center; font-size:8px; color:white; font-weight:900;
+}
+.theme-opt.active .theme-check { display:flex; }
+
+/* ══════════════════════════════════════════
+   ACCENT COLOR PICKER
+══════════════════════════════════════════ */
+#accent-grid { display:flex; gap:10px; flex-wrap:wrap; }
+.accent-dot {
+  width:36px; height:36px; border-radius:50%; cursor:pointer;
+  border:3px solid transparent; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+}
+.accent-dot.active { border-color:white; box-shadow:0 0 0 2px rgba(255,255,255,0.3); transform:scale(1.1); }
+.accent-dot:hover { transform:scale(1.05); }
+
+/* ══════════════════════════════════════════
+   FONT PICKER
+══════════════════════════════════════════ */
+.font-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.font-opt {
+  padding:12px 14px; border-radius:10px; border:1px solid var(--border);
+  cursor:pointer; transition:all 0.2s; background:rgba(255,255,255,0.03);
+}
+.font-opt:hover { border-color:rgba(123,77,255,0.4); background:rgba(123,77,255,0.06); }
+.font-opt.active { border-color:var(--purple); background:rgba(123,77,255,0.12); }
+.font-preview { font-size:16px; font-weight:700; margin-bottom:3px; }
+.font-name  { font-size:10px; color:var(--muted); font-weight:600; letter-spacing:0.5px; }
+
+/* ══════════════════════════════════════════
+   LAYOUT DENSITY
+══════════════════════════════════════════ */
+.density-grid { display:flex; gap:10px; }
+.density-opt {
+  flex:1; padding:14px 10px; border-radius:10px; border:1px solid var(--border);
+  cursor:pointer; transition:all 0.2s; background:rgba(255,255,255,0.03); text-align:center;
+}
+.density-opt:hover { border-color:rgba(123,77,255,0.4); }
+.density-opt.active { border-color:var(--purple); background:rgba(123,77,255,0.12); }
+.density-icon { font-size:22px; margin-bottom:6px; }
+.density-label { font-size:11px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.density-desc  { font-size:10px; color:var(--muted); }
+
+/* ══════════════════════════════════════════
+   PRIVACY — Visibility toggles
+══════════════════════════════════════════ */
+.visibility-item {
+  display:flex; align-items:center; gap:12px; padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.visibility-item:last-child { border-bottom:none; }
+.vis-icon { font-size:18px; flex-shrink:0; width:28px; text-align:center; }
+.vis-info { flex:1; }
+.vis-info h4 { font-size:12px; font-weight:700; margin-bottom:1px; }
+.vis-info p  { font-size:11px; color:var(--muted); }
+.vis-select {
+  font-size:11px; font-weight:700; font-family:'Montserrat',sans-serif;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  color:var(--text); padding:6px 28px 6px 10px; border-radius:8px;
+  appearance:none; outline:none; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 8px center;
+  transition:border-color 0.2s;
+}
+.vis-select:focus { border-color:rgba(123,77,255,0.6); }
+.vis-select option { background:#0f172a; }
+
+/* ══════════════════════════════════════════
+   PLAN CARDS
+══════════════════════════════════════════ */
+.plan-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.plan-card {
+  border-radius:14px; border:1px solid var(--border);
+  overflow:hidden; position:relative; transition:all 0.25s;
+}
+.plan-card:hover { border-color:var(--border-lt); transform:translateY(-3px); }
+.plan-card.current { border-color:rgba(123,77,255,0.4); box-shadow:0 0 0 2px rgba(123,77,255,0.15); }
+.plan-card.popular { border-color:rgba(255,224,102,0.35); }
+.plan-badge-top {
+  text-align:center; padding:5px; font-size:9px; font-weight:800; letter-spacing:1px;
+  text-transform:uppercase;
+}
+.plan-badge-top.current-badge { background:rgba(123,77,255,0.2); color:#c4b5fd; }
+.plan-badge-top.popular-badge { background:rgba(255,224,102,0.15); color:#ffe066; }
+.plan-badge-top.hidden { opacity:0; }
+.plan-body { padding:18px; }
+.plan-name  { font-size:13px; font-weight:800; margin-bottom:2px; }
+.plan-price { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; line-height:1; margin-bottom:4px; }
+.plan-price span { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
+.plan-desc { font-size:11px; color:var(--muted); margin-bottom:14px; line-height:1.5; }
+.plan-features { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.plan-feat { font-size:11px; display:flex; align-items:center; gap:7px; }
+.plan-feat::before { content:''; width:14px; height:14px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:8px; }
+.feat-yes::before { content:'✓'; background:rgba(34,197,94,0.2); color:#4ade80; }
+.feat-no::before  { content:'✕'; background:rgba(255,255,255,0.07); color:var(--muted); }
+.plan-feat.feat-no { color:var(--muted); }
+.plan-btn {
+  width:100%; padding:10px; border-radius:9px; font-size:12px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; border:none;
+}
+.plan-btn.current-plan { background:rgba(255,255,255,0.07); color:var(--muted); cursor:default; }
+.plan-btn.upgrade-btn  { background:var(--grad); color:white; }
+.plan-btn.upgrade-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(123,77,255,0.4); }
+
+/* ══════════════════════════════════════════
+   API KEY CARD
+══════════════════════════════════════════ */
+.api-key-row {
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  border-radius:10px; margin-bottom:10px; font-family:'DM Sans',monospace;
+}
+.api-key-val { flex:1; font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.api-key-copy, .api-key-regen {
+  padding:5px 11px; border-radius:7px; font-size:11px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; border:none;
+  white-space:nowrap;
+}
+.api-key-copy  { background:rgba(123,77,255,0.2); border:1px solid rgba(123,77,255,0.3); color:#c4b5fd; }
+.api-key-copy:hover { background:rgba(123,77,255,0.35); }
+.api-key-regen { background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--muted); }
+.api-key-regen:hover { border-color:var(--border-lt); color:var(--text); }
+.api-usage-bar { height:6px; background:rgba(255,255,255,0.07); border-radius:4px; overflow:hidden; margin-top:6px; }
+.api-usage-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#7b4dff,#49C6C6); transition:width 0.6s cubic-bezier(0.22,1,0.36,1); }
+
+/* ══════════════════════════════════════════
+   SESSION CARDS
+══════════════════════════════════════════ */
+.session-item {
+  display:flex; align-items:center; gap:12px; padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+.session-item:last-child { border-bottom:none; }
+.session-icon { width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.session-info { flex:1; }
+.session-info h4 { font-size:13px; font-weight:700; margin-bottom:2px; }
+.session-info p  { font-size:11px; color:var(--muted); }
+.session-current { font-size:10px; font-weight:800; padding:2px 8px; border-radius:50px; background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+.session-revoke { padding:5px 11px; border-radius:7px; font-size:11px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); color:#f87171; transition:all 0.2s; }
+.session-revoke:hover { background:rgba(239,68,68,0.2); }
+
+/* ══════════════════════════════════════════
+   LANG + REGION ROW
+══════════════════════════════════════════ */
+.lang-flag { font-size:18px; margin-right:4px; }
+
+/* ══════════════════════════════════════════
+   ACTIVITY LOG
+══════════════════════════════════════════ */
+.log-item {
+  display:flex; align-items:center; gap:12px; padding:11px 0;
+  border-bottom:1px solid var(--border);
+}
+.log-item:last-child { border-bottom:none; }
+.log-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.log-info { flex:1; }
+.log-info h4 { font-size:12px; font-weight:700; margin-bottom:1px; }
+.log-info p  { font-size:11px; color:var(--muted); }
+.log-time { font-size:10px; color:var(--muted2); white-space:nowrap; }
+
+/* ══════════════════════════════════════════
+   DANGER ZONE
+══════════════════════════════════════════ */
+.danger-card { border-color:rgba(239,68,68,0.22)!important; }
+.danger-card .card-head { border-bottom-color:rgba(239,68,68,0.15); }
+
+/* ══════════════════════════════════════════
+   SAVE BANNER (fixed bottom)
+══════════════════════════════════════════ */
+#save-banner {
+  position:fixed; bottom:0; left:var(--sidebar-w); right:0;
+  background:rgba(8,12,24,0.95); border-top:1px solid var(--border);
+  backdrop-filter:blur(20px); padding:14px clamp(20px,3vw,40px);
+  display:flex; align-items:center; gap:14px; z-index:500;
+  transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+#save-banner.show { transform:translateY(0); }
+#save-banner p { font-size:13px; color:var(--muted); flex:1; }
+#save-banner p strong { color:var(--text); }
+.btn-save-all {
+  padding:10px 24px; border-radius:9px; background:var(--grad);
+  border:none; color:white; font-size:13px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; gap:7px;
+}
+.btn-save-all:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(123,77,255,0.4); }
+.btn-discard { padding:10px 18px; border-radius:9px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; }
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+#modal-overlay {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+  align-items:center; justify-content:center; padding:20px;
+}
+#modal-overlay.show { display:flex; }
+#modal-box {
+  background:#0f172a; border:1px solid rgba(123,77,255,0.25);
+  border-radius:18px; padding:clamp(24px,3vw,36px); max-width:440px; width:100%;
+  box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  animation:modalIn 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+@keyframes modalIn { from{opacity:0;transform:scale(0.95)translateY(16px);} to{opacity:1;transform:scale(1)translateY(0);} }
+#modal-icon  { font-size:36px; margin-bottom:12px; }
+#modal-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; margin-bottom:8px; }
+#modal-body  { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+#modal-inp   { width:100%; margin-bottom:16px; }
+.modal-actions { display:flex; gap:10px; }
+.modal-confirm { flex:1; padding:12px; border-radius:9px; border:none; font-size:13px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer; }
+.modal-confirm.danger { background:rgba(239,68,68,0.85); color:white; }
+.modal-confirm.danger:hover { background:#ef4444; }
+.modal-confirm.safe { background:var(--grad); color:white; }
+.modal-cancel-btn { padding:12px 22px; border-radius:9px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--muted); font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#toast {
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:#1e293b; color:white; padding:11px 22px; border-radius:50px;
+  font-size:13px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); z-index:9999;
+  white-space:nowrap; border:1px solid rgba(255,255,255,0.08);
+}
+#toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width:1100px) {
+  #settings-nav { width:180px; }
+  .plan-grid { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:900px) {
+  #sidebar { transform:translateX(-100%); }
+  #sidebar.open { transform:translateX(0); }
+  #sb-overlay.show { display:block; }
+  #main { margin-left:0; }
+  #mobile-menu-btn { display:block; }
+  #save-banner { left:0; }
+  #settings-nav { display:none; }
+  #settings-nav.mob-open { display:block; width:100%; position:static; margin-bottom:20px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px; }
+  #mob-nav-toggle { display:flex; }
+  .plan-grid { grid-template-columns:1fr; }
+  .font-grid { grid-template-columns:1fr 1fr 1fr 1fr; }
+}
+@media (max-width:640px) {
+  #settings-shell { flex-direction:column; padding:16px; }
+  .form-grid { grid-template-columns:1fr; }
+  .form-grid.triple { grid-template-columns:1fr 1fr; }
+  #theme-grid { grid-template-columns:repeat(2,1fr); }
+  .density-grid { flex-direction:column; }
+  .font-grid { grid-template-columns:1fr 1fr; }
+}
+#mob-nav-toggle { display:none; width:100%; margin-bottom:16px; padding:11px 16px; border-radius:10px; background:var(--card); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; text-align:left; align-items:center; gap:10px; }
+</style>
+</head>
+<body>
+<div id="shell">
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside id="sidebar">
+  <div id="sb-logo" onclick="window.location.href='dashboard.html'">Prolio AI</div>
+  <nav id="sb-nav">
+    <div class="sb-section-label">Main</div>
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+      <div class="nav-icon">📊</div>Dashboard
+    </div>
+    <div class="nav-item" onclick="window.location.href='resume-builder.html'">
+      <div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='portfolio.html'">
+      <div class="nav-icon">🌐</div>My Portfolio
+    </div>
+    <div class="sb-section-label">Manage</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'">
+      <div class="nav-icon">👤</div>Profile
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon">⚙️</div>Settings
+    </div>
+    <div class="nav-item" onclick="window.location.href='developer-api.html'">
+      <div class="nav-icon">🔗</div>Developer API
+    </div>
+    <div class="sb-section-label">Support</div>
+    <div class="nav-item" onclick="window.location.href='help-docs.html'">
+      <div class="nav-icon">💬</div>Help &amp; Docs
+    </div>
+  </nav>
+  <div id="sb-upgrade">
+    <h4>✨ Go Pro</h4>
+    <p>Unlimited resumes, custom domain, advanced AI &amp; priority support.</p>
+    <button id="sb-upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
+  </div>
+  <div id="sb-user" onclick="window.location.href='profile.html'">
+    <div id="sb-avatar">A</div>
+    <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+    <span id="sb-user-arrow">›</span>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div id="main">
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <button id="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+    <div>
+      <div id="topbar-title">Settings</div>
+      <div id="topbar-sub">Manage your preferences, privacy and plan</div>
+    </div>
+    <div id="topbar-right">
+      <div class="topbar-icon-btn" onclick="showToast('No new notifications')">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-icon-btn" onclick="window.location.href='help-docs.html'">💡</div>
+      <div id="topbar-avatar">A</div>
+    </div>
+  </header>
+
+  <!-- SETTINGS SHELL -->
+  <div id="settings-shell">
+
+    <!-- ── Left Nav ── -->
+    <button id="mob-nav-toggle" onclick="toggleMobNav()">☰ &nbsp;Jump to section</button>
+    <nav id="settings-nav">
+      <div class="sn-group">
+        <div class="sn-group-label">Appearance</div>
+        <div class="sn-item active" id="sn-appearance" onclick="showSection('appearance')"><span class="sn-icon">🎨</span>Appearance</div>
+        <div class="sn-item" id="sn-language" onclick="showSection('language')"><span class="sn-icon">🌐</span>Language &amp; Region</div>
+      </div>
+      <div class="sn-group">
+        <div class="sn-group-label">Account</div>
+        <div class="sn-item" id="sn-notifications" onclick="showSection('notifications')"><span class="sn-icon">🔔</span>Notifications</div>
+        <div class="sn-item" id="sn-privacy" onclick="showSection('privacy')"><span class="sn-icon">🔒</span>Privacy &amp; Visibility</div>
+        <div class="sn-item" id="sn-security" onclick="showSection('security')"><span class="sn-icon">🛡️</span>Security<span class="sn-badge new">2FA</span></div>
+        <div class="sn-item" id="sn-sessions" onclick="showSection('sessions')"><span class="sn-icon">📱</span>Sessions</div>
+      </div>
+      <div class="sn-group">
+        <div class="sn-group-label">Workspace</div>
+        <div class="sn-item" id="sn-portfolio-settings" onclick="showSection('portfolio-settings')"><span class="sn-icon">🌐</span>Portfolio Settings</div>
+        <div class="sn-item" id="sn-ai" onclick="showSection('ai')"><span class="sn-icon">✨</span>AI Preferences<span class="sn-badge new">New</span></div>
+        <div class="sn-item" id="sn-integrations" onclick="showSection('integrations')"><span class="sn-icon">🔌</span>Integrations</div>
+        <div class="sn-item" id="sn-api" onclick="showSection('api')"><span class="sn-icon">⚡</span>API &amp; Webhooks<span class="sn-badge pro">Pro</span></div>
+      </div>
+      <div class="sn-group">
+        <div class="sn-group-label">Billing</div>
+        <div class="sn-item" id="sn-plan" onclick="showSection('plan')"><span class="sn-icon">💎</span>Plan &amp; Billing</div>
+        <div class="sn-item" id="sn-activity" onclick="showSection('activity')"><span class="sn-icon">📋</span>Activity Log</div>
+        <div class="sn-item" id="sn-danger" onclick="showSection('danger')"><span class="sn-icon">⚠️</span>Danger Zone</div>
+      </div>
+    </nav>
+
+    <!-- ══════════ SETTINGS CONTENT ══════════ -->
+    <div id="settings-content">
+
+      <!-- ████ APPEARANCE ████ -->
+      <div class="settings-section active" id="sec-appearance">
+        <div class="sec-page-title">
+          <h2>🎨 <em>Appearance</em></h2>
+          <p>Customise how Prolio AI looks and feels for you.</p>
+        </div>
+
+        <!-- Theme -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="card-head-icon" style="background:rgba(123,77,255,0.15);">🌙</div>
+              <div><h3>Theme</h3><p>Choose your colour mode</p></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="theme-grid">
+              <div class="theme-opt active" id="theme-dark" onclick="setTheme('dark',this)">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#080c18,#1a1040);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:22px;">🌙</span>
+                </div>
+                <div class="theme-label">Dark</div>
+                <div class="theme-check">✓</div>
+              </div>
+              <div class="theme-opt" id="theme-light" onclick="setTheme('light',this)">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:22px;">☀️</span>
+                </div>
+                <div class="theme-label" style="background:rgba(0,0,0,0.12);color:#475569;">Light</div>
+                <div class="theme-check">✓</div>
+              </div>
+              <div class="theme-opt" id="theme-system" onclick="setTheme('system',this)">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#080c18 50%,#f8fafc 50%);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:22px;">🖥️</span>
+                </div>
+                <div class="theme-label">System</div>
+                <div class="theme-check">✓</div>
+              </div>
+              <div class="theme-opt" id="theme-midnight" onclick="setTheme('midnight',this)">
+                <div class="theme-swatch" style="background:linear-gradient(135deg,#000000,#0a0a2e);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:22px;">🌑</span>
+                </div>
+                <div class="theme-label">Midnight</div>
+                <div class="theme-check">✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent Colour -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="card-head-icon" style="background:rgba(123,77,255,0.15);">🎨</div>
+              <div><h3>Accent Colour</h3><p>Buttons, highlights and active states</p></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="accent-grid">
+              <div class="accent-dot active" style="background:linear-gradient(135deg,#7b4dff,#5E7CFF);" onclick="setAccent('purple',this)" title="Purple (Default)">✓</div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#49C6C6,#2F8DA8);" onclick="setAccent('cyan',this)" title="Cyan"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#22c55e,#16a34a);" onclick="setAccent('green',this)" title="Green"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#f97316,#ef4444);" onclick="setAccent('orange',this)" title="Orange"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#e11d78,#f472b6);" onclick="setAccent('pink',this)" title="Pink"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#daa520,#ffe066);" onclick="setAccent('gold',this)" title="Gold"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);" onclick="setAccent('sky',this)" title="Sky Blue"></div>
+              <div class="accent-dot" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);" onclick="setAccent('violet',this)" title="Violet"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Font -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="card-head-icon" style="background:rgba(73,198,198,0.15);">Aa</div>
+              <div><h3>Interface Font</h3><p>Font used across the Prolio AI dashboard</p></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="font-grid">
+              <div class="font-opt active" onclick="setFont('Montserrat','font-a',this)">
+                <div class="font-preview" style="font-family:'Montserrat',sans-serif;">Montserrat</div>
+                <div class="font-name">Current · Default</div>
+              </div>
+              <div class="font-opt" onclick="setFont('DM Sans','font-b',this)">
+                <div class="font-preview" style="font-family:'DM Sans',sans-serif;">DM Sans</div>
+                <div class="font-name">Clean · Modern</div>
+              </div>
+              <div class="font-opt" onclick="setFont('Playfair Display','font-c',this)">
+                <div class="font-preview" style="font-family:'Playfair Display',serif;">Playfair</div>
+                <div class="font-name">Elegant · Serif</div>
+              </div>
+              <div class="font-opt" onclick="setFont('monospace','font-d',this)">
+                <div class="font-preview" style="font-family:monospace;">Monospace</div>
+                <div class="font-name">Developer · Minimal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layout Density -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="card-head-icon" style="background:rgba(94,124,255,0.15);">↕</div>
+              <div><h3>Layout Density</h3><p>Control how compact or spacious the UI feels</p></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="density-grid">
+              <div class="density-opt" onclick="setDensity('compact',this)">
+                <div class="density-icon">⬛⬛⬛</div>
+                <div class="density-label">Compact</div>
+                <div class="density-desc">More items visible at once</div>
+              </div>
+              <div class="density-opt active" onclick="setDensity('default',this)">
+                <div class="density-icon">⬛⬛</div>
+                <div class="density-label">Default</div>
+                <div class="density-desc">Balanced spacing</div>
+              </div>
+              <div class="density-opt" onclick="setDensity('comfortable',this)">
+                <div class="density-icon">⬛</div>
+                <div class="density-label">Comfortable</div>
+                <div class="density-desc">Extra breathing room</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Animations -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <div class="card-head-icon" style="background:rgba(255,224,102,0.12);">✨</div>
+              <div><h3>Animations &amp; Motion</h3></div>
+            </div>
+          </div>
+          <div class="card-body no-pad">
+            <div class="setting-row">
+              <div class="setting-info"><h4>Enable animations</h4><p>Page transitions, hover effects and micro-interactions</p></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>Reduce motion</h4><p>Minimise motion for accessibility (overrides animations)</p></div>
+              <label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>Particle background</h4><p>Floating particles on the homepage hero</p></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ LANGUAGE & REGION ████ -->
+      <div class="settings-section" id="sec-language">
+        <div class="sec-page-title"><h2>🌐 Language &amp; <em>Region</em></h2><p>Set your language, time zone and date preferences.</p></div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-grid" style="margin-bottom:16px;">
+              <div class="fgroup">
+                <label class="flabel">Interface Language</label>
+                <select class="fselect" onchange="markDirty()">
+                  <option selected>🇬🇧 English (UK)</option>
+                  <option>🇺🇸 English (US)</option>
+                  <option>🇮🇳 English (India)</option>
+                  <option>🇩🇪 German</option>
+                  <option>🇫🇷 French</option>
+                  <option>🇪🇸 Spanish</option>
+                  <option>🇯🇵 Japanese</option>
+                  <option>🇵🇹 Portuguese</option>
+                  <option>🇦🇪 Arabic</option>
+                </select>
+              </div>
+              <div class="fgroup">
+                <label class="flabel">Time Zone</label>
+                <select class="fselect" onchange="markDirty()">
+                  <option selected>Asia/Kolkata (IST, UTC+5:30)</option>
+                  <option>UTC+0 (GMT)</option>
+                  <option>America/New_York (EST, UTC-5)</option>
+                  <option>America/Los_Angeles (PST, UTC-8)</option>
+                  <option>Europe/London (BST, UTC+1)</option>
+                  <option>Asia/Tokyo (JST, UTC+9)</option>
+                  <option>Australia/Sydney (AEST, UTC+10)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="fgroup">
+                <label class="flabel">Date Format</label>
+                <select class="fselect" onchange="markDirty()">
+                  <option>DD/MM/YYYY</option>
+                  <option>MM/DD/YYYY</option>
+                  <option selected>MMM DD, YYYY</option>
+                  <option>YYYY-MM-DD</option>
+                </select>
+              </div>
+              <div class="fgroup">
+                <label class="flabel">Currency</label>
+                <select class="fselect" onchange="markDirty()">
+                  <option selected>₹ INR – Indian Rupee</option>
+                  <option>$ USD – US Dollar</option>
+                  <option>€ EUR – Euro</option>
+                  <option>£ GBP – British Pound</option>
+                  <option>¥ JPY – Japanese Yen</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body no-pad">
+            <div class="setting-row">
+              <div class="setting-info"><h4>First day of week</h4><p>Used in date pickers and calendars</p></div>
+              <select class="fselect" style="width:130px;" onchange="markDirty()"><option>Monday</option><option selected>Sunday</option><option>Saturday</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>24-hour clock</h4><p>Display time in 24-hour format instead of AM/PM</p></div>
+              <label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ NOTIFICATIONS ████ -->
+      <div class="settings-section" id="sec-notifications">
+        <div class="sec-page-title"><h2>🔔 <em>Notifications</em></h2><p>Control what you get notified about and how.</p></div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">📧</div><div><h3>Email Notifications</h3><p>Sent to arun@example.com</p></div></div></div>
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Portfolio views</h4><p>When someone views your portfolio page</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Resume downloads</h4><p>When your resume is downloaded or shared</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>New messages</h4><p>When someone contacts you via your portfolio</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Weekly digest</h4><p>Summary of views, downloads and profile activity</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>AI improvement tips</h4><p>Weekly suggestions to improve your profile and resume</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>New features &amp; updates</h4><p>Product announcements and changelog</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Marketing &amp; promotions</h4><p>Special offers, discounts and newsletters</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(73,198,198,0.15);">🔔</div><div><h3>Push &amp; Browser Notifications</h3></div></div><button class="btn-ghost" onclick="showToast('Browser permission requested')">Enable Push</button></div>
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Real-time portfolio views</h4><p>Instant browser notification when someone visits your portfolio</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Important security alerts</h4><p>Login attempts and suspicious activity</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(94,124,255,0.15);">⏰</div><div><h3>Notification Schedule</h3><p>Quiet hours — no notifications during this time</p></div></div></div>
+          <div class="card-body">
+            <div class="setting-row" style="padding:0 0 14px; border:none;">
+              <div class="setting-info"><h4>Enable quiet hours</h4><p>Pause all non-critical notifications</p></div>
+              <label class="tog-switch"><input type="checkbox" id="quiet-tog" onchange="toggleQuiet(this)"><div class="tog-track"></div></label>
+            </div>
+            <div class="form-grid" id="quiet-times" style="opacity:0.4;pointer-events:none;transition:opacity 0.3s;">
+              <div class="fgroup"><label class="flabel">Start time</label><input class="finput" type="time" value="22:00" onchange="markDirty()"></div>
+              <div class="fgroup"><label class="flabel">End time</label><input class="finput" type="time" value="08:00" onchange="markDirty()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ PRIVACY & VISIBILITY ████ -->
+      <div class="settings-section" id="sec-privacy">
+        <div class="sec-page-title"><h2>🔒 Privacy &amp; <em>Visibility</em></h2><p>Control who can see your profile and portfolio.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">👁</div><div><h3>Profile Visibility</h3><p>Control what others see on your public portfolio</p></div></div></div>
+          <div class="card-body">
+            <div class="visibility-item"><div class="vis-icon">📧</div><div class="vis-info"><h4>Email address</h4><p>Your contact email on the portfolio contact section</p></div><select class="vis-select" onchange="markDirty()"><option>Public</option><option selected>Registered users</option><option>Hidden</option></select></div>
+            <div class="visibility-item"><div class="vis-icon">📱</div><div class="vis-info"><h4>Phone number</h4><p>Shown in resume contact row</p></div><select class="vis-select" onchange="markDirty()"><option>Public</option><option>Registered users</option><option selected>Hidden</option></select></div>
+            <div class="visibility-item"><div class="vis-icon">📍</div><div class="vis-info"><h4>Location</h4><p>City/country shown on your portfolio hero</p></div><select class="vis-select" onchange="markDirty()"><option selected>Public</option><option>Registered users</option><option>Hidden</option></select></div>
+            <div class="visibility-item"><div class="vis-icon">🔗</div><div class="vis-info"><h4>Social links</h4><p>LinkedIn, GitHub and other linked accounts</p></div><select class="vis-select" onchange="markDirty()"><option selected>Public</option><option>Hidden</option></select></div>
+            <div class="visibility-item"><div class="vis-icon">📊</div><div class="vis-info"><h4>Profile analytics</h4><p>Let others see your view count and share stats</p></div><select class="vis-select" onchange="markDirty()"><option>Public</option><option selected>Hidden</option></select></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Indexing by search engines</h4><p>Allow Google, Bing etc. to index your portfolio page</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Portfolio password protection</h4><p>Require a password to view your portfolio<span class="setting-badge">Pro</span></p></div><label class="tog-switch"><input type="checkbox" disabled onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Show "Built with Prolio AI" badge</h4><p>Display attribution badge at the footer of your portfolio</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Appear in Prolio AI talent directory</h4><p>Let recruiters discover your portfolio through Prolio AI</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(34,197,94,0.15);">📤</div><div><h3>Data &amp; Privacy</h3></div></div></div>
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Usage analytics</h4><p>Help us improve by sharing anonymous usage data</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Personalised AI suggestions</h4><p>Let AI use your data to give better profile recommendations</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Download my data</h4><p>Export all your resumes, portfolio and account info as ZIP</p></div><button class="btn-ghost" onclick="showToast('📦 Preparing export… you\'ll receive an email shortly.')">⬇ Export</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ SECURITY ████ -->
+      <div class="settings-section" id="sec-security">
+        <div class="sec-page-title"><h2>🛡️ <em>Security</em></h2><p>Two-factor authentication, login preferences and recovery options.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(34,197,94,0.15);">🔐</div><div><h3>Two-Factor Authentication</h3><p>Add an extra layer of security to your account</p></div></div><span style="font-size:11px;font-weight:800;padding:4px 10px;border-radius:50px;background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);">Not enabled</span></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">Two-factor authentication adds a second verification step when you sign in, making your account significantly more secure even if your password is compromised.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-primary" onclick="openModal('2fa-app')">📱 Setup Authenticator App</button>
+              <button class="btn-ghost" onclick="openModal('2fa-sms')">📲 Use SMS instead</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Login alerts</h4><p>Email me when a new device or location signs in</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Auto-logout after inactivity</h4><p>Log out automatically after a period of inactivity</p></div><select class="fselect" style="width:170px;" onchange="markDirty()"><option>Never</option><option selected>30 minutes</option><option>1 hour</option><option>4 hours</option><option>8 hours</option></select></div>
+            <div class="setting-row"><div class="setting-info"><h4>Recovery email</h4><p>Used to recover your account if you lose access</p></div><button class="btn-ghost" onclick="openModal('recovery-email')">✉ Set recovery email</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(245,158,11,0.15);">🗝</div><div><h3>Backup Codes</h3><p>One-time codes to access your account if you lose 2FA</p></div></div></div>
+          <div class="card-body"><button class="btn-warning" onclick="showToast('Enable 2FA first to generate backup codes')">🗝 Generate Backup Codes</button></div>
+        </div>
+      </div>
+
+      <!-- ████ SESSIONS ████ -->
+      <div class="settings-section" id="sec-sessions">
+        <div class="sec-page-title"><h2>📱 <em>Sessions</em></h2><p>Manage devices and active login sessions.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">📡</div><div><h3>Active Sessions</h3><p>You are logged in on these devices</p></div></div><button class="btn-danger" onclick="openModal('revoke-all')">Revoke All Others</button></div>
+          <div class="card-body no-pad" style="padding:0 20px;">
+            <div class="session-item">
+              <div class="session-icon">💻</div>
+              <div class="session-info"><h4>Chrome on Windows</h4><p>Chennai, India · 103.21.x.x · Active now</p></div>
+              <span class="session-current">Current</span>
+            </div>
+            <div class="session-item">
+              <div class="session-icon">📱</div>
+              <div class="session-info"><h4>Safari on iPhone 14</h4><p>Chennai, India · 103.21.x.x · 2 hours ago</p></div>
+              <button class="session-revoke" onclick="revokeSession(this,'Safari iPhone 14')">Revoke</button>
+            </div>
+            <div class="session-item">
+              <div class="session-icon">💻</div>
+              <div class="session-info"><h4>Firefox on MacOS</h4><p>Bengaluru, India · 49.36.x.x · 3 days ago</p></div>
+              <button class="session-revoke" onclick="revokeSession(this,'Firefox MacOS')">Revoke</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ PORTFOLIO SETTINGS ████ -->
+      <div class="settings-section" id="sec-portfolio-settings">
+        <div class="sec-page-title"><h2>🌐 Portfolio <em>Settings</em></h2><p>Control your public portfolio URL, SEO and sharing.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(73,198,198,0.15);">🔗</div><div><h3>Public URL</h3><p>Your shareable portfolio link</p></div></div></div>
+          <div class="card-body">
+            <div class="fgroup" style="margin-bottom:14px;">
+              <label class="flabel">Username / Slug</label>
+              <div style="display:flex;gap:0;">
+                <div style="padding:10px 13px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-right:none;border-radius:9px 0 0 9px;font-size:12px;color:var(--muted);white-space:nowrap;">prolioai.com/u/</div>
+                <input class="finput" id="slug-input" value="arunr" style="border-radius:0 9px 9px 0;" oninput="updateSlugPreview(this.value)" onchange="markDirty()">
+              </div>
+              <div style="font-size:11px;color:var(--cyan);margin-top:6px;">✓ prolioai.com/u/<span id="slug-preview">arunr</span> is available</div>
+            </div>
+            <div class="fgroup" style="margin-bottom:14px;">
+              <label class="flabel">Custom Domain <span class="setting-badge">Pro</span></label>
+              <input class="finput" placeholder="yourname.com — upgrade to Pro to connect" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">🔍</div><div><h3>SEO &amp; Metadata</h3></div></div></div>
+          <div class="card-body">
+            <div class="form-grid single" style="margin-bottom:14px;">
+              <div class="fgroup"><label class="flabel">Page Title</label><input class="finput" value="Arun R — Full Stack Developer | Prolio AI" onchange="markDirty()"></div>
+            </div>
+            <div class="form-grid single" style="margin-bottom:14px;">
+              <div class="fgroup"><label class="flabel">Meta Description</label><textarea class="ftextarea" style="min-height:70px;" onchange="markDirty()">Full stack developer specialising in React.js, Node.js and AI-powered applications. View my projects and get in touch.</textarea></div>
+            </div>
+            <div class="form-grid single">
+              <div class="fgroup"><label class="flabel">Keywords</label><input class="finput" value="full stack developer, react, nodejs, portfolio, prolio ai" onchange="markDirty()"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>Open Graph image</h4><p>Image shown when your portfolio is shared on social media</p></div><button class="btn-ghost" onclick="showToast('OG image upload coming soon!')">⬆ Upload Image</button></div>
+            <div class="setting-row"><div class="setting-info"><h4>Portfolio analytics</h4><p>Detailed view stats, referral sources and heatmaps<span class="setting-badge">Pro</span></p></div><button class="btn-ghost" onclick="location.href='pricing.html'">View Analytics</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ AI PREFERENCES ████ -->
+      <div class="settings-section" id="sec-ai">
+        <div class="sec-page-title"><h2>✨ AI <em>Preferences</em></h2><p>Control how Prolio AI's intelligence works for you.</p></div>
+        <div class="card">
+          <div class="card-body no-pad">
+            <div class="setting-row"><div class="setting-info"><h4>AI resume enhancement</h4><p>Automatically suggest improvements as you type in the resume builder</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Smart autocomplete</h4><p>AI-powered field completion for job titles, skills and descriptions</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Profile strength tips</h4><p>Real-time tips to improve your profile completion score</p></div><label class="tog-switch"><input type="checkbox" checked onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>AI-generated portfolio bio</h4><p>Let AI draft your hero bio from your resume data</p></div><label class="tog-switch"><input type="checkbox" onchange="markDirty()"><div class="tog-track"></div></label></div>
+            <div class="setting-row"><div class="setting-info"><h4>Job match suggestions<span class="setting-badge">Pro</span></h4><p>AI matches open roles to your skills and experience</p></div><label class="tog-switch"><input type="checkbox" disabled><div class="tog-track"></div></label></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">🤖</div><div><h3>AI Writing Tone</h3><p>How should AI sound when writing for you?</p></div></div></div>
+          <div class="card-body">
+            <div class="density-grid">
+              <div class="density-opt active" onclick="setTone('professional',this)"><div class="density-icon">👔</div><div class="density-label">Professional</div><div class="density-desc">Formal, polished</div></div>
+              <div class="density-opt" onclick="setTone('friendly',this)"><div class="density-icon">😊</div><div class="density-label">Friendly</div><div class="density-desc">Warm, conversational</div></div>
+              <div class="density-opt" onclick="setTone('bold',this)"><div class="density-icon">🚀</div><div class="density-label">Bold</div><div class="density-desc">Confident, direct</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(73,198,198,0.15);">📊</div><div><h3>AI Usage</h3><p>Your monthly AI enhancement credits</p></div></div></div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;"><span>Credits used this month</span><span style="color:var(--text);font-weight:800;">47 / 100</span></div>
+            <div class="api-usage-bar"><div class="api-usage-fill" style="width:47%;background:linear-gradient(90deg,#7b4dff,#49C6C6);"></div></div>
+            <p style="font-size:11px;color:var(--muted);margin-top:8px;">Resets on 1st of each month. <span style="color:#c4b5fd;cursor:pointer;" onclick="location.href='pricing.html'">Upgrade for unlimited →</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ INTEGRATIONS ████ -->
+      <div class="settings-section" id="sec-integrations">
+        <div class="sec-page-title"><h2>🔌 <em>Integrations</em></h2><p>Connect Prolio AI with your favourite tools.</p></div>
+        <div class="card">
+          <div class="card-body no-pad">
+
+            <div class="setting-row">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🐙</div>
+              <div class="setting-info" style="margin-left:12px;"><h4>GitHub</h4><p>Auto-import repos as portfolio projects</p></div>
+              <button class="btn-primary" onclick="showToast('✅ GitHub syncing your repos…')">Connect</button>
+            </div>
+            <div class="setting-row">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(10,102,194,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🔗</div>
+              <div class="setting-info" style="margin-left:12px;"><h4>LinkedIn</h4><p>Import work experience and education automatically</p></div>
+              <button class="btn-ghost" onclick="showToast('LinkedIn import coming soon!')">Import</button>
+            </div>
+            <div class="setting-row">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,67,53,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📄</div>
+              <div class="setting-info" style="margin-left:12px;"><h4>Google Drive</h4><p>Store and sync your resumes to Drive<span class="setting-badge">Pro</span></p></div>
+              <button class="btn-ghost" onclick="location.href='pricing.html'">Connect</button>
+            </div>
+            <div class="setting-row">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(94,124,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📅</div>
+              <div class="setting-info" style="margin-left:12px;"><h4>Google Calendar</h4><p>Schedule interview prep and reminder sessions<span class="setting-badge">Pro</span></p></div>
+              <button class="btn-ghost" onclick="location.href='pricing.html'">Connect</button>
+            </div>
+            <div class="setting-row">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">💬</div>
+              <div class="setting-info" style="margin-left:12px;"><h4>Slack</h4><p>Get portfolio view notifications in Slack<span class="setting-badge">Pro</span></p></div>
+              <button class="btn-ghost" onclick="location.href='pricing.html'">Connect</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ API & WEBHOOKS ████ -->
+      <div class="settings-section" id="sec-api">
+        <div class="sec-page-title"><h2>⚡ API &amp; <em>Webhooks</em></h2><p>Access Prolio AI programmatically. Upgrade to Pro to use the API.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(255,224,102,0.12);">🔑</div><div><h3>API Key</h3><p>Keep this secret — treat it like a password</p></div></div></div>
+          <div class="card-body">
+            <div class="api-key-row">
+              <span class="api-key-val" id="api-key-display">sk-prolio-••••••••••••••••••••••••••••••••</span>
+              <button class="api-key-copy" onclick="copyApiKey()">Copy</button>
+              <button class="api-key-regen" onclick="openModal('regen-key')">↺ Regenerate</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;"><span>API calls this month</span><span style="color:var(--text);font-weight:700;">342 / 1,000</span></div>
+            <div class="api-usage-bar"><div class="api-usage-fill" style="width:34.2%;"></div></div>
+            <p style="font-size:11px;color:var(--muted);margin-top:8px;">Monthly limit resets in 10 days. <a href="#" style="color:#c4b5fd;text-decoration:none;">View API docs →</a></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(73,198,198,0.15);">⚡</div><div><h3>Webhooks</h3><p>Receive real-time POST events when things happen</p></div></div><button class="btn-primary" onclick="showToast('Webhook creation coming soon!')">+ Add Webhook</button></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--muted);text-align:center;padding:20px 0;">No webhooks configured yet. Add one to receive events like <code style="background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;font-size:11px;">portfolio.viewed</code>, <code style="background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;font-size:11px;">resume.downloaded</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ PLAN & BILLING ████ -->
+      <div class="settings-section" id="sec-plan">
+        <div class="sec-page-title"><h2>💎 Plan &amp; <em>Billing</em></h2><p>Manage your subscription and payment details.</p></div>
+        <div class="card">
+          <div class="card-body">
+            <div class="plan-grid">
+              <div class="plan-card current">
+                <div class="plan-badge-top current-badge">✓ Current Plan</div>
+                <div class="plan-body">
+                  <div class="plan-name">Free</div>
+                  <div class="plan-price">₹0 <span>/ month</span></div>
+                  <div class="plan-desc">Get started for free</div>
+                  <div class="plan-features">
+                    <div class="plan-feat feat-yes">3 resumes</div>
+                    <div class="plan-feat feat-yes">1 portfolio site</div>
+                    <div class="plan-feat feat-yes">Basic AI features</div>
+                    <div class="plan-feat feat-yes">Prolio AI subdomain</div>
+                    <div class="plan-feat feat-no">Custom domain</div>
+                    <div class="plan-feat feat-no">Advanced analytics</div>
+                    <div class="plan-feat feat-no">API access</div>
+                  </div>
+                  <button class="plan-btn current-plan">Current Plan</button>
+                </div>
+              </div>
+              <div class="plan-card popular">
+                <div class="plan-badge-top popular-badge">⭐ Most Popular</div>
+                <div class="plan-body">
+                  <div class="plan-name" style="background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro</div>
+                  <div class="plan-price" style="background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹299 <span style="color:var(--muted)">/ month</span></div>
+                  <div class="plan-desc">For serious professionals</div>
+                  <div class="plan-features">
+                    <div class="plan-feat feat-yes">Unlimited resumes</div>
+                    <div class="plan-feat feat-yes">Unlimited portfolios</div>
+                    <div class="plan-feat feat-yes">Advanced AI (unlimited)</div>
+                    <div class="plan-feat feat-yes">Custom domain</div>
+                    <div class="plan-feat feat-yes">Advanced analytics</div>
+                    <div class="plan-feat feat-yes">API access (1K calls/mo)</div>
+                    <div class="plan-feat feat-yes">Priority support</div>
+                  </div>
+                  <button class="plan-btn upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
+                </div>
+              </div>
+              <div class="plan-card">
+                <div class="plan-badge-top hidden">—</div>
+                <div class="plan-body">
+                  <div class="plan-name">Team</div>
+                  <div class="plan-price">₹799 <span>/ month</span></div>
+                  <div class="plan-desc">For agencies &amp; teams</div>
+                  <div class="plan-features">
+                    <div class="plan-feat feat-yes">Everything in Pro</div>
+                    <div class="plan-feat feat-yes">5 team members</div>
+                    <div class="plan-feat feat-yes">Shared brand templates</div>
+                    <div class="plan-feat feat-yes">Team analytics dashboard</div>
+                    <div class="plan-feat feat-yes">API (10K calls/mo)</div>
+                    <div class="plan-feat feat-yes">Dedicated support</div>
+                  </div>
+                  <button class="plan-btn upgrade-btn" onclick="location.href='pricing.html'">Get Team Plan →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(94,124,255,0.15);">💳</div><div><h3>Payment Method</h3><p>No payment method added</p></div></div><button class="btn-ghost" onclick="location.href='pricing.html'">+ Add Card</button></div>
+          <div class="card-body"><p style="font-size:13px;color:var(--muted);">Add a payment method to upgrade your plan. We accept Visa, Mastercard, UPI, and Net Banking.</p></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(255,255,255,0.08);">🧾</div><div><h3>Billing History</h3></div></div></div>
+          <div class="card-body"><p style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0;">No invoices yet. They will appear here after your first payment.</p></div>
+        </div>
+      </div>
+
+      <!-- ████ ACTIVITY LOG ████ -->
+      <div class="settings-section" id="sec-activity">
+        <div class="sec-page-title"><h2>📋 Activity <em>Log</em></h2><p>A record of important actions on your account.</p></div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-left"><div class="card-head-icon" style="background:rgba(123,77,255,0.15);">📋</div><div><h3>Recent Activity</h3></div></div><button class="btn-ghost" onclick="showToast('Exporting activity log…')">⬇ Export CSV</button></div>
+          <div class="card-body no-pad" style="padding:0 20px;">
+            <div class="log-item"><div class="log-dot" style="background:#22c55e;"></div><div class="log-info"><h4>Profile updated</h4><p>Personal information changed</p></div><div class="log-time">2m ago</div></div>
+            <div class="log-item"><div class="log-dot" style="background:#7b4dff;"></div><div class="log-info"><h4>Portfolio published</h4><p>Portfolio set to live</p></div><div class="log-time">1h ago</div></div>
+            <div class="log-item"><div class="log-dot" style="background:#5E7CFF;"></div><div class="log-info"><h4>Resume updated</h4><p>Frontend Developer Resume — 3 sections changed</p></div><div class="log-time">2h ago</div></div>
+            <div class="log-item"><div class="log-dot" style="background:#49C6C6;"></div><div class="log-info"><h4>New login — Chrome / Windows</h4><p>Chennai, India · 103.21.x.x</p></div><div class="log-time">3h ago</div></div>
+            <div class="log-item"><div class="log-dot" style="background:#f59e0b;"></div><div class="log-info"><h4>Password changed</h4><p>Password updated successfully</p></div><div class="log-time">Yesterday</div></div>
+            <div class="log-item"><div class="log-dot" style="background:#22c55e;"></div><div class="log-info"><h4>Account created</h4><p>Welcome to Prolio AI!</p></div><div class="log-time">15 Mar 2026</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ████ DANGER ZONE ████ -->
+      <div class="settings-section" id="sec-danger">
+        <div class="sec-page-title"><h2>⚠️ <em>Danger Zone</em></h2><p>Irreversible actions. Please read carefully before proceeding.</p></div>
+        <div class="card danger-card">
+          <div class="card-body no-pad">
+            <div class="setting-row">
+              <div class="setting-info"><h4>Clear all resumes</h4><p>Delete all saved resumes permanently. Your account stays active.</p></div>
+              <button class="btn-danger" onclick="openModal('clear-resumes')">🗑 Clear Resumes</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>Unpublish portfolio</h4><p>Take your portfolio offline immediately. You can republish anytime.</p></div>
+              <button class="btn-warning" onclick="showToast('⏸ Portfolio taken offline.')">⏸ Unpublish</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>Reset account data</h4><p>Clear all resumes, portfolio data and settings. Account remains active.</p></div>
+              <button class="btn-danger" onclick="openModal('reset-data')">↺ Reset Data</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><h4>Deactivate account</h4><p>Hide your profile temporarily. You can reactivate by logging in again.</p></div>
+              <button class="btn-danger" onclick="openModal('deactivate')">Deactivate</button>
+            </div>
+            <div class="setting-row" style="border-bottom:none;">
+              <div class="setting-info"><h4 style="color:#f87171;">Delete account permanently</h4><p>This will delete your account, all resumes, portfolio and data forever. This cannot be undone.</p></div>
+              <button class="btn-danger" onclick="openModal('delete')">🗑 Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /settings-content -->
+  </div><!-- /settings-shell -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- SAVE BANNER -->
+<div id="save-banner">
+  <p><strong>You have unsaved changes</strong> — save them before leaving this page.</p>
+  <button class="btn-discard" onclick="discardChanges()">Discard</button>
+  <button class="btn-save-all" onclick="saveAllSettings()">
+    <span class="btn-text">💾 Save All Changes</span>
+    <div class="spinner"></div>
+  </button>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <div id="modal-icon">⚠️</div>
+    <div id="modal-title">Confirm Action</div>
+    <div id="modal-body">Are you sure?</div>
+    <input class="finput" id="modal-inp" placeholder="" style="display:none;margin-bottom:16px;">
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm danger" id="modal-confirm-btn" onclick="confirmModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   SECTION NAVIGATION
+══════════════════════════════════════ */
+var currentSection = 'appearance';
+
+function showSection(id) {
+  // Update nav
+  document.querySelectorAll('.sn-item').forEach(function(el){ el.classList.remove('active'); });
+  var navEl = document.getElementById('sn-' + id);
+  if (navEl) navEl.classList.add('active');
+
+  // Update content
+  document.querySelectorAll('.settings-section').forEach(function(el){ el.classList.remove('active'); });
+  var sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+
+  currentSection = id;
+
+  // Close mobile nav if open
+  var nav = document.getElementById('settings-nav');
+  if (nav.classList.contains('mob-open')) { nav.classList.remove('mob-open'); }
+}
+
+function toggleMobNav() {
+  document.getElementById('settings-nav').classList.toggle('mob-open');
+}
+
+/* ══════════════════════════════════════
+   THEME — actually applies CSS vars
+══════════════════════════════════════ */
+var currentTheme = 'dark';
+var THEMES_MAP = {
+  dark: {
+    '--bg':'#080c18', '--bg2':'#0d1220', '--card':'rgba(255,255,255,0.04)',
+    '--border':'rgba(255,255,255,0.08)', '--border-lt':'rgba(255,255,255,0.14)',
+    '--text':'#f1f5f9', '--muted':'rgba(255,255,255,0.45)', '--muted2':'rgba(255,255,255,0.22)',
+    'bg-before-1':'rgba(123,77,255,0.18)', 'bg-before-2':'rgba(73,198,198,0.14)'
+  },
+  light: {
+    '--bg':'#f8fafc', '--bg2':'#f1f5f9', '--card':'rgba(0,0,0,0.04)',
+    '--border':'rgba(0,0,0,0.10)', '--border-lt':'rgba(0,0,0,0.18)',
+    '--text':'#0f172a', '--muted':'rgba(0,0,0,0.45)', '--muted2':'rgba(0,0,0,0.25)',
+    'bg-before-1':'rgba(123,77,255,0.10)', 'bg-before-2':'rgba(73,198,198,0.08)'
+  },
+  midnight: {
+    '--bg':'#000000', '--bg2':'#080810', '--card':'rgba(255,255,255,0.03)',
+    '--border':'rgba(255,255,255,0.07)', '--border-lt':'rgba(255,255,255,0.12)',
+    '--text':'#e2e8f0', '--muted':'rgba(255,255,255,0.38)', '--muted2':'rgba(255,255,255,0.18)',
+    'bg-before-1':'rgba(123,77,255,0.12)', 'bg-before-2':'rgba(73,198,198,0.08)'
+  },
+  system: null /* handled separately */
+};
+
+function setTheme(theme, el) {
+  /* Update button highlight */
+  document.querySelectorAll('.theme-opt').forEach(function(o){ o.classList.remove('active'); });
+  el.classList.add('active');
+  currentTheme = theme;
+
+  var root = document.documentElement;
+
+  if (theme === 'system') {
+    /* Detect OS preference */
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    theme = prefersDark ? 'dark' : 'light';
+  }
+
+  var map = THEMES_MAP[theme];
+  if (map) {
+    Object.keys(map).forEach(function(prop) {
+      if (prop.startsWith('--')) {
+        root.style.setProperty(prop, map[prop]);
+      }
+    });
+    /* Rebuild body ambient gradient */
+    var c1 = map['bg-before-1'] || 'rgba(123,77,255,0.18)';
+    var c2 = map['bg-before-2'] || 'rgba(73,198,198,0.14)';
+    /* Inject a live style override for body::before pseudo */
+    var styleId = 'theme-override';
+    var existing = document.getElementById(styleId);
+    if (!existing) { existing = document.createElement('style'); existing.id = styleId; document.head.appendChild(existing); }
+    existing.textContent = 'body::before { background: radial-gradient(ellipse at 0% 0%,' + c1 + ' 0%,transparent 50%), radial-gradient(ellipse at 100% 80%,' + c2 + ' 0%,transparent 50%) !important; }';
+
+    /* Light mode — sidebar and topbar need special treatment */
+    var sidebarBg = (theme === 'light') ? 'rgba(240,244,248,0.97)' : 'rgba(8,12,24,0.92)';
+    var topbarBg  = (theme === 'light') ? 'rgba(248,250,252,0.92)' : 'rgba(8,12,24,0.8)';
+    document.getElementById('sidebar').style.background = sidebarBg;
+    document.getElementById('topbar').style.background  = topbarBg;
+  }
+
+  var labels = { dark:'🌙 Dark mode applied', light:'☀️ Light mode applied', system:'🖥️ Using system preference', midnight:'🌑 Midnight mode applied' };
+  showToast(labels[currentTheme] || 'Theme updated');
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   ACCENT — actually updates CSS vars
+══════════════════════════════════════ */
+var ACCENTS = {
+  purple: { main:'#7b4dff', lt:'#a78bff', secondary:'#5E7CFF', grad:'linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6)' },
+  cyan:   { main:'#0891b2', lt:'#7bedff', secondary:'#49C6C6', grad:'linear-gradient(135deg,#49C6C6,#0891b2,#2F8DA8)' },
+  green:  { main:'#16a34a', lt:'#4ade80', secondary:'#22c55e', grad:'linear-gradient(135deg,#22c55e,#16a34a,#15803d)' },
+  orange: { main:'#ea6c00', lt:'#fb923c', secondary:'#f97316', grad:'linear-gradient(135deg,#f97316,#ea6c00,#ef4444)' },
+  pink:   { main:'#db2777', lt:'#f9a8d4', secondary:'#e11d78', grad:'linear-gradient(135deg,#e11d78,#db2777,#f472b6)' },
+  gold:   { main:'#b45309', lt:'#fbbf24', secondary:'#d97706', grad:'linear-gradient(135deg,#daa520,#b45309,#ffe066)' },
+  sky:    { main:'#0284c7', lt:'#7dd3fc', secondary:'#0ea5e9', grad:'linear-gradient(135deg,#0ea5e9,#0284c7,#38bdf8)' },
+  violet: { main:'#7c3aed', lt:'#c4b5fd', secondary:'#8b5cf6', grad:'linear-gradient(135deg,#8b5cf6,#7c3aed,#a78bfa)' }
+};
+
+function setAccent(color, el) {
+  /* Update dot highlight */
+  document.querySelectorAll('.accent-dot').forEach(function(d){ d.classList.remove('active'); d.textContent = ''; });
+  el.classList.add('active'); el.textContent = '✓';
+
+  var acc = ACCENTS[color];
+  if (!acc) { showToast('Unknown accent'); return; }
+
+  var root = document.documentElement;
+  root.style.setProperty('--purple',    acc.main);
+  root.style.setProperty('--purple-lt', acc.lt);
+  root.style.setProperty('--blue',      acc.secondary);
+  root.style.setProperty('--grad',      acc.grad);
+
+  /* Also update the sb-logo gradient (uses background-image text clip) */
+  var styleId = 'accent-override';
+  var existing = document.getElementById(styleId);
+  if (!existing) { existing = document.createElement('style'); existing.id = styleId; document.head.appendChild(existing); }
+  existing.textContent = [
+    '#sb-logo, .sn-item.active, .plan-name.pro-name { background:' + acc.grad + '; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }',
+    '.nav-item.active { background:rgba(123,77,255,0.18); border-color:rgba(123,77,255,0.25); }',
+    '#sb-avatar, #topbar-avatar, #avatar-img { background:' + acc.grad + ' !important; }',
+    '.btn-primary, .btn-save-all, #sb-upgrade-btn, .plan-btn.upgrade-btn { background:' + acc.grad + ' !important; }',
+    '.sn-item.active { background:rgba(123,77,255,0.15); border-color:rgba(123,77,255,0.22); color:' + acc.lt + '; }',
+    '.tog-switch input:checked + .tog-track { background:' + acc.main + '88; border-color:' + acc.main + '66; }'
+  ].join('\n');
+
+  showToast('✓ Accent colour updated to ' + color);
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   FONT
+══════════════════════════════════════ */
+function setFont(family, id, el) {
+  document.querySelectorAll('.font-opt').forEach(function(o){ o.classList.remove('active'); });
+  el.classList.add('active');
+  document.body.style.fontFamily = "'" + family + "', sans-serif";
+  showToast('Font updated to ' + family);
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   DENSITY
+══════════════════════════════════════ */
+function setDensity(type, el) {
+  el.closest('.density-grid').querySelectorAll('.density-opt').forEach(function(o){ o.classList.remove('active'); });
+  el.classList.add('active');
+  showToast('Layout density: ' + type);
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   AI TONE
+══════════════════════════════════════ */
+function setTone(tone, el) {
+  el.closest('.density-grid').querySelectorAll('.density-opt').forEach(function(o){ o.classList.remove('active'); });
+  el.classList.add('active');
+  showToast('AI tone set to: ' + tone);
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   QUIET HOURS
+══════════════════════════════════════ */
+function toggleQuiet(cb) {
+  var times = document.getElementById('quiet-times');
+  times.style.opacity = cb.checked ? '1' : '0.4';
+  times.style.pointerEvents = cb.checked ? 'auto' : 'none';
+  markDirty();
+}
+
+/* ══════════════════════════════════════
+   SLUG PREVIEW
+══════════════════════════════════════ */
+function updateSlugPreview(val) {
+  var clean = val.toLowerCase().replace(/[^a-z0-9\-]/g,'');
+  document.getElementById('slug-preview').textContent = clean || 'yourname';
+}
+
+/* ══════════════════════════════════════
+   API KEY
+══════════════════════════════════════ */
+var apiKeyRevealed = false;
+var API_KEY = 'sk-prolio-b3jX9mQpTkLrN2wVc5aY8uHdEoFiGs7A1';
+function copyApiKey() {
+  if (!apiKeyRevealed) { openModal('reveal-key'); return; }
+  try { navigator.clipboard.writeText(API_KEY); } catch(e) {}
+  showToast('🔑 API key copied to clipboard!');
+}
+
+/* ══════════════════════════════════════
+   SESSIONS
+══════════════════════════════════════ */
+function revokeSession(btn, device) {
+  var row = btn.closest('.session-item');
+  row.style.opacity = '0'; row.style.transition = 'opacity 0.3s';
+  setTimeout(function(){ row.remove(); }, 300);
+  showToast('✅ ' + device + ' session revoked');
+}
+
+/* ══════════════════════════════════════
+   DIRTY / SAVE BANNER
+══════════════════════════════════════ */
+var isDirty = false;
+function markDirty() {
+  if (isDirty) return;
+  isDirty = true;
+  document.getElementById('save-banner').classList.add('show');
+}
+function discardChanges() {
+  isDirty = false;
+  document.getElementById('save-banner').classList.remove('show');
+  showToast('↺ Changes discarded');
+}
+function saveAllSettings() {
+  var btn = document.querySelector('.btn-save-all');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(function(){
+    btn.classList.remove('loading'); btn.disabled = false;
+    isDirty = false;
+    document.getElementById('save-banner').classList.remove('show');
+    showToast('✅ All settings saved!');
+  }, 1000);
+}
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', function(e) {
+  if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+var modalAction = '';
+function openModal(action) {
+  modalAction = action;
+  var inp = document.getElementById('modal-inp');
+  var confirmBtn = document.getElementById('modal-confirm-btn');
+  inp.style.display = 'none'; inp.value = '';
+  confirmBtn.className = 'modal-confirm danger';
+
+  var cfg = {
+    '2fa-app':       { icon:'📱', title:'Setup Authenticator',    body:'Scan the QR code in your authenticator app (Google Authenticator, Authy etc.) to enable 2FA. This feature is coming soon!', confirm:'Got it', safe:true },
+    '2fa-sms':       { icon:'📲', title:'SMS Authentication',     body:'We\'ll send a code to your registered mobile number each time you log in. Coming soon!', confirm:'Got it', safe:true },
+    'recovery-email':{ icon:'✉️', title:'Recovery Email',         body:'Set a separate email address to recover your account if you lose access.', confirm:'Save', safe:true },
+    'regen-key':     { icon:'🔑', title:'Regenerate API Key',     body:'This will invalidate your current API key immediately. Any apps using it will stop working. Are you sure?', confirm:'Regenerate' },
+    'reveal-key':    { icon:'👁', title:'Reveal API Key',          body:'For security, confirm you want to copy your secret API key to clipboard.', confirm:'Copy Key', safe:true },
+    'revoke-all':    { icon:'🔒', title:'Revoke All Sessions',     body:'All other active sessions will be immediately logged out. You will stay signed in on this device.', confirm:'Revoke All' },
+    'clear-resumes': { icon:'🗑️', title:'Clear All Resumes',       body:'This will permanently delete all your saved resumes. This cannot be undone. Type CLEAR to confirm.', confirm:'Clear Resumes', input:'Type CLEAR to confirm' },
+    'reset-data':    { icon:'↺',  title:'Reset Account Data',      body:'All resumes, portfolio data and settings will be cleared. Your account stays active. Type RESET to confirm.', confirm:'Reset Data', input:'Type RESET to confirm' },
+    'deactivate':    { icon:'⏸️', title:'Deactivate Account',      body:'Your profile and portfolio will be hidden from public view. You can reactivate at any time by logging in.', confirm:'Deactivate', safe:true },
+    'delete':        { icon:'🗑️', title:'Delete Account Forever',  body:'This permanently deletes your account, all resumes, portfolio and every byte of your data. This CANNOT be undone. Type DELETE to confirm.', confirm:'Delete Forever', input:'Type DELETE to confirm' },
+    'upgrade':       { icon:'💎', title:'Upgrade to Pro',          body:'Unlock unlimited resumes, custom domains, advanced analytics, AI (unlimited) and API access for just ₹299/month. Payment coming soon!', confirm:'Notify Me', safe:true },
+  };
+
+  var c = cfg[action] || { icon:'⚠️', title:'Confirm', body:'Are you sure?', confirm:'Confirm' };
+  document.getElementById('modal-icon').textContent  = c.icon;
+  document.getElementById('modal-title').textContent = c.title;
+  document.getElementById('modal-body').textContent  = c.body;
+  if (c.input) { inp.style.display = 'block'; inp.placeholder = c.input; }
+  if (c.safe)  { confirmBtn.className = 'modal-confirm safe'; }
+  confirmBtn.textContent = c.confirm;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  modalAction = '';
+}
+
+function confirmModal() {
+  var inp = document.getElementById('modal-inp').value.trim();
+  if (modalAction === 'delete' && inp !== 'DELETE') { showToast('⚠️ Type DELETE in caps to confirm'); return; }
+  if (modalAction === 'clear-resumes' && inp !== 'CLEAR') { showToast('⚠️ Type CLEAR in caps to confirm'); return; }
+  if (modalAction === 'reset-data' && inp !== 'RESET') { showToast('⚠️ Type RESET in caps to confirm'); return; }
+
+  var msgs = {
+    'regen-key':     '🔑 API key regenerated successfully',
+    'reveal-key':    function(){ apiKeyRevealed=true; try{navigator.clipboard.writeText(API_KEY);}catch(e){}return '🔑 API key copied!'; },
+    'revoke-all':    '✅ All other sessions revoked',
+    'clear-resumes': '🗑 All resumes cleared',
+    'reset-data':    '↺ Account data reset',
+    'deactivate':    '⏸ Account deactivated',
+    'delete':        '🗑 Account deletion requested — check your email',
+    'upgrade':       '🚀 We\'ll notify you when payments go live!',
+    '2fa-app':       '📱 Coming soon!',
+    '2fa-sms':       '📲 Coming soon!',
+    'recovery-email':'✅ Recovery email saved',
+  };
+  var msg = msgs[modalAction];
+  if (typeof msg === 'function') msg = msg();
+  if (msg) showToast(msg);
+  closeModal();
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3200);
+}
+
+/* ── PLAN STATE ── */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+  if(isPro){
+    document.querySelectorAll('input[type="checkbox"][disabled]').forEach(function(inp){
+      inp.removeAttribute('disabled');
+    });
+  }
+})();
+</script>
+</body>
+</html>

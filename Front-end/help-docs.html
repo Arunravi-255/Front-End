@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help & Docs — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#7b4dff; --purple-lt:#a78bff; --blue:#5E7CFF; --cyan:#49C6C6;
+  --green:#22c55e; --red:#ef4444; --gold:#ffe066; --orange:#f97316;
+  --bg:#080c18; --bg2:#0d1220; --card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08); --border-lt:rgba(255,255,255,0.14);
+  --text:#f1f5f9; --muted:rgba(255,255,255,0.45); --muted2:rgba(255,255,255,0.22);
+  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  --sidebar-w:240px; --header-h:64px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 0% 0%,rgba(123,77,255,0.18) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.14) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 40%,rgba(94,124,255,0.08) 0%,transparent 55%);}
+
+/* ── SHELL ── */
+#shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:rgba(8,12,24,0.92);
+  border-right:1px solid var(--border);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);}
+#sb-logo{padding:22px 20px 18px;font-size:20px;font-weight:900;letter-spacing:3px;font-style:italic;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;flex-shrink:0;}
+#sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 10px 6px;}
+.sb-lbl:first-child{padding-top:4px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;
+  margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(123,77,255,0.18);color:#c4b5fd;border-color:rgba(123,77,255,0.25);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(123,77,255,0.25);}
+.nav-item:hover:not(.active) .nav-icon{background:rgba(255,255,255,0.07);}
+.nav-badge{margin-left:auto;background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px;}
+#sb-upgrade{margin:12px;padding:16px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));
+  border:1px solid rgba(123,77,255,0.3);flex-shrink:0;}
+#sb-upgrade h4{font-size:13px;font-weight:800;margin-bottom:4px;color:#c4b5fd;}
+#sb-upgrade p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+#sb-upgrade-btn{width:100%;padding:8px;border:none;border-radius:8px;background:var(--grad);
+  color:white;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+#sb-user{padding:14px;border-top:1px solid var(--border);display:flex;align-items:center;
+  gap:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+#sb-user:hover{background:rgba(255,255,255,0.04);}
+#sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;flex-shrink:0;}
+#sb-user-name{font-size:13px;font-weight:700;}
+#sb-user-role{font-size:11px;color:var(--muted);}
+#sb-user-arrow{margin-left:auto;color:var(--muted);font-size:12px;}
+#sb-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.6);}
+#sb-overlay.show{display:block;}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+#topbar{height:var(--header-h);background:rgba(8,12,24,0.8);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;
+  padding:0 32px;gap:16px;position:sticky;top:0;z-index:100;}
+#mob-menu{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+.tb-title{font-size:16px;font-weight:800;}
+.tb-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+#tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all 0.2s;position:relative;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;
+  background:#ef4444;border:1.5px solid var(--bg);}
+#tb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;cursor:pointer;border:2px solid rgba(123,77,255,0.4);}
+
+/* ── HERO ── */
+#help-hero{padding:52px 40px 40px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(123,77,255,0.08),rgba(73,198,198,0.04));
+  position:relative;overflow:hidden;text-align:center;}
+#help-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,77,255,0.12),transparent 65%);pointer-events:none;}
+#help-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);
+  font-weight:900;margin-bottom:10px;position:relative;}
+#help-hero h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#help-hero p{font-size:14px;color:var(--muted);line-height:1.7;max-width:520px;
+  margin:0 auto 28px;position:relative;}
+
+/* SEARCH BAR */
+#search-wrap{position:relative;max-width:560px;margin:0 auto;z-index:1;}
+#search-input{width:100%;padding:14px 52px 14px 52px;border-radius:14px;
+  background:rgba(255,255,255,0.07);border:1px solid var(--border-lt);
+  color:var(--text);font-size:14px;font-family:'Montserrat',sans-serif;
+  outline:none;transition:all 0.25s;}
+#search-input::placeholder{color:var(--muted);}
+#search-input:focus{border-color:rgba(123,77,255,0.6);background:rgba(255,255,255,0.1);
+  box-shadow:0 0 0 4px rgba(123,77,255,0.1);}
+#search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  font-size:17px;pointer-events:none;}
+#search-clear{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;
+  display:none;transition:color 0.2s;padding:2px;}
+#search-clear:hover{color:var(--text);}
+#search-results{position:absolute;top:calc(100% + 8px);left:0;right:0;
+  background:#0f172a;border:1px solid var(--border-lt);border-radius:12px;
+  overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.5);display:none;z-index:200;}
+.sr-item{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  cursor:pointer;transition:background 0.15s;border-bottom:1px solid var(--border);}
+.sr-item:last-child{border-bottom:none;}
+.sr-item:hover{background:rgba(123,77,255,0.08);}
+.sr-icon{font-size:16px;flex-shrink:0;}
+.sr-title{font-size:13px;font-weight:700;}
+.sr-cat{font-size:11px;color:var(--muted);margin-top:1px;}
+.sr-arrow{margin-left:auto;color:var(--muted);font-size:12px;}
+
+/* QUICK LINKS */
+#quick-links{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px;position:relative;z-index:1;}
+.ql{padding:7px 16px;border-radius:50px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--muted);
+  cursor:pointer;transition:all 0.2s;}
+.ql:hover{background:rgba(123,77,255,0.15);border-color:rgba(123,77,255,0.35);color:#c4b5fd;}
+
+/* HERO STATS */
+#hero-stats{display:flex;justify-content:center;gap:clamp(24px,5vw,60px);margin-top:32px;flex-wrap:wrap;position:relative;z-index:1;}
+.hs{text-align:center;}
+.hs-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--text);}
+.hs-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+
+/* ── BODY LAYOUT ── */
+#help-body{display:flex;flex:1;align-items:start;}
+
+/* ── LEFT NAV ── */
+#help-nav{width:230px;flex-shrink:0;position:sticky;top:var(--header-h);
+  height:calc(100vh - var(--header-h));overflow-y:auto;overflow-x:hidden;
+  border-right:1px solid var(--border);background:rgba(5,8,16,0.6);padding:16px 0;}
+#help-nav::-webkit-scrollbar{width:3px;}
+#help-nav::-webkit-scrollbar-thumb{background:rgba(123,77,255,0.3);border-radius:3px;}
+.hn-label{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted2);padding:12px 18px 5px;display:block;}
+.hn-item{display:flex;align-items:center;gap:8px;padding:8px 18px;font-size:12px;
+  font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s;
+  border-left:2px solid transparent;}
+.hn-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.hn-item.active{color:#c4b5fd;border-left-color:var(--purple);background:rgba(123,77,255,0.06);}
+.hn-badge{margin-left:auto;font-size:9px;font-weight:800;padding:1px 6px;border-radius:50px;}
+.hb-new{background:rgba(34,197,94,0.15);color:#4ade80;}
+.hb-hot{background:rgba(239,68,68,0.15);color:#f87171;}
+
+/* ── CONTENT ── */
+#help-content{flex:1;min-width:0;padding:32px 40px;max-width:900px;}
+
+/* SECTIONS */
+.hsec{display:none;flex-direction:column;gap:22px;animation:fadeUp 0.3s ease;}
+.hsec.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.hsec-head{padding-bottom:16px;border-bottom:1px solid var(--border);}
+.hsec-head h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:6px;}
+.hsec-head h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hsec-head p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.card-head h3{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.card-body{padding:20px;}
+.card-body.np{padding:0;}
+
+/* TOPIC GRID (used in home overview) */
+.topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px;cursor:pointer;transition:all 0.22s;display:flex;flex-direction:column;gap:8px;}
+.topic-card:hover{border-color:rgba(123,77,255,0.4);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,0.3);}
+.tc-icon{font-size:28px;}
+.tc-title{font-size:13px;font-weight:800;}
+.tc-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.tc-count{font-size:11px;color:var(--purple-lt);font-weight:700;margin-top:4px;}
+
+/* FAQ ACCORDION */
+.faq-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px;transition:border-color 0.2s;}
+.faq-item:last-child{margin-bottom:0;}
+.faq-item.open{border-color:rgba(123,77,255,0.3);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px 18px;cursor:pointer;user-select:none;transition:background 0.15s;}
+.faq-q:hover{background:rgba(255,255,255,0.02);}
+.faq-q-text{font-size:13px;font-weight:700;}
+.faq-chev{font-size:13px;color:var(--muted);transition:transform 0.22s;flex-shrink:0;}
+.faq-item.open .faq-chev{transform:rotate(90deg);color:var(--purple-lt);}
+.faq-a{display:none;padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.8;}
+.faq-item.open .faq-a{display:block;}
+.faq-a code{font-family:'Fira Code',monospace;background:rgba(123,77,255,0.1);color:#c4b5fd;padding:1px 6px;border-radius:4px;font-size:11px;}
+.faq-a a{color:var(--purple-lt);text-decoration:none;font-weight:700;}
+.faq-a a:hover{text-decoration:underline;}
+
+/* GUIDE STEPS */
+.guide-steps{display:flex;flex-direction:column;gap:0;}
+.guide-step{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--border);position:relative;}
+.guide-step:last-child{border-bottom:none;}
+.guide-step::before{content:'';position:absolute;left:19px;top:52px;bottom:0;width:2px;
+  background:linear-gradient(to bottom,rgba(123,77,255,0.3),transparent);pointer-events:none;}
+.guide-step:last-child::before{display:none;}
+.gs-num{width:38px;height:38px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
+.gs-body{flex:1;}
+.gs-title{font-size:13px;font-weight:800;margin-bottom:6px;}
+.gs-desc{font-size:13px;color:var(--muted);line-height:1.7;}
+.gs-tip{margin-top:10px;padding:10px 14px;border-radius:9px;background:rgba(123,77,255,0.08);
+  border:1px solid rgba(123,77,255,0.2);font-size:12px;color:#c4b5fd;}
+.gs-img{margin-top:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:10px;padding:16px;text-align:center;font-size:12px;color:var(--muted);}
+
+/* CODE SNIPPETS */
+.code-wrap{background:#050810;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.code-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);}
+.code-dots{display:flex;gap:5px;}
+.cd{width:10px;height:10px;border-radius:50%;}
+.cd-r{background:#ff5f56;}.cd-y{background:#ffbd2e;}.cd-g{background:#27c93f;}
+.code-lang{font-size:11px;color:var(--muted);font-family:'Fira Code',monospace;margin-left:8px;}
+.copy-btn{padding:4px 11px;border-radius:6px;background:rgba(123,77,255,0.18);
+  border:1px solid rgba(123,77,255,0.3);color:#c4b5fd;font-size:10px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.copy-btn:hover{background:rgba(123,77,255,0.32);}
+.copy-btn.ok{background:rgba(34,197,94,0.18);border-color:rgba(34,197,94,0.3);color:#4ade80;}
+pre{padding:16px 18px;font-family:'Fira Code',monospace;font-size:12px;line-height:1.75;overflow-x:auto;}
+
+/* INFO / CALLOUT BOXES */
+.callout{border-radius:10px;padding:13px 15px;font-size:13px;line-height:1.7;
+  display:flex;gap:10px;align-items:flex-start;margin-bottom:0;}
+.cb-info{background:rgba(94,124,255,0.1);border:1px solid rgba(94,124,255,0.22);color:#93c5fd;}
+.cb-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.22);color:#fbbf24;}
+.cb-tip{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.22);color:#4ade80;}
+.cb-icon{font-size:15px;flex-shrink:0;}
+
+/* VIDEO CARD */
+.video-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.22s;}
+.video-card:hover{border-color:rgba(123,77,255,0.4);transform:translateY(-2px);}
+.video-thumb{height:140px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));
+  display:flex;align-items:center;justify-content:center;position:relative;}
+.play-btn{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  transition:all 0.2s;}
+.video-card:hover .play-btn{background:rgba(123,77,255,0.5);border-color:rgba(123,77,255,0.6);transform:scale(1.1);}
+.video-duration{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(4px);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;}
+.video-info{padding:14px 16px;}
+.video-title{font-size:13px;font-weight:800;margin-bottom:4px;}
+.video-meta{font-size:11px;color:var(--muted);}
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+/* STATUS PAGE */
+.status-row{display:flex;align-items:center;gap:14px;padding:13px 18px;
+  border-bottom:1px solid var(--border);transition:background 0.15s;}
+.status-row:last-child{border-bottom:none;}
+.status-row:hover{background:rgba(255,255,255,0.02);}
+.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.st-op{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.6);}
+.st-deg{background:#f97316;box-shadow:0 0 6px rgba(249,115,22,0.5);}
+.st-down{background:#ef4444;box-shadow:0 0 6px rgba(239,68,68,0.5);}
+.status-name{font-size:13px;font-weight:700;flex:1;}
+.status-tag{font-size:10px;font-weight:800;padding:3px 9px;border-radius:50px;}
+.stag-op{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.22);}
+.stag-deg{background:rgba(249,115,22,0.12);color:#fb923c;border:1px solid rgba(249,115,22,0.22);}
+.uptime-bar{display:flex;gap:2px;margin-left:auto;}
+.ub{width:5px;height:20px;border-radius:2px;background:rgba(34,197,94,0.6);}
+.ub.miss{background:rgba(239,68,68,0.5);}
+
+/* CONTACT CARDS */
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px;display:flex;flex-direction:column;gap:10px;transition:all 0.22s;}
+.contact-card:hover{border-color:rgba(123,77,255,0.35);transform:translateY(-2px);}
+.cc-icon{font-size:28px;}
+.cc-title{font-size:13px;font-weight:800;}
+.cc-desc{font-size:12px;color:var(--muted);line-height:1.5;flex:1;}
+.cc-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;align-self:flex-start;}
+.ccb-green{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.2);}
+.ccb-gold{background:rgba(255,224,102,0.12);color:#ffe066;border:1px solid rgba(255,224,102,0.2);}
+.ccb-blue{background:rgba(94,124,255,0.12);color:#93c5fd;border:1px solid rgba(94,124,255,0.2);}
+.cc-btn{padding:9px 16px;border-radius:9px;font-size:12px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;border:none;
+  display:inline-flex;align-items:center;gap:6px;margin-top:4px;}
+.cc-btn.grad{background:var(--grad);color:white;}
+.cc-btn.grad:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,77,255,0.4);}
+.cc-btn.ghost{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);}
+.cc-btn.ghost:hover{border-color:var(--border-lt);color:var(--text);}
+
+/* TICKET FORM */
+.fgroup{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.flabel{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.8px;text-transform:uppercase;}
+.finput,.fselect,.ftextarea{background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;font-size:13px;font-family:'Montserrat',sans-serif;
+  color:var(--text);outline:none;transition:border-color 0.2s;width:100%;}
+.finput::placeholder,.ftextarea::placeholder{color:var(--muted2);}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:rgba(123,77,255,0.6);background:rgba(255,255,255,0.09);}
+.fselect{appearance:none;cursor:pointer;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;}
+.fselect option{background:#0f172a;}
+.ftextarea{resize:vertical;min-height:110px;line-height:1.6;}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn{padding:10px 22px;border-radius:9px;font-size:12px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:6px;border:none;}
+.btn-grad{background:var(--grad);color:white;}
+.btn-grad:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,77,255,0.4);}
+.btn-ghost{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--border-lt);color:var(--text);}
+.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;
+  border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+.btn.loading .spinner{display:inline-block;}
+.btn.loading .bt{opacity:0.7;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* RELEASE NOTES */
+.rn-item{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--border);}
+.rn-item:last-child{border-bottom:none;}
+.rn-date{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;
+  min-width:80px;font-family:'Fira Code',monospace;padding-top:2px;}
+.rn-right{flex:1;}
+.rn-ver{font-size:12px;font-weight:800;color:#c4b5fd;font-family:'Fira Code',monospace;
+  margin-bottom:7px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.rn-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;}
+.rnt-new{background:rgba(34,197,94,0.15);color:#4ade80;}
+.rnt-fix{background:rgba(239,68,68,0.12);color:#f87171;}
+.rnt-imp{background:rgba(123,77,255,0.15);color:#c4b5fd;}
+.rnt-brk{background:rgba(245,158,11,0.12);color:#fbbf24;}
+.rn-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.rn-list li{font-size:12px;color:var(--muted);display:flex;gap:7px;line-height:1.5;}
+.rn-list li::before{content:'›';color:var(--purple-lt);font-weight:700;flex-shrink:0;}
+
+/* KEYBOARD SHORTCUT CHIP */
+.kbd{display:inline-flex;align-items:center;gap:4px;font-family:'Fira Code',monospace;
+  font-size:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  border-radius:5px;padding:2px 8px;color:var(--text);}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-bottom:20px;}
+.breadcrumb span{cursor:pointer;transition:color 0.15s;}
+.breadcrumb span:hover{color:var(--text);}
+.breadcrumb .sep{opacity:0.4;}
+.breadcrumb .current{color:var(--text);font-weight:700;}
+
+/* FEEDBACK WIDGET */
+#feedback-bar{display:flex;align-items:center;gap:12px;padding:16px 20px;
+  background:rgba(123,77,255,0.06);border:1px solid rgba(123,77,255,0.18);border-radius:12px;}
+#feedback-bar p{font-size:13px;color:var(--muted);flex:1;}
+.fb-btn{padding:6px 16px;border-radius:7px;font-size:12px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;border:none;}
+.fb-yes{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25);color:#4ade80;}
+.fb-yes:hover{background:rgba(34,197,94,0.25);}
+.fb-no{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);}
+.fb-no:hover{border-color:var(--border-lt);color:var(--text);}
+
+/* MODAL */
+#modal-ov{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;}
+#modal-ov.open{display:flex;}
+#modal-box{background:#0f172a;border:1px solid rgba(123,77,255,0.25);border-radius:18px;
+  padding:32px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  animation:mIn 0.3s cubic-bezier(0.22,1,0.36,1);}
+@keyframes mIn{from{opacity:0;transform:scale(0.95)translateY(14px);}to{opacity:1;transform:scale(1)translateY(0);}}
+#m-icon{font-size:32px;margin-bottom:12px;}
+#m-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:8px;}
+#m-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
+.m-actions{display:flex;gap:10px;}
+.m-confirm{flex:1;padding:12px;border-radius:9px;border:none;background:var(--grad);
+  color:white;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+.m-cancel{padding:12px 20px;border-radius:9px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:700;
+  font-family:'Montserrat',sans-serif;cursor:pointer;}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;
+  font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;
+  border:1px solid rgba(255,255,255,0.08);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:1100px){#help-nav{width:190px;}.topic-grid{grid-template-columns:1fr 1fr;}.video-grid{grid-template-columns:1fr 1fr;}.contact-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}#help-nav{display:none;}.topic-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:620px){.topic-grid{grid-template-columns:1fr;}.video-grid{grid-template-columns:1fr;}.contact-grid{grid-template-columns:1fr;}.form-2{grid-template-columns:1fr;}#help-content{padding:20px;}}
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
+    <nav id="sb-nav">
+      <div class="sb-lbl">Main</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
+      <div class="sb-lbl">Manage</div>
+      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
+      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
+      <div class="nav-item" onclick="location.href='developer-api.html'"><div class="nav-icon">🔗</div>Developer API</div>
+      <div class="sb-lbl">Support</div>
+      <div class="nav-item active"><div class="nav-icon">💬</div>Help &amp; Docs</div>
+    </nav>
+    <div id="sb-upgrade">
+      <h4>✨ Go Pro</h4>
+      <p>Unlock priority support, advanced AI and unlimited resumes.</p>
+      <button id="sb-upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
+    </div>
+    <div id="sb-user" onclick="location.href='profile.html'">
+      <div id="sb-avatar">A</div>
+      <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+      <span id="sb-user-arrow">›</span>
+    </div>
+  </aside>
+  <div id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+      <button id="mob-menu" onclick="toggleSidebar()">☰</button>
+      <div>
+        <div class="tb-title">Help &amp; Docs</div>
+        <div class="tb-sub">Guides, tutorials, FAQs and support</div>
+      </div>
+      <div id="tb-right"><span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
+        <div class="tb-btn" onclick="toast('No new notifications')">🔔<span class="notif-dot"></span></div>
+        <div class="tb-btn" onclick="showSection('contact')">🎧 Support</div>
+        <div id="tb-avatar">A</div>
+      </div>
+    </header>
+
+    <!-- HERO + SEARCH -->
+    <div id="help-hero">
+      <h1>How can we <em>help you?</em></h1>
+      <p>Search our documentation, guides and FAQs — or browse by topic below.</p>
+      <div id="search-wrap">
+        <span id="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search for anything… e.g. 'export PDF', 'custom domain', 'API key'" oninput="doSearch(this.value)" onfocus="showResults()" onblur="setTimeout(hideResults,200)">
+        <button id="search-clear" onclick="clearSearch()">✕</button>
+        <div id="search-results"></div>
+      </div>
+      <div id="quick-links">
+        <div class="ql" onclick="showSection('getting-started')">🚀 Getting Started</div>
+        <div class="ql" onclick="showSection('resume')">📄 Resume Builder</div>
+        <div class="ql" onclick="showSection('portfolio')">🌐 Portfolio</div>
+        <div class="ql" onclick="showSection('ai')">✨ AI Features</div>
+        <div class="ql" onclick="showSection('billing')">💳 Billing</div>
+        <div class="ql" onclick="showSection('contact')">🎧 Contact Us</div>
+      </div>
+      <div id="hero-stats">
+        <div class="hs"><div class="hs-val">240+</div><div class="hs-lbl">Help Articles</div></div>
+        <div class="hs"><div class="hs-val">&lt; 2h</div><div class="hs-lbl">Avg Response</div></div>
+        <div class="hs"><div class="hs-val">98%</div><div class="hs-lbl">Issues Resolved</div></div>
+        <div class="hs"><div class="hs-val">24/7</div><div class="hs-lbl">AI Support</div></div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div id="help-body">
+
+      <!-- LEFT NAV -->
+      <nav id="help-nav">
+        <span class="hn-label">Browse</span>
+        <div class="hn-item active" id="hn-home"           onclick="showSection('home')">🏠 Help Home</div>
+        <div class="hn-item"        id="hn-getting-started" onclick="showSection('getting-started')">🚀 Getting Started</div>
+        <div class="hn-item"        id="hn-resume"          onclick="showSection('resume')">📄 Resume Builder</div>
+        <div class="hn-item"        id="hn-portfolio"       onclick="showSection('portfolio')">🌐 Portfolio</div>
+        <div class="hn-item"        id="hn-ai"              onclick="showSection('ai')">✨ AI Features<span class="hn-badge hb-new">New</span></div>
+        <div class="hn-item"        id="hn-account"         onclick="showSection('account')">👤 Account &amp; Profile</div>
+        <div class="hn-item"        id="hn-billing"         onclick="showSection('billing')">💳 Billing &amp; Plans</div>
+        <div class="hn-item"        id="hn-integrations"    onclick="showSection('integrations')">🔌 Integrations</div>
+        <div class="hn-item"        id="hn-privacy"         onclick="showSection('privacy')">🔒 Privacy &amp; Security</div>
+        <div class="hn-item"        id="hn-troubleshoot"    onclick="showSection('troubleshoot')">🔧 Troubleshooting<span class="hn-badge hb-hot">Hot</span></div>
+        <span class="hn-label">Resources</span>
+        <div class="hn-item"        id="hn-videos"          onclick="showSection('videos')">🎬 Video Tutorials</div>
+        <div class="hn-item"        id="hn-shortcuts"       onclick="showSection('shortcuts')">⌨️ Keyboard Shortcuts</div>
+        <div class="hn-item"        id="hn-status"          onclick="showSection('status')">🟢 System Status</div>
+        <div class="hn-item"        id="hn-releases"        onclick="showSection('releases')">📋 Release Notes</div>
+        <span class="hn-label">Support</span>
+        <div class="hn-item"        id="hn-contact"         onclick="showSection('contact')">🎧 Contact Support</div>
+        <div class="hn-item"        id="hn-community"       onclick="showSection('community')">👥 Community</div>
+      </nav>
+
+      <!-- CONTENT -->
+      <div id="help-content">
+
+        <!-- ══ HOME ══ -->
+        <div class="hsec active" id="sec-home">
+          <div class="hsec-head">
+            <h2>👋 Welcome to <em>Prolio AI</em> Help</h2>
+            <p>Everything you need to build the perfect resume and portfolio. Browse by topic or search above.</p>
+          </div>
+          <div class="topic-grid">
+            <div class="topic-card" onclick="showSection('getting-started')">
+              <div class="tc-icon">🚀</div>
+              <div class="tc-title">Getting Started</div>
+              <div class="tc-desc">Set up your account, create your first resume and go live in minutes.</div>
+              <div class="tc-count">12 articles</div>
+            </div>
+            <div class="topic-card" onclick="showSection('resume')">
+              <div class="tc-icon">📄</div>
+              <div class="tc-title">Resume Builder</div>
+              <div class="tc-desc">Templates, sections, formatting, PDF export and sharing your resume.</div>
+              <div class="tc-count">28 articles</div>
+            </div>
+            <div class="topic-card" onclick="showSection('portfolio')">
+              <div class="tc-icon">🌐</div>
+              <div class="tc-title">Portfolio</div>
+              <div class="tc-desc">Building your live portfolio, custom domains, themes and SEO.</div>
+              <div class="tc-count">19 articles</div>
+            </div>
+            <div class="topic-card" onclick="showSection('ai')">
+              <div class="tc-icon">✨</div>
+              <div class="tc-title">AI Features</div>
+              <div class="tc-desc">AI enhancement, auto-writing, smart suggestions and tone controls.</div>
+              <div class="tc-count">16 articles</div>
+            </div>
+            <div class="topic-card" onclick="showSection('billing')">
+              <div class="tc-icon">💳</div>
+              <div class="tc-title">Billing &amp; Plans</div>
+              <div class="tc-desc">Free vs Pro, upgrades, payments, invoices and cancellations.</div>
+              <div class="tc-count">10 articles</div>
+            </div>
+            <div class="topic-card" onclick="showSection('troubleshoot')">
+              <div class="tc-icon">🔧</div>
+              <div class="tc-title">Troubleshooting</div>
+              <div class="tc-desc">Common issues, error messages, bugs and how to fix them fast.</div>
+              <div class="tc-count">22 articles</div>
+            </div>
+          </div>
+          <!-- Popular Articles -->
+          <div class="card">
+            <div class="card-head"><h3>🔥 Most Popular Articles</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                  <span class="faq-q-text">How do I export my resume as a PDF?</span>
+                  <span class="faq-chev">›</span>
+                </div>
+                <div class="faq-a">Open your resume in the Resume Builder, then click the <strong>Export</strong> button in the top-right toolbar. Choose <strong>PDF</strong> from the dropdown. Your browser will download a pixel-perfect PDF version. Make sure pop-ups are enabled for the best experience. <a onclick="showSection('resume')">Read the full guide →</a></div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                  <span class="faq-q-text">How do I make my portfolio public?</span>
+                  <span class="faq-chev">›</span>
+                </div>
+                <div class="faq-a">Go to your Portfolio page, click <strong>Settings</strong> in the top bar, then toggle <strong>Publish Portfolio</strong> to ON. Your portfolio will immediately be accessible at <code>prolioai.com/u/yourusername</code>. You can customise your URL slug in Portfolio Settings. <a onclick="showSection('portfolio')">Portfolio guide →</a></div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                  <span class="faq-q-text">What does AI Enhancement do?</span>
+                  <span class="faq-chev">›</span>
+                </div>
+                <div class="faq-a">AI Enhancement rewrites your experience descriptions, summaries and project descriptions to sound more professional and impactful. It corrects grammar, improves phrasing, adds action verbs and tailors the tone. You stay in control — it suggests, you decide. Uses 1 AI credit per enhancement. <a onclick="showSection('ai')">AI features guide →</a></div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                  <span class="faq-q-text">Can I have multiple resumes?</span>
+                  <span class="faq-chev">›</span>
+                </div>
+                <div class="faq-a">Free plan users can create up to <strong>3 resumes</strong>. Pro plan users get <strong>unlimited resumes</strong>. You can duplicate an existing resume as a starting point for a new one — great for tailoring your resume per job application.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                  <span class="faq-q-text">How do I connect a custom domain to my portfolio?</span>
+                  <span class="faq-chev">›</span>
+                </div>
+                <div class="faq-a">Custom domains are a <strong>Pro plan</strong> feature. Upgrade your account, then go to Portfolio → Settings → Custom Domain. Enter your domain, then add a CNAME record pointing to <code>cname.prolioai.com</code> in your domain registrar's DNS settings. Changes propagate within 24–48 hours. <a onclick="showSection('portfolio')">Full setup guide →</a></div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar">
+            <p>Was this page helpful?</p>
+            <button class="fb-btn fb-yes" onclick="toast('👍 Thanks for the feedback!')">👍 Yes</button>
+            <button class="fb-btn fb-no"  onclick="toast('📝 We\'ll improve this page!')">👎 No</button>
+          </div>
+        </div>
+
+        <!-- ══ GETTING STARTED ══ -->
+        <div class="hsec" id="sec-getting-started">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Getting Started</span></div>
+          <div class="hsec-head">
+            <h2>🚀 <em>Getting Started</em></h2>
+            <p>From creating your account to publishing your first live portfolio — this guide covers every step.</p>
+          </div>
+          <div class="callout cb-tip"><span class="cb-icon">💡</span><div>Most users complete setup and go live in under <strong>10 minutes</strong>. Follow these steps in order for the smoothest experience.</div></div>
+          <div class="card">
+            <div class="card-head"><h3>📋 Setup Checklist</h3><span style="font-size:11px;color:var(--green);font-weight:700;" id="checklist-progress">0 / 6 complete</span></div>
+            <div class="card-body np">
+              <div style="display:flex;flex-direction:column;">
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Create your Prolio AI account</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Complete your profile (name, role, location)</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Add at least one work experience</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Create your first resume and choose a template</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Run AI Enhancement on your resume</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+                  <input type="checkbox" class="cl-check" onchange="updateChecklist()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+                  <span style="font-size:13px;font-weight:600;">Publish your portfolio and share the link</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>🪜 Step-by-Step Guide</h3></div>
+            <div class="card-body">
+              <div class="guide-steps">
+                <div class="guide-step">
+                  <div class="gs-num">1</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Create your account</div>
+                    <div class="gs-desc">Visit <strong>prolioai.com</strong> and click <strong>Sign Up</strong>. You can register with your email or continue with Google. Verify your email within 24 hours to unlock all features.</div>
+                    <div class="gs-tip">💡 Tip: Use your professional email address — it appears in your portfolio contact section.</div>
+                  </div>
+                </div>
+                <div class="guide-step">
+                  <div class="gs-num">2</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Complete your profile</div>
+                    <div class="gs-desc">Go to <strong>Profile</strong> in the sidebar. Fill in your name, job title, location, bio, skills and social links. The more complete your profile, the stronger your portfolio will look. Aim for 90%+ profile strength.</div>
+                    <div class="gs-tip">💡 Tip: Add your GitHub and LinkedIn URLs — they auto-link in your portfolio.</div>
+                  </div>
+                </div>
+                <div class="guide-step">
+                  <div class="gs-num">3</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Build your first resume</div>
+                    <div class="gs-desc">Click <strong>Resume Builder</strong> in the sidebar. Choose a template from the 35 available. Fill in your experience, education, skills and projects. Use the live preview to see changes in real-time.</div>
+                    <div class="gs-tip">💡 Tip: Start with the <strong>Midnight</strong> template — it's the most popular for tech roles.</div>
+                  </div>
+                </div>
+                <div class="guide-step">
+                  <div class="gs-num">4</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Use AI to improve it</div>
+                    <div class="gs-desc">Click the ✨ <strong>AI Enhance</strong> button next to any experience description. AI will rewrite it with stronger action verbs, better phrasing and a more professional tone. You can accept, edit or regenerate the suggestion.</div>
+                    <div class="gs-tip">💡 Tip: Free plan gives you 100 AI credits per month. Use them on your most important sections first.</div>
+                  </div>
+                </div>
+                <div class="guide-step">
+                  <div class="gs-num">5</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Export or share your resume</div>
+                    <div class="gs-desc">Click <strong>Export PDF</strong> to download a print-ready version. Or click <strong>Share Link</strong> to get a direct URL to your live resume — perfect for pasting into job applications.</div>
+                  </div>
+                </div>
+                <div class="guide-step">
+                  <div class="gs-num">6</div>
+                  <div class="gs-body">
+                    <div class="gs-title">Publish your portfolio</div>
+                    <div class="gs-desc">Click <strong>My Portfolio</strong> in the sidebar. Choose a theme, customise your URL slug, and click <strong>Publish</strong>. Share your portfolio link on LinkedIn, in your email signature and on job applications.</div>
+                    <div class="gs-tip">🎉 Your portfolio is live at <strong>prolioai.com/u/yourusername</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this guide helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="toast('📝 We\'ll improve this!')">👎 No</button></div>
+        </div>
+
+        <!-- ══ RESUME ══ -->
+        <div class="hsec" id="sec-resume">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Resume Builder</span></div>
+          <div class="hsec-head">
+            <h2>📄 Resume <em>Builder</em></h2>
+            <p>Everything about creating, editing, exporting and sharing your resumes.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Frequently Asked Questions</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How many resume templates are available?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Prolio AI offers <strong>35 professionally designed templates</strong> including standard, modern, creative, photo-based and minimal styles. All templates are ATS-friendly (Applicant Tracking System compatible). New templates are added regularly.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I export my resume as a PDF?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">In the Resume Builder, click the <strong>Export</strong> button in the top toolbar. Select <strong>PDF</strong> — a download will start immediately. The PDF is pixel-perfect and print-ready at A4 size. For the best result, ensure all browser extensions are disabled during export. You can also export as <strong>DOCX</strong> (Word) or <strong>JSON</strong> for developers.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I reorder sections on my resume?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes. In the Resume Builder, hover over any section header to reveal the <strong>drag handle</strong> (⠿ icon) on the left. Click and drag to reorder sections. This is useful for putting Skills before Experience when applying to technical roles.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I duplicate a resume?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">From the Dashboard, hover over any resume card and click the <strong>⋯ menu</strong> → <strong>Duplicate</strong>. A copy is created instantly with all your existing content. Useful for creating tailored versions per job application without losing your original.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why is my resume showing on two pages?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">If your content exceeds one page, the resume automatically flows to a second page — this is intentional and expected for experienced professionals. To fit one page: shorten descriptions, reduce font size (Font Size slider in the toolbar), remove less important sections, or use a more compact template like <strong>Compact Pro</strong> or <strong>Minimal</strong>.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Are Prolio AI resumes ATS-compatible?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes. All 35 templates generate clean, machine-readable PDFs that Applicant Tracking Systems can parse correctly. We avoid tables, graphics and multi-column layouts in the underlying structure. The exported PDF contains selectable, copyable text — not an image.</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout cb-warn"><span class="cb-icon">⚠️</span><div>When sharing your resume link, note that <strong>anyone with the link can view it</strong>. If you need privacy, set your portfolio to password-protected (Pro feature) or share only the PDF.</div></div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ PORTFOLIO ══ -->
+        <div class="hsec" id="sec-portfolio">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Portfolio</span></div>
+          <div class="hsec-head">
+            <h2>🌐 <em>Portfolio</em></h2>
+            <p>Build, customise, publish and share your live portfolio website.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Portfolio FAQs</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I publish my portfolio?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>My Portfolio</strong> in the sidebar. Click the <strong>Publish</strong> button in the top bar. Your portfolio becomes live at <code>prolioai.com/u/yourslug</code> instantly. You can unpublish at any time from Portfolio Settings.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I change my portfolio URL?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Portfolio Settings → Username / Slug</strong>. Type your desired username — it must be lowercase, letters/numbers/hyphens only. Your old URL will stop working immediately after changing, so update any links you've shared.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I use my own domain name?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes, custom domains are a <strong>Pro feature</strong>. After upgrading, go to <strong>Settings → Portfolio Settings → Custom Domain</strong>. Add your domain, then create a CNAME record in your DNS settings pointing to <code>cname.prolioai.com</code>. SSL is automatically provisioned. Propagation takes 24–48 hours.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I change my portfolio theme?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Inside your Portfolio, click the <strong>🎨 Themes</strong> tab in the right sidebar. Browse the 35+ themes and click any to preview instantly. Click <strong>Apply Theme</strong> to make it live. Changes reflect on your public URL immediately.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Will my portfolio show up on Google?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">By default, search engine indexing is <strong>enabled</strong>. Your portfolio will be crawled by Google and Bing once published. To disable indexing, go to <strong>Settings → Privacy → Indexing by search engines</strong> and toggle it off. You can also set a custom SEO title and meta description in Portfolio Settings.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ AI FEATURES ══ -->
+        <div class="hsec" id="sec-ai">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">AI Features</span></div>
+          <div class="hsec-head">
+            <h2>✨ AI <em>Features</em></h2>
+            <p>Understand how Prolio AI's intelligence works and how to get the best results from it.</p>
+          </div>
+          <div class="callout cb-info"><span class="cb-icon">ℹ️</span><div>AI features use credits. Free plan includes <strong>100 credits/month</strong>. Pro plan has <strong>unlimited</strong> credits. Credits reset on the 1st of each month.</div></div>
+          <div class="card">
+            <div class="card-head"><h3>🤖 AI Feature Guide</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is AI Enhancement and how do I use it?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">AI Enhancement rewrites any text block on your resume to sound more professional. Click the <strong>✨ button</strong> next to any text field in the Resume Builder. The AI will suggest an improved version — you can <strong>Accept</strong>, <strong>Edit</strong> or <strong>Regenerate</strong> it. Each enhancement uses 1 credit.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How does AI tone selection work?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">When using AI, you can pick from three tones:<br><br><strong>Professional</strong> — formal, polished language suited for corporate roles.<br><strong>Friendly</strong> — warm, approachable language for startups or creative roles.<br><strong>Bold</strong> — confident, direct language for senior or leadership positions.<br><br>You can set your default tone in <strong>Settings → AI Preferences → AI Writing Tone</strong>.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can AI write my entire resume from scratch?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes, partially. The <strong>AI Generate</strong> feature can write your professional summary, bio and experience descriptions from a job title and brief context you provide. However, for accuracy you should always fill in your actual dates, company names and specific achievements — AI generates the <em>language</em> around the facts you provide.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How many AI credits does each action use?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">
+                  AI Enhancement (single field) — <strong>1 credit</strong><br>
+                  AI Generate (summary/bio) — <strong>2 credits</strong><br>
+                  Full Resume AI Enhancement — <strong>5 credits</strong><br>
+                  Cover Letter generation — <strong>4 credits</strong><br>
+                  Profile bio generation — <strong>2 credits</strong>
+                </div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is the AI output unique to me?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes. The AI generates unique content each time based on your specific input. Two users with the same job title will get different output because the AI considers your full context — your industry, skills, experience level and the specific text you provided. We never reuse output across users.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ ACCOUNT ══ -->
+        <div class="hsec" id="sec-account">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Account &amp; Profile</span></div>
+          <div class="hsec-head"><h2>👤 Account &amp; <em>Profile</em></h2><p>Managing your account, profile details, password and connected accounts.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Account FAQs</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I change my password?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Profile → Password</strong>. Enter your current password, then your new password twice. Password must be at least 8 characters with at least one number. Click <strong>Update Password</strong>. If you've forgotten your current password, use <strong>Forgot Password</strong> on the login page.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I change my email address?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Profile → Personal Info → Edit</strong> and update your email field. A verification link will be sent to your <em>new</em> email address — click it to confirm the change. Until confirmed, your old email remains active for login.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I delete my account?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Danger Zone → Delete Account</strong>. You'll be asked to type <code>DELETE</code> to confirm. This permanently removes all your resumes, portfolio, data and account. This action <strong>cannot be undone</strong>. If you just want a break, consider <strong>Deactivate Account</strong> instead — your data is preserved.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I download all my data?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Privacy → Download My Data</strong> and click <strong>Export</strong>. We'll prepare a ZIP file containing all your resumes, portfolio data, profile info and account history and email it to you within 24 hours.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ BILLING ══ -->
+        <div class="hsec" id="sec-billing">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Billing &amp; Plans</span></div>
+          <div class="hsec-head"><h2>💳 Billing &amp; <em>Plans</em></h2><p>Understand plan differences, how billing works and how to manage your subscription.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>📊 Plan Comparison</h3></div>
+            <div class="card-body">
+              <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead><tr>
+                  <th style="padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);">Feature</th>
+                  <th style="padding:10px 12px;text-align:center;border-bottom:1px solid var(--border);font-size:11px;font-weight:800;color:var(--muted);">Free</th>
+                  <th style="padding:10px 12px;text-align:center;border-bottom:1px solid var(--border);font-size:11px;font-weight:800;color:#c4b5fd;background:rgba(123,77,255,0.06);">Pro ₹499/mo</th>
+                  <th style="padding:10px 12px;text-align:center;border-bottom:1px solid var(--border);font-size:11px;font-weight:800;color:#ffe066;">Team ₹799/mo</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">Resumes</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">3</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);">Unlimited</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">Unlimited</td></tr>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">Portfolio sites</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">1</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);">Unlimited</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">Unlimited</td></tr>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">AI Credits / month</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">100</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);">Unlimited</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">Unlimited</td></tr>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">Custom domain</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">✕</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);color:#4ade80;">✓</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#4ade80;">✓</td></tr>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">Advanced analytics</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">✕</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);color:#4ade80;">✓</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#4ade80;">✓</td></tr>
+                  <tr><td style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--muted);">API access</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);">✕</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(123,77,255,0.04);color:#4ade80;">✓</td><td style="padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#4ade80;">✓</td></tr>
+                  <tr><td style="padding:10px 12px;color:var(--muted);">Priority support</td><td style="padding:10px 12px;text-align:center;">✕</td><td style="padding:10px 12px;text-align:center;background:rgba(123,77,255,0.04);color:#4ade80;">✓</td><td style="padding:10px 12px;text-align:center;color:#4ade80;">✓</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Billing FAQs</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I upgrade to Pro?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Plan &amp; Billing</strong> and click <strong>Upgrade to Pro</strong>. Online payments are coming soon — click <strong>Notify Me</strong> and we'll email you the moment payments go live. You can also contact us at <strong>billing@prolioai.com</strong>.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Will I lose my data if I downgrade?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">No. Your data is preserved when downgrading. However, if you have more than 3 resumes on Pro and downgrade to Free, your extra resumes will be archived — not deleted. You'll need to upgrade again to access them.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is there a student or NGO discount?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Yes! We offer <strong>50% off</strong> for students with a valid .edu email and <strong>free Pro</strong> for registered NGOs and open-source contributors. Email <strong>support@prolioai.com</strong> with proof of eligibility.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ INTEGRATIONS ══ -->
+        <div class="hsec" id="sec-integrations">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Integrations</span></div>
+          <div class="hsec-head"><h2>🔌 <em>Integrations</em></h2><p>Connect Prolio AI with GitHub, LinkedIn, Google Drive and more.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Integration FAQs</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I connect my GitHub account?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Integrations → GitHub → Connect</strong>. Authorise Prolio AI in the GitHub OAuth dialog. Once connected, your public repositories are imported as portfolio projects automatically. You can choose which repos to show/hide.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I import my LinkedIn profile?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">LinkedIn import is currently in <strong>beta</strong>. You can connect your LinkedIn account from <strong>Settings → Integrations → LinkedIn</strong>. Due to LinkedIn's API restrictions, we can import your headline, current role and education. Full work history import is on our roadmap for Q2 2026.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I sync my resume to Google Drive?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Google Drive sync is a <strong>Pro feature</strong>. After upgrading, go to <strong>Settings → Integrations → Google Drive → Connect</strong>. Once connected, every time you export a PDF, it's automatically saved to a <strong>Prolio AI</strong> folder in your Drive.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ PRIVACY ══ -->
+        <div class="hsec" id="sec-privacy">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Privacy &amp; Security</span></div>
+          <div class="hsec-head"><h2>🔒 Privacy &amp; <em>Security</em></h2><p>How we protect your data and how to secure your account.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>❓ Privacy FAQs</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Does Prolio AI sell my data?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Absolutely not. We <strong>never sell, rent or share</strong> your personal data with third parties for marketing purposes. We use your data only to provide and improve the service. Read our full <a onclick="toast('Privacy Policy coming soon!')">Privacy Policy</a> for details.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I enable two-factor authentication?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Security → Two-Factor Authentication</strong>. Click <strong>Setup Authenticator App</strong> and scan the QR code with Google Authenticator or Authy. 2FA adds a second verification step at login. We highly recommend enabling it.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">I see a login from an unknown location. What do I do?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">Go to <strong>Settings → Sessions</strong> immediately. Click <strong>Revoke All Others</strong> to log out every other session. Then go to <strong>Settings → Security</strong> and change your password. Enable 2FA if you haven't already. Contact us at <strong>security@prolioai.com</strong> if you believe your account was compromised.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Where is my data stored?</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">All data is stored on encrypted servers hosted in India and the EU. We use AES-256 encryption at rest and TLS 1.3 in transit. We are GDPR-compliant and working towards ISO 27001 certification. You can request a copy or deletion of your data at any time.</div>
+              </div>
+            </div>
+          </div>
+          <div id="feedback-bar"><p>Was this helpful?</p><button class="fb-btn fb-yes" onclick="toast('👍 Thanks!')">👍 Yes</button><button class="fb-btn fb-no" onclick="showSection('contact')">👎 Contact Us</button></div>
+        </div>
+
+        <!-- ══ TROUBLESHOOTING ══ -->
+        <div class="hsec" id="sec-troubleshoot">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Troubleshooting</span></div>
+          <div class="hsec-head">
+            <h2>🔧 <em>Troubleshooting</em></h2>
+            <p>Common issues and how to fix them. If your problem isn't here, contact our support team.</p>
+          </div>
+          <div class="callout cb-tip"><span class="cb-icon">💡</span><div>Before contacting support, try a <strong>hard refresh</strong> (<span class="kbd">Ctrl+Shift+R</span> on Windows, <span class="kbd">Cmd+Shift+R</span> on Mac) and clear your browser cache. This fixes 60% of issues.</div></div>
+          <div class="card">
+            <div class="card-head"><h3>🐛 Common Issues</h3></div>
+            <div class="card-body np">
+              <div class="faq-item open">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">My PDF export is blank or corrupted</span><span class="faq-chev">›</span></div>
+                <div class="faq-a"><strong>Causes &amp; Fixes:</strong><br><br>1. <strong>Browser extension conflict</strong> — disable ad blockers / privacy extensions and try again.<br>2. <strong>Pop-up blocked</strong> — allow pop-ups for prolioai.com in browser settings.<br>3. <strong>Large file size</strong> — if your resume has many images, try removing them before exporting.<br>4. <strong>Browser issue</strong> — try in Chrome or Edge (Firefox has known PDF export quirks).<br><br>Still not working? <a onclick="showSection('contact')">Contact support</a> with your browser version.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">My portfolio isn't loading / shows 404</span><span class="faq-chev">›</span></div>
+                <div class="faq-a"><strong>Check these in order:</strong><br><br>1. Is your portfolio <strong>published</strong>? Go to My Portfolio — the status badge should say "Live".<br>2. Did you recently change your <strong>slug</strong>? Old URLs stop working immediately after a slug change.<br>3. <strong>Custom domain</strong> — DNS changes take 24–48 hours to propagate globally. Test with the default prolioai.com URL first.<br>4. <strong>Cache</strong> — try opening in an incognito window.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">AI Enhancement button is greyed out</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">This happens when you have <strong>0 AI credits remaining</strong>. Check your usage at <strong>Settings → AI Preferences → AI Usage</strong>. Credits reset on the 1st of each month. To get more credits immediately, upgrade to Pro for unlimited credits.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">I can't log in to my account</span><span class="faq-chev">›</span></div>
+                <div class="faq-a"><strong>Try these steps:</strong><br><br>1. <strong>Forgot password?</strong> — Click "Forgot Password" on the login page. Check spam folder for the reset email.<br>2. <strong>Google login</strong> — if you signed up with Google, use "Continue with Google" — not email/password.<br>3. <strong>Account deactivated</strong> — if you deactivated your account, simply log in again to reactivate it.<br>4. Still stuck? Email <strong>support@prolioai.com</strong> with your registered email address.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">My changes aren't saving</span><span class="faq-chev">›</span></div>
+                <div class="faq-a">1. Check your internet connection — changes require an active connection to save.<br>2. Look for the <strong>Save</strong> button — some sections require manual saving (look for blue "Save" button).<br>3. <strong>Session expired</strong> — if you've been inactive for a while, refresh the page and log in again.<br>4. Check if you're at a <strong>plan limit</strong> — Free plan users can't save more than 3 resumes.</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout cb-warn" style="margin-top:4px;"><span class="cb-icon">⚠️</span><div>If none of these solutions work, <a onclick="showSection('contact')" style="color:#fbbf24;font-weight:700;cursor:pointer;">contact our support team</a> with a screenshot and your browser/OS details. We respond within 2 hours on weekdays.</div></div>
+        </div>
+
+        <!-- ══ VIDEOS ══ -->
+        <div class="hsec" id="sec-videos">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Video Tutorials</span></div>
+          <div class="hsec-head"><h2>🎬 Video <em>Tutorials</em></h2><p>Step-by-step video guides for the most important features.</p></div>
+          <div class="video-grid">
+            <div class="video-card" onclick="toast('▶ Opening: Getting Started with Prolio AI')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(123,77,255,0.3),rgba(73,198,198,0.2));"><div class="play-btn">▶</div><div class="video-duration">4:32</div></div>
+              <div class="video-info"><div class="video-title">Getting Started with Prolio AI</div><div class="video-meta">Beginner · 4,201 views</div></div>
+            </div>
+            <div class="video-card" onclick="toast('▶ Opening: Build Your First Resume')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(94,124,255,0.3),rgba(123,77,255,0.2));"><div class="play-btn">▶</div><div class="video-duration">6:18</div></div>
+              <div class="video-info"><div class="video-title">Build Your First Resume in 6 Minutes</div><div class="video-meta">Beginner · 8,740 views</div></div>
+            </div>
+            <div class="video-card" onclick="toast('▶ Opening: AI Enhancement Deep Dive')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(73,198,198,0.3),rgba(47,141,168,0.2));"><div class="play-btn">▶</div><div class="video-duration">5:45</div></div>
+              <div class="video-info"><div class="video-title">AI Enhancement Deep Dive</div><div class="video-meta">Intermediate · 3,108 views</div></div>
+            </div>
+            <div class="video-card" onclick="toast('▶ Opening: Publishing Your Portfolio')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(239,68,68,0.15));"><div class="play-btn">▶</div><div class="video-duration">3:55</div></div>
+              <div class="video-info"><div class="video-title">Publish &amp; Share Your Portfolio</div><div class="video-meta">Beginner · 5,892 views</div></div>
+            </div>
+            <div class="video-card" onclick="toast('▶ Opening: Custom Domain Setup')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(255,224,102,0.2),rgba(245,158,11,0.15));"><div class="play-btn">▶</div><div class="video-duration">7:12</div></div>
+              <div class="video-info"><div class="video-title">Setting Up a Custom Domain</div><div class="video-meta">Advanced · Pro · 2,341 views</div></div>
+            </div>
+            <div class="video-card" onclick="toast('▶ Opening: Resume Templates Tour')">
+              <div class="video-thumb" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(123,77,255,0.15));"><div class="play-btn">▶</div><div class="video-duration">8:30</div></div>
+              <div class="video-info"><div class="video-title">All 35 Resume Templates Tour</div><div class="video-meta">Overview · 12,450 views</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ KEYBOARD SHORTCUTS ══ -->
+        <div class="hsec" id="sec-shortcuts">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Keyboard Shortcuts</span></div>
+          <div class="hsec-head"><h2>⌨️ Keyboard <em>Shortcuts</em></h2><p>Work faster with these keyboard shortcuts across Prolio AI.</p></div>
+          <div class="card">
+            <div class="card-head"><h3>🖥️ Global Shortcuts</h3></div>
+            <div class="card-body np">
+              <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead><tr><th style="padding:10px 18px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);">Action</th><th style="padding:10px 18px;text-align:right;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);">Shortcut</th></tr></thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Open search</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl K</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Go to Dashboard</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">G D</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Go to Resume Builder</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">G R</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Go to Portfolio</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">G P</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Go to Settings</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">G S</span></td></tr>
+                  <tr><td style="padding:11px 18px;color:var(--muted);">Open Help</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">?</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>📝 Resume Builder Shortcuts</h3></div>
+            <div class="card-body np">
+              <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead><tr><th style="padding:10px 18px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);">Action</th><th style="padding:10px 18px;text-align:right;border-bottom:1px solid var(--border);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);">Shortcut</th></tr></thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Save resume</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl S</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Undo last change</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl Z</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Export PDF</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl Shift E</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">AI Enhance selected field</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl Shift A</span></td></tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:11px 18px;color:var(--muted);">Add new section</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl Shift N</span></td></tr>
+                  <tr><td style="padding:11px 18px;color:var(--muted);">Toggle preview mode</td><td style="padding:11px 18px;text-align:right;"><span class="kbd">Ctrl P</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ SYSTEM STATUS ══ -->
+        <div class="hsec" id="sec-status">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">System Status</span></div>
+          <div class="hsec-head"><h2>🟢 System <em>Status</em></h2><p>Real-time operational status of all Prolio AI services.</p></div>
+          <div class="callout cb-tip"><span class="cb-icon">✅</span><div>All systems are fully operational as of <strong>today, March 21, 2026</strong>. Uptime: 99.98% (last 30 days).</div></div>
+          <div class="card">
+            <div class="card-head"><h3>📡 Service Status</h3><span style="font-size:11px;color:var(--green);font-weight:700;">All Operational</span></div>
+            <div class="card-body np">
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">Web App (prolioai.com)</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-web"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">API (api.prolioai.com)</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-api"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">AI Enhancement Engine</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-ai"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">Portfolio CDN</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-cdn"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">PDF Export Service</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-pdf"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">Authentication</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-auth"></div></div>
+              <div class="status-row"><div class="status-dot st-op"></div><span class="status-name">Email &amp; Notifications</span><span class="status-tag stag-op">Operational</span><div class="uptime-bar" id="ub-email"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>📋 Recent Incidents</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="padding:14px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;">
+                  <div style="font-size:12px;font-weight:800;color:#4ade80;margin-bottom:4px;">✅ Mar 18, 2026 — Resolved</div>
+                  <div style="font-size:12px;color:var(--muted);line-height:1.6;">PDF export latency was elevated for ~40 minutes between 14:20–15:00 IST. Root cause: export queue backup due to high traffic spike. Resolved by scaling export workers. No data loss occurred.</div>
+                </div>
+                <div style="padding:14px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;">
+                  <div style="font-size:12px;font-weight:800;color:#4ade80;margin-bottom:4px;">✅ Mar 10, 2026 — Resolved</div>
+                  <div style="font-size:12px;color:var(--muted);line-height:1.6;">Scheduled maintenance window 02:00–03:30 IST for database migration. App was in read-only mode. All services restored on schedule.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ RELEASE NOTES ══ -->
+        <div class="hsec" id="sec-releases">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Release Notes</span></div>
+          <div class="hsec-head"><h2>📋 <em>Release Notes</em></h2><p>What's new, what's fixed and what's changed in each version of Prolio AI.</p></div>
+          <div class="card">
+            <div class="card-body">
+              <div class="rn-item">
+                <div class="rn-date">2026-03-15</div>
+                <div class="rn-right">
+                  <div class="rn-ver">v3.2.0 <span class="rn-tag rnt-new">New</span><span class="rn-tag rnt-imp">Improved</span></div>
+                  <ul class="rn-list">
+                    <li>Added <strong>5 new photo-based portfolio templates</strong> (T31–T35) with split-screen, editorial and neon styles</li>
+                    <li>New <strong>AI Generate from Scratch</strong> — write summaries, bios and cover letters by just entering your job title</li>
+                    <li>Portfolio <strong>Alignment Tool</strong> — control text alignment, photo shape and typography from the sidebar</li>
+                    <li>Settings page: complete overhaul with theme picker, accent colours, notification controls and 2FA setup</li>
+                    <li>Developer API v2.1 released — see <a onclick="location.href='developer-api.html'">API docs</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="rn-item">
+                <div class="rn-date">2026-02-20</div>
+                <div class="rn-right">
+                  <div class="rn-ver">v3.1.0 <span class="rn-tag rnt-new">New</span><span class="rn-tag rnt-fix">Fix</span></div>
+                  <ul class="rn-list">
+                    <li>Launched <strong>Profile page</strong> with skills editor, experience accordion and social links</li>
+                    <li>Added 8 new resume templates including Luxury Gold and Neon Grid</li>
+                    <li>Fixed: PDF export failing for resumes with custom fonts on Windows Chrome</li>
+                    <li>Fixed: Portfolio slug change not updating the live URL immediately</li>
+                    <li>Performance: Dashboard loads 2× faster with optimised API calls</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="rn-item">
+                <div class="rn-date">2026-01-10</div>
+                <div class="rn-right">
+                  <div class="rn-ver">v3.0.0 <span class="rn-tag rnt-new">Major</span><span class="rn-tag rnt-brk">Breaking</span></div>
+                  <ul class="rn-list">
+                    <li>Complete UI redesign — dark theme, new navigation and mobile-first layout</li>
+                    <li>Portfolio builder fully rebuilt with 30 templates and live theme switching</li>
+                    <li>AI Enhancement engine upgraded — 40% better output quality</li>
+                    <li>Breaking: Old portfolio URLs (<code>prolioai.com/portfolio/id</code>) redirected to new format (<code>prolioai.com/u/slug</code>)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="rn-item">
+                <div class="rn-date">2025-11-05</div>
+                <div class="rn-right">
+                  <div class="rn-ver">v2.8.4 <span class="rn-tag rnt-fix">Bugfix</span></div>
+                  <ul class="rn-list">
+                    <li>Fixed: Session timeout logging users out unexpectedly during editing</li>
+                    <li>Fixed: Mobile keyboard pushing content off-screen in resume builder</li>
+                    <li>Fixed: AI credit count not updating in real-time</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ CONTACT SUPPORT ══ -->
+        <div class="hsec" id="sec-contact">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Contact Support</span></div>
+          <div class="hsec-head">
+            <h2>🎧 Contact <em>Support</em></h2>
+            <p>We're here to help. Choose the best way to reach us.</p>
+          </div>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <div class="cc-icon">💬</div>
+              <div class="cc-title">Live Chat</div>
+              <div class="cc-desc">Chat with our support team in real-time. Fastest way to get help with urgent issues.</div>
+              <div class="cc-badge ccb-green">● Online now</div>
+              <button class="cc-btn grad" onclick="openModal('chat')">Start Chat</button>
+            </div>
+            <div class="contact-card">
+              <div class="cc-icon">📧</div>
+              <div class="cc-title">Email Support</div>
+              <div class="cc-desc">Send a detailed message with screenshots. We respond within 2 hours on weekdays.</div>
+              <div class="cc-badge ccb-blue">Avg 1h 45m</div>
+              <button class="cc-btn ghost" onclick="showSection('ticket')">Send Email</button>
+            </div>
+            <div class="contact-card">
+              <div class="cc-icon">🎯</div>
+              <div class="cc-title">Priority Support</div>
+              <div class="cc-desc">Pro and Team users get dedicated priority support with guaranteed 30-min response.</div>
+              <div class="cc-badge ccb-gold">Pro &amp; Team only</div>
+              <button class="cc-btn ghost" onclick="location.href='pricing.html'">Upgrade to Pro</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>📬 Submit a Support Ticket</h3></div>
+            <div class="card-body">
+              <div class="form-2">
+                <div class="fgroup"><label class="flabel">Your Name</label><input class="finput" value="Arun R" placeholder="Full name"></div>
+                <div class="fgroup"><label class="flabel">Email</label><input class="finput" value="arun@example.com" placeholder="your@email.com"></div>
+              </div>
+              <div class="fgroup"><label class="flabel">Category</label>
+                <select class="fselect" id="ticket-cat">
+                  <option>Resume Builder</option>
+                  <option>Portfolio</option>
+                  <option>AI Features</option>
+                  <option>Account &amp; Login</option>
+                  <option>Billing &amp; Plans</option>
+                  <option>Bug Report</option>
+                  <option>Feature Request</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="fgroup"><label class="flabel">Subject</label><input class="finput" id="ticket-sub" placeholder="Brief summary of your issue"></div>
+              <div class="fgroup"><label class="flabel">Message</label><textarea class="ftextarea" id="ticket-msg" style="min-height:130px;" placeholder="Describe your issue in detail. Include steps to reproduce, what you expected vs what happened, and your browser/OS if relevant."></textarea></div>
+              <div style="display:flex;gap:10px;">
+                <button class="btn btn-grad" id="ticket-submit" onclick="submitTicket()"><span class="bt">📨 Submit Ticket</span><div class="spinner"></div></button>
+                <button class="btn btn-ghost" onclick="toast('👍 We appreciate the feedback!')">💡 Suggest a Feature</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ COMMUNITY ══ -->
+        <div class="hsec" id="sec-community">
+          <div class="breadcrumb"><span onclick="showSection('home')">Help Home</span><span class="sep">›</span><span class="current">Community</span></div>
+          <div class="hsec-head"><h2>👥 <em>Community</em></h2><p>Connect with other Prolio AI users, share tips and get inspired.</p></div>
+          <div class="topic-grid">
+            <div class="topic-card" onclick="toast('Opening Discord...')">
+              <div class="tc-icon">💬</div>
+              <div class="tc-title">Discord Server</div>
+              <div class="tc-desc">Join 2,400+ members. Chat, share your portfolio, get feedback and get help.</div>
+              <div class="tc-count">2,400+ members</div>
+            </div>
+            <div class="topic-card" onclick="toast('Opening Twitter/X...')">
+              <div class="tc-icon">🐦</div>
+              <div class="tc-title">Twitter / X</div>
+              <div class="tc-desc">Follow @ProlioAI for updates, tips, template releases and community highlights.</div>
+              <div class="tc-count">@ProlioAI</div>
+            </div>
+            <div class="topic-card" onclick="toast('Opening LinkedIn...')">
+              <div class="tc-icon">🔗</div>
+              <div class="tc-title">LinkedIn Page</div>
+              <div class="tc-desc">Professional updates, case studies and job tips from the Prolio AI team.</div>
+              <div class="tc-count">LinkedIn Page</div>
+            </div>
+            <div class="topic-card" onclick="toast('Opening Portfolio Showcase...')">
+              <div class="tc-icon">🌟</div>
+              <div class="tc-title">Portfolio Showcase</div>
+              <div class="tc-desc">Browse portfolios built by Prolio AI users for inspiration and design ideas.</div>
+              <div class="tc-count">340+ featured</div>
+            </div>
+            <div class="topic-card" onclick="toast('Opening Feature Requests...')">
+              <div class="tc-icon">💡</div>
+              <div class="tc-title">Feature Requests</div>
+              <div class="tc-desc">Vote on features you want, suggest new ideas and track what we're building next.</div>
+              <div class="tc-count">Roadmap board</div>
+            </div>
+            <div class="topic-card" onclick="toast('Opening GitHub...')">
+              <div class="tc-icon">🐙</div>
+              <div class="tc-title">GitHub</div>
+              <div class="tc-desc">Open-source SDK libraries, report bugs and contribute to Prolio AI's public repos.</div>
+              <div class="tc-count">github.com/prolioai</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /help-content -->
+    </div><!-- /help-body -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- MODAL -->
+<div id="modal-ov">
+  <div id="modal-box">
+    <div id="m-icon">💬</div>
+    <div id="m-title">Live Chat</div>
+    <div id="m-body">Connecting you to our support team...</div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-confirm" onclick="closeModal();toast('Chat connected! Our team will reply shortly.')">Start Chat</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── SECTION NAV ── */
+function showSection(id) {
+  document.querySelectorAll('.hn-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.hsec').forEach(el => el.classList.remove('active'));
+  var nav = document.getElementById('hn-' + id);
+  var sec = document.getElementById('sec-' + id);
+  if (nav) nav.classList.add('active');
+  if (sec) sec.classList.add('active');
+  document.getElementById('help-content').scrollTop = 0;
+  if (id === 'status') setTimeout(buildUptimeBars, 200);
+}
+
+/* ── FAQ ACCORDION ── */
+function toggleFaq(head) { head.closest('.faq-item').classList.toggle('open'); }
+
+/* ── SEARCH ── */
+var SEARCH_INDEX = [
+  {title:'How to export resume as PDF', cat:'Resume Builder', sec:'resume'},
+  {title:'Make portfolio public / publish', cat:'Portfolio', sec:'portfolio'},
+  {title:'What does AI Enhancement do?', cat:'AI Features', sec:'ai'},
+  {title:'How many resumes can I create?', cat:'Resume Builder', sec:'resume'},
+  {title:'Connect custom domain', cat:'Portfolio', sec:'portfolio'},
+  {title:'Change password', cat:'Account', sec:'account'},
+  {title:'Delete my account', cat:'Account', sec:'account'},
+  {title:'Upgrade to Pro plan', cat:'Billing', sec:'billing'},
+  {title:'AI credits — how many do I have?', cat:'AI Features', sec:'ai'},
+  {title:'PDF export blank or corrupted', cat:'Troubleshooting', sec:'troubleshoot'},
+  {title:'Portfolio showing 404 error', cat:'Troubleshooting', sec:'troubleshoot'},
+  {title:'AI button is greyed out', cat:'Troubleshooting', sec:'troubleshoot'},
+  {title:'Connect GitHub account', cat:'Integrations', sec:'integrations'},
+  {title:'Enable two-factor authentication', cat:'Security', sec:'privacy'},
+  {title:'Keyboard shortcuts', cat:'Tips', sec:'shortcuts'},
+  {title:'System status and uptime', cat:'Status', sec:'status'},
+  {title:'Getting started guide', cat:'Beginner', sec:'getting-started'},
+  {title:'Plan comparison — Free vs Pro', cat:'Billing', sec:'billing'},
+  {title:'Student discount', cat:'Billing', sec:'billing'},
+  {title:'Contact support / submit ticket', cat:'Support', sec:'contact'},
+];
+
+function doSearch(q) {
+  var clr = document.getElementById('search-clear');
+  clr.style.display = q.length > 0 ? 'block' : 'none';
+  if (q.length < 2) { hideResults(); return; }
+  var results = SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q.toLowerCase()) ||
+    item.cat.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 6);
+  var container = document.getElementById('search-results');
+  if (results.length === 0) {
+    container.innerHTML = '<div class="sr-item"><span class="sr-icon">🤷</span><div><div class="sr-title">No results found</div><div class="sr-cat">Try different keywords or browse topics above</div></div></div>';
+  } else {
+    container.innerHTML = results.map(r =>
+      `<div class="sr-item" onclick="showSection('${r.sec}');clearSearch()">
+        <span class="sr-icon">📄</span>
+        <div><div class="sr-title">${r.title}</div><div class="sr-cat">${r.cat}</div></div>
+        <span class="sr-arrow">›</span>
+      </div>`
+    ).join('');
+  }
+  container.style.display = 'block';
+}
+function showResults() { if (document.getElementById('search-input').value.length > 1) document.getElementById('search-results').style.display = 'block'; }
+function hideResults() { document.getElementById('search-results').style.display = 'none'; }
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-clear').style.display = 'none';
+  hideResults();
+}
+
+/* Ctrl+K to focus search */
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+    document.getElementById('search-input').select();
+  }
+});
+
+/* ── CHECKLIST ── */
+function updateChecklist() {
+  var checks = document.querySelectorAll('.cl-check');
+  var done = Array.from(checks).filter(c => c.checked).length;
+  document.getElementById('checklist-progress').textContent = done + ' / ' + checks.length + ' complete';
+  document.getElementById('checklist-progress').style.color = done === checks.length ? '#4ade80' : 'var(--cyan)';
+}
+
+/* ── UPTIME BARS ── */
+function buildUptimeBars() {
+  var ids = ['ub-web','ub-api','ub-ai','ub-cdn','ub-pdf','ub-auth','ub-email'];
+  ids.forEach(id => {
+    var el = document.getElementById(id); if(!el) return;
+    var bars = Array.from({length:30}, (_,i) => {
+      var miss = (id==='ub-pdf' && i===14) || (id==='ub-api' && i===10);
+      return `<div class="ub${miss?' miss':''}"></div>`;
+    });
+    el.innerHTML = bars.join('');
+  });
+}
+
+/* ── TICKET SUBMIT ── */
+function submitTicket() {
+  var sub = document.getElementById('ticket-sub').value.trim();
+  var msg = document.getElementById('ticket-msg').value.trim();
+  if (!sub) { toast('⚠️ Please enter a subject'); return; }
+  if (msg.length < 10) { toast('⚠️ Please describe your issue'); return; }
+  var btn = document.getElementById('ticket-submit');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(() => {
+    btn.classList.remove('loading'); btn.disabled = false;
+    document.getElementById('ticket-sub').value = '';
+    document.getElementById('ticket-msg').value = '';
+    toast('✅ Ticket submitted! Check your email for confirmation.');
+  }, 1200);
+}
+
+/* ── MODAL ── */
+var MA = '';
+function openModal(a) {
+  MA = a;
+  var cfg = {
+    chat:    {icon:'💬',title:'Start Live Chat',body:'Our support team is online and ready to help. Average wait time: under 2 minutes.'},
+    upgrade: {icon:'💎',title:'Upgrade to Pro',body:'Get unlimited resumes, AI credits, custom domain and priority support for ₹299/month. Payments coming soon!'},
+  };
+  var c = cfg[a] || {icon:'⚠️',title:'Confirm',body:'Are you sure?'};
+  document.getElementById('m-icon').textContent = c.icon;
+  document.getElementById('m-title').textContent = c.title;
+  document.getElementById('m-body').textContent  = c.body;
+  document.getElementById('modal-ov').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-ov').classList.remove('open'); }
+document.getElementById('modal-ov').addEventListener('click', e => { if(e.target===document.getElementById('modal-ov')) closeModal(); });
+
+/* ── SIDEBAR ── */
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sb-overlay').classList.toggle('show'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sb-overlay').classList.remove('show'); }
+
+/* ── TOAST ── */
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── PLAN STATE ── */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+})();
+</script>
+</body>
+</html>

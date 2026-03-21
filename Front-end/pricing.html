@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7b4dff;--purple-lt:#a78bff;--blue:#5E7CFF;--cyan:#49C6C6;
+  --green:#22c55e;--gold:#ffe066;--red:#ef4444;
+  --bg:#080c18;--bg2:#0d1220;--card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--border-lt:rgba(255,255,255,0.14);
+  --text:#f1f5f9;--muted:rgba(255,255,255,0.45);--muted2:rgba(255,255,255,0.22);
+  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  --sidebar-w:240px;--header-h:64px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(123,77,255,0.2) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 90%,rgba(73,198,198,0.15) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 40%,rgba(94,124,255,0.08) 0%,transparent 55%);}
+
+/* ── SHELL ── */
+#shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:rgba(8,12,24,0.92);
+  border-right:1px solid var(--border);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);}
+#sb-logo{padding:22px 20px 18px;font-size:20px;font-weight:900;letter-spacing:3px;font-style:italic;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;flex-shrink:0;}
+#sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 10px 6px;}
+.sb-lbl:first-child{padding-top:4px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;
+  margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(123,77,255,0.18);color:#c4b5fd;border-color:rgba(123,77,255,0.25);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(123,77,255,0.25);}
+.nav-item:hover:not(.active) .nav-icon{background:rgba(255,255,255,0.07);}
+.nav-badge{margin-left:auto;background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px;}
+#sb-user{padding:14px;border-top:1px solid var(--border);display:flex;align-items:center;
+  gap:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+#sb-user:hover{background:rgba(255,255,255,0.04);}
+#sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;flex-shrink:0;}
+#sb-user-name{font-size:13px;font-weight:700;}
+#sb-user-role{font-size:11px;color:var(--muted);}
+#sb-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.6);}
+#sb-overlay.show{display:block;}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+
+/* ── TOPBAR ── */
+#topbar{height:var(--header-h);background:rgba(8,12,24,0.8);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;
+  padding:0 32px;gap:16px;position:sticky;top:0;z-index:100;}
+#mob-menu{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+#tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all 0.2s;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);}
+#tb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  font-family:'Playfair Display',serif;cursor:pointer;border:2px solid rgba(123,77,255,0.4);}
+
+/* ── PAGE CONTENT ── */
+#page{padding:clamp(32px,4vw,60px) clamp(20px,4vw,60px);}
+
+/* ── HERO ── */
+#pricing-hero{text-align:center;margin-bottom:52px;position:relative;}
+#pricing-hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(123,77,255,0.15) 0%,transparent 65%);
+  pointer-events:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(123,77,255,0.12);border:1px solid rgba(123,77,255,0.28);
+  border-radius:50px;padding:6px 16px;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--purple-lt);margin-bottom:18px;}
+.hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px rgba(34,197,94,0.8);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+#pricing-hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);
+  font-weight:900;line-height:1.1;margin-bottom:14px;}
+#pricing-hero h1 em{font-style:italic;background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+#pricing-hero p{font-size:15px;color:var(--muted);line-height:1.7;max-width:500px;
+  margin:0 auto 28px;}
+
+/* ── BILLING TOGGLE ── */
+#billing-toggle{display:inline-flex;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);border-radius:50px;padding:4px;gap:0;margin-bottom:48px;}
+.bt-opt{padding:8px 22px;border-radius:50px;font-size:13px;font-weight:700;
+  color:var(--muted);cursor:pointer;transition:all 0.25s;border:none;background:none;
+  font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:8px;}
+.bt-opt.active{background:var(--grad);color:white;box-shadow:0 4px 14px rgba(123,77,255,0.4);}
+.save-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:50px;
+  background:rgba(34,197,94,0.2);color:#4ade80;border:1px solid rgba(34,197,94,0.3);}
+
+/* ── PLANS GRID ── */
+#plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:1040px;
+  margin:0 auto 60px;align-items:start;}
+
+/* ── PLAN CARD ── */
+.plan-card{border-radius:20px;border:1px solid var(--border);overflow:hidden;
+  background:rgba(255,255,255,0.03);position:relative;transition:all 0.3s;}
+.plan-card:hover{transform:translateY(-4px);border-color:var(--border-lt);}
+
+/* PRO card — elevated */
+.plan-card.pro{border-color:rgba(123,77,255,0.5);
+  background:linear-gradient(160deg,rgba(123,77,255,0.1) 0%,rgba(94,124,255,0.06) 60%,rgba(73,198,198,0.06) 100%);
+  box-shadow:0 0 0 1px rgba(123,77,255,0.3),0 20px 60px rgba(123,77,255,0.2);
+  transform:scale(1.02);}
+.plan-card.pro:hover{transform:scale(1.02) translateY(-4px);}
+
+/* Top badge */
+.plan-top-badge{padding:6px 0;text-align:center;font-size:10px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;}
+.ptb-pro{background:linear-gradient(90deg,rgba(123,77,255,0.7),rgba(73,198,198,0.7));color:white;}
+.ptb-free{background:rgba(255,255,255,0.05);color:var(--muted);}
+.ptb-team{background:rgba(255,224,102,0.12);color:#ffe066;}
+.ptb-hidden{opacity:0;pointer-events:none;padding:6px;}
+
+.plan-body{padding:28px 26px 26px;}
+
+/* Plan name + price */
+.plan-name{font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;}
+.plan-card.pro .plan-name{color:#c4b5fd;}
+
+.plan-price-wrap{display:flex;align-items:flex-end;gap:4px;margin-bottom:6px;}
+.plan-price{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;line-height:1;}
+.plan-card.pro .plan-price{background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.plan-price-orig{font-size:18px;font-weight:700;color:var(--muted);text-decoration:line-through;margin-left:4px;margin-bottom:6px;}
+.plan-price-period{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:8px;}
+.plan-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:22px;min-height:36px;}
+
+/* CTA Button */
+.plan-cta{width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.25s;border:none;
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:22px;}
+.cta-free{background:rgba(255,255,255,0.08);color:var(--muted);border:1px solid var(--border);cursor:default;}
+.cta-pro{background:var(--grad);color:white;}
+.cta-pro:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(123,77,255,0.5);}
+.cta-team{background:rgba(255,224,102,0.1);color:#ffe066;border:1px solid rgba(255,224,102,0.3);}
+.cta-team:hover{background:rgba(255,224,102,0.18);}
+
+/* Features list */
+.plan-features{display:flex;flex-direction:column;gap:9px;}
+.feat{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;}
+.feat-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;}
+.fi-yes{background:rgba(34,197,94,0.18);color:#4ade80;}
+.fi-no{background:rgba(255,255,255,0.06);color:var(--muted2);}
+.fi-pro{background:rgba(123,77,255,0.2);color:#c4b5fd;}
+.feat-text{color:var(--muted);}
+.feat-text strong{color:var(--text);font-weight:700;}
+.feat.na .feat-text{color:var(--muted2);}
+
+/* Plan divider */
+.plan-divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
+
+/* ── POPULAR LABEL ── */
+.popular-glow{position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  background:var(--grad);color:white;font-size:10px;font-weight:800;
+  padding:4px 16px;border-radius:0 0 10px 10px;letter-spacing:1px;text-transform:uppercase;
+  white-space:nowrap;}
+
+/* ── VALUE PROPS ── */
+#value-section{max-width:1040px;margin:0 auto 64px;}
+#value-section h2{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);
+  font-weight:900;text-align:center;margin-bottom:8px;}
+#value-section h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#value-section .sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:36px;}
+.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.value-card{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px;transition:all 0.22s;}
+.value-card:hover{border-color:rgba(123,77,255,0.35);transform:translateY(-2px);}
+.vc-icon{font-size:28px;margin-bottom:12px;}
+.vc-title{font-size:13px;font-weight:800;margin-bottom:6px;}
+.vc-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* ── COMPARISON TABLE ── */
+#compare-section{max-width:1040px;margin:0 auto 64px;}
+#compare-section h2{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);
+  font-weight:900;text-align:center;margin-bottom:36px;}
+#compare-section h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.ctable{width:100%;border-collapse:collapse;background:var(--card);
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.ctable thead th{padding:14px 20px;font-size:12px;font-weight:800;border-bottom:1px solid var(--border);}
+.ctable thead th:first-child{text-align:left;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.ctable thead th:not(:first-child){text-align:center;width:160px;}
+.ctable thead th.col-pro{background:rgba(123,77,255,0.08);color:#c4b5fd;}
+.ctable thead th.col-team{color:#ffe066;}
+.ctable tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;}
+.ctable tbody tr:last-child{border-bottom:none;}
+.ctable tbody tr:hover{background:rgba(255,255,255,0.02);}
+.ctable tbody td{padding:12px 20px;font-size:12px;}
+.ctable tbody td:first-child{color:var(--muted);font-weight:600;}
+.ctable tbody td:not(:first-child){text-align:center;}
+.ctable tbody td.col-pro{background:rgba(123,77,255,0.04);}
+.check-yes{color:#4ade80;font-size:14px;}
+.check-no{color:var(--muted2);font-size:12px;}
+.check-val{font-weight:700;font-size:12px;}
+.ctable .section-row td{background:rgba(255,255,255,0.02);font-size:10px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);padding:8px 20px;}
+.ctable .section-row td.col-pro{background:rgba(123,77,255,0.04);}
+
+/* ── TESTIMONIALS ── */
+#testimonials{max-width:1040px;margin:0 auto 64px;}
+#testimonials h2{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);
+  font-weight:900;text-align:center;margin-bottom:8px;}
+#testimonials h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#testimonials .sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:36px;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.testi-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;
+  display:flex;flex-direction:column;gap:12px;transition:border-color 0.2s;}
+.testi-card:hover{border-color:rgba(123,77,255,0.3);}
+.testi-stars{color:#fbbf24;font-size:13px;letter-spacing:2px;}
+.testi-text{font-size:13px;color:var(--muted);line-height:1.7;font-style:italic;flex:1;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
+.testi-name{font-size:13px;font-weight:800;}
+.testi-role{font-size:11px;color:var(--muted);}
+.testi-badge{margin-left:auto;font-size:9px;font-weight:800;padding:2px 8px;border-radius:50px;
+  background:rgba(123,77,255,0.15);color:#c4b5fd;border:1px solid rgba(123,77,255,0.25);}
+
+/* ── FAQ ── */
+#faq-section{max-width:700px;margin:0 auto 64px;}
+#faq-section h2{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,32px);
+  font-weight:900;text-align:center;margin-bottom:36px;}
+#faq-section h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.faq-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px;}
+.faq-item.open{border-color:rgba(123,77,255,0.3);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:15px 18px;cursor:pointer;user-select:none;transition:background 0.15s;}
+.faq-q:hover{background:rgba(255,255,255,0.02);}
+.faq-q-text{font-size:13px;font-weight:700;}
+.faq-chev{font-size:13px;color:var(--muted);transition:transform 0.22s;flex-shrink:0;}
+.faq-item.open .faq-chev{transform:rotate(90deg);color:var(--purple-lt);}
+.faq-a{display:none;padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.8;}
+.faq-item.open .faq-a{display:block;}
+
+/* ── CTA BANNER ── */
+#cta-banner{max-width:1040px;margin:0 auto 60px;border-radius:24px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.2),rgba(94,124,255,0.15),rgba(73,198,198,0.12));
+  border:1px solid rgba(123,77,255,0.3);padding:clamp(36px,4vw,56px);
+  text-align:center;position:relative;overflow:hidden;}
+#cta-banner::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;
+  border-radius:50%;background:radial-gradient(circle,rgba(123,77,255,0.2),transparent 65%);pointer-events:none;}
+#cta-banner h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,36px);
+  font-weight:900;margin-bottom:10px;position:relative;}
+#cta-banner h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#cta-banner p{font-size:14px;color:var(--muted);margin-bottom:28px;max-width:460px;
+  margin-left:auto;margin-right:auto;line-height:1.7;position:relative;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;}
+.btn-main{padding:14px 32px;border-radius:12px;background:var(--grad);border:none;
+  color:white;font-size:14px;font-weight:800;font-family:'Montserrat',sans-serif;
+  cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(123,77,255,0.5);}
+.btn-sec{padding:13px 24px;border-radius:12px;background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);color:var(--text);
+  font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.25s;}
+.btn-sec:hover{background:rgba(255,255,255,0.14);}
+.cta-trust{font-size:11px;color:var(--muted2);margin-top:16px;position:relative;}
+
+/* ── MODAL ── */
+#modal-ov{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+#modal-ov.open{display:flex;}
+#modal-box{background:#0d1220;border:1px solid rgba(123,77,255,0.3);border-radius:22px;
+  max-width:480px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,0.6);
+  animation:mIn 0.35s cubic-bezier(0.22,1,0.36,1);overflow:hidden;}
+@keyframes mIn{from{opacity:0;transform:scale(0.92)translateY(20px);}to{opacity:1;transform:scale(1)translateY(0);}}
+#modal-top{padding:28px 28px 0;text-align:center;}
+#modal-icon{font-size:40px;margin-bottom:10px;}
+#modal-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:8px;}
+#modal-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:0;}
+#modal-plan-display{margin:20px 28px;background:linear-gradient(135deg,rgba(123,77,255,0.15),rgba(73,198,198,0.08));
+  border:1px solid rgba(123,77,255,0.3);border-radius:14px;padding:18px 20px;}
+.mpd-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px;}
+.mpd-row:last-child{margin-bottom:0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);font-weight:800;font-size:14px;}
+.mpd-label{color:var(--muted);}
+.mpd-val{font-weight:700;color:var(--text);}
+.mpd-val.grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+#modal-form{padding:0 28px;}
+.mf-group{margin-bottom:12px;}
+.mf-label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:5px;display:block;}
+.mf-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:10px;padding:11px 14px;font-size:13px;font-family:'Montserrat',sans-serif;
+  color:var(--text);outline:none;transition:border-color 0.2s;}
+.mf-input:focus{border-color:rgba(123,77,255,0.6);background:rgba(255,255,255,0.09);}
+.mf-input::placeholder{color:var(--muted2);}
+.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mf-card-icons{display:flex;gap:8px;margin-bottom:14px;}
+.mf-card-icon{padding:5px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:7px;font-size:11px;font-weight:700;color:var(--muted);}
+#modal-footer{padding:16px 28px 28px;}
+.mf-submit{width:100%;padding:14px;border-radius:12px;background:var(--grad);border:none;
+  color:white;font-size:14px;font-weight:800;font-family:'Montserrat',sans-serif;
+  cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+.mf-submit:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(123,77,255,0.5);}
+.mf-submit.loading .spin{display:inline-block;}
+.mf-submit.loading .bt{opacity:0.7;}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;
+  border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.mf-cancel{width:100%;padding:10px;border-radius:10px;background:none;border:none;
+  color:var(--muted);font-size:13px;font-family:'Montserrat',sans-serif;cursor:pointer;transition:color 0.2s;}
+.mf-cancel:hover{color:var(--text);}
+.mf-trust{text-align:center;font-size:10px;color:var(--muted2);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;
+  font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;
+  border:1px solid rgba(255,255,255,0.08);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1050px){#plans-grid{grid-template-columns:1fr 1fr;}.plan-card.pro{transform:none;grid-column:span 2;}.value-grid{grid-template-columns:1fr 1fr;}.testi-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}}
+@media(max-width:700px){#plans-grid{grid-template-columns:1fr;}.plan-card.pro{grid-column:auto;}.value-grid{grid-template-columns:1fr 1fr;}.testi-grid{grid-template-columns:1fr;}.ctable thead th{padding:10px 12px;font-size:11px;}.ctable tbody td{padding:10px 12px;font-size:11px;}}
+@media(max-width:480px){.value-grid{grid-template-columns:1fr;}.mf-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
+    <nav id="sb-nav">
+      <div class="sb-lbl">Main</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
+      <div class="sb-lbl">Manage</div>
+      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
+      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
+      <div class="nav-item" onclick="location.href='developer-api.html'"><div class="nav-icon">🔗</div>Developer API</div>
+      <div class="sb-lbl">Support</div>
+      <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div>Help &amp; Docs</div>
+      <div class="sb-lbl">Upgrade</div>
+      <div class="nav-item active"><div class="nav-icon">💎</div>Pricing &amp; Plans</div>
+    </nav>
+    <div id="sb-user" onclick="location.href='profile.html'">
+      <div id="sb-avatar">A</div>
+      <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px;">›</span>
+    </div>
+  </aside>
+  <div id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+      <button id="mob-menu" onclick="toggleSidebar()">☰</button>
+      <div>
+        <div style="font-size:16px;font-weight:800;">Pricing &amp; Plans</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:1px;">Simple, honest pricing. No hidden fees.</div>
+      </div>
+      <div id="tb-right"><span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
+        <div class="tb-btn" onclick="toast('No new notifications')">🔔</div>
+        <div class="tb-btn" onclick="location.href='help-docs.html'">💡</div>
+        <div id="tb-avatar">A</div>
+      </div>
+    </header>
+
+    <!-- PAGE -->
+    <div id="page">
+
+      <!-- HERO -->
+      <div id="pricing-hero">
+        <div class="hero-eyebrow"><span></span> Limited Time — 40% Off Annual Plans</div>
+        <h1>Invest in Your <em>Career,</em><br>Not Your Wallet</h1>
+        <p>Everything you need to land your dream job — powerful AI, beautiful templates and a live portfolio — for less than a cup of coffee a day.</p>
+
+        <!-- Billing toggle -->
+        <div id="billing-toggle">
+          <button class="bt-opt active" id="bt-monthly" onclick="setBilling('monthly')">Monthly</button>
+          <button class="bt-opt" id="bt-annual"  onclick="setBilling('annual')">Annual <span class="save-badge">Save 40%</span></button>
+        </div>
+      </div>
+
+      <!-- PLANS -->
+      <div id="plans-grid">
+
+        <!-- FREE -->
+        <div class="plan-card">
+          <div class="plan-top-badge ptb-free">Current Plan</div>
+          <div class="plan-body">
+            <div class="plan-name">Free</div>
+            <div class="plan-price-wrap">
+              <div class="plan-price" style="color:var(--text);">₹0</div>
+            </div>
+            <div class="plan-price-period">forever free</div>
+            <div class="plan-desc">Get started and build your first resume and portfolio — no credit card needed.</div>
+            <button class="plan-cta cta-free">✓ Your Current Plan</button>
+            <div class="plan-features">
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>3 resumes</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>1 portfolio</strong> site</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>100 AI credits</strong>/month</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text">30+ resume templates</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text">Prolio AI subdomain</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text">PDF &amp; link sharing</div></div>
+              <div class="feat na"><div class="feat-icon fi-no">✕</div><div class="feat-text">Custom domain</div></div>
+              <div class="feat na"><div class="feat-icon fi-no">✕</div><div class="feat-text">Advanced analytics</div></div>
+              <div class="feat na"><div class="feat-icon fi-no">✕</div><div class="feat-text">API access</div></div>
+              <div class="feat na"><div class="feat-icon fi-no">✕</div><div class="feat-text">Priority support</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRO -->
+        <div class="plan-card pro">
+          <div class="popular-glow">⭐ Most Popular</div>
+          <div class="plan-top-badge ptb-pro">Recommended for You</div>
+          <div class="plan-body">
+            <div class="plan-name">Pro</div>
+            <div class="plan-price-wrap">
+              <div class="plan-price" id="pro-price">₹179</div>
+              <div class="plan-price-orig" id="pro-orig" style="display:none;">₹299</div>
+            </div>
+            <div class="plan-price-period" id="pro-period">per month</div>
+            <div class="plan-desc" id="pro-desc">For professionals who are serious about their career. Everything you need, unlimited.</div>
+            <button class="plan-cta cta-pro" onclick="location.href='payment-gateway.html?plan=pro&billing='+billing">🚀 Upgrade to Pro →</button>
+            <div class="plan-features">
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Unlimited resumes</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Unlimited portfolios</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Unlimited AI credits</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>All 35+ templates</strong> incl. premium</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Custom domain</strong> connect</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Advanced analytics</strong> — views, referrers, devices</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>API access</strong> — 1,000 calls/month</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Password-protect</strong> portfolio</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Remove</strong> Prolio AI branding</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Priority support</strong> — &lt;2h response</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>AI Cover Letter</strong> generator</div></div>
+              <div class="feat"><div class="feat-icon fi-pro">✦</div><div class="feat-text"><strong>Google Drive</strong> auto-sync</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="plan-card">
+          <div class="plan-top-badge ptb-team">For Teams &amp; Agencies</div>
+          <div class="plan-body">
+            <div class="plan-name" style="color:#ffe066;">Team</div>
+            <div class="plan-price-wrap">
+              <div class="plan-price" id="team-price" style="color:#ffe066;">₹479</div>
+              <div class="plan-price-orig" id="team-orig" style="display:none;">₹799</div>
+            </div>
+            <div class="plan-price-period" id="team-period">per month · up to 5 seats</div>
+            <div class="plan-desc">Everything in Pro, shared across your whole team with a unified brand.</div>
+            <button class="plan-cta cta-team" onclick="openUpgrade('team')">👥 Get Team Plan →</button>
+            <div class="plan-features">
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Everything in Pro</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>5 team members</strong> (add more ₹150/seat)</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Shared brand templates</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Team analytics</strong> dashboard</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>API — 10,000 calls</strong>/month</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Unlimited webhooks</strong></div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Dedicated account</strong> manager</div></div>
+              <div class="feat"><div class="feat-icon fi-yes">✓</div><div class="feat-text"><strong>Custom onboarding</strong> call</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /plans-grid -->
+
+      <!-- VALUE PROPS -->
+      <div id="value-section">
+        <h2>Why Professionals <em>Choose Pro</em></h2>
+        <div class="sub">Real value that pays for itself the moment you land an interview.</div>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="vc-icon">✨</div>
+            <div class="vc-title">Unlimited AI Credits</div>
+            <div class="vc-desc">Rewrite every bullet point, summary and bio with AI. No more worrying about running out mid-application.</div>
+          </div>
+          <div class="value-card">
+            <div class="vc-icon">🌐</div>
+            <div class="vc-title">Your Own Domain</div>
+            <div class="vc-desc">yourname.com instantly makes you look 10× more professional. Recruiters notice. Hiring managers remember it.</div>
+          </div>
+          <div class="value-card">
+            <div class="vc-icon">📊</div>
+            <div class="vc-title">Know Who's Watching</div>
+            <div class="vc-desc">See exactly which companies viewed your portfolio, where they came from and how long they spent reading it.</div>
+          </div>
+          <div class="value-card">
+            <div class="vc-icon">🔒</div>
+            <div class="vc-title">Password-Protect It</div>
+            <div class="vc-desc">Share your portfolio privately with specific recruiters. Perfect for confidential job searches while employed.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPARISON TABLE -->
+      <div id="compare-section">
+        <h2>Full Feature <em>Comparison</em></h2>
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Free</th>
+              <th class="col-pro">Pro</th>
+              <th class="col-team">Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="section-row"><td>Resumes &amp; Portfolio</td><td></td><td class="col-pro"></td><td></td></tr>
+            <tr><td>Resumes</td><td><span class="check-val">3</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">Unlimited</span></td><td><span class="check-val" style="color:#ffe066;">Unlimited</span></td></tr>
+            <tr><td>Portfolio sites</td><td><span class="check-val">1</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">Unlimited</span></td><td><span class="check-val" style="color:#ffe066;">Unlimited</span></td></tr>
+            <tr><td>Resume templates</td><td><span class="check-val">30</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">35+ incl. premium</span></td><td><span class="check-val" style="color:#ffe066;">35+ + custom</span></td></tr>
+            <tr><td>PDF &amp; link export</td><td><span class="check-yes">✓</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Custom domain</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Remove branding</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Password protection</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+
+            <tr class="section-row"><td>AI Features</td><td></td><td class="col-pro"></td><td></td></tr>
+            <tr><td>AI credits / month</td><td><span class="check-val">100</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">Unlimited</span></td><td><span class="check-val" style="color:#ffe066;">Unlimited</span></td></tr>
+            <tr><td>AI Enhancement</td><td><span class="check-yes">✓</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>AI Cover Letter</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>AI tone control</td><td><span class="check-yes">✓</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>AI job match suggestions</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+
+            <tr class="section-row"><td>Analytics &amp; Integrations</td><td></td><td class="col-pro"></td><td></td></tr>
+            <tr><td>Basic analytics</td><td><span class="check-yes">✓</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Advanced analytics</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Google Drive sync</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>API access</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">1K calls/mo</span></td><td><span class="check-val" style="color:#ffe066;">10K calls/mo</span></td></tr>
+            <tr><td>Webhooks</td><td><span class="check-val">2</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">20</span></td><td><span class="check-val" style="color:#ffe066;">Unlimited</span></td></tr>
+
+            <tr class="section-row"><td>Support</td><td></td><td class="col-pro"></td><td></td></tr>
+            <tr><td>Community support</td><td><span class="check-yes">✓</span></td><td class="col-pro"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+            <tr><td>Email support</td><td><span class="check-val">48h</span></td><td class="col-pro"><span class="check-val" style="color:#c4b5fd;">&lt; 2h</span></td><td><span class="check-val" style="color:#ffe066;">&lt; 30 min</span></td></tr>
+            <tr><td>Dedicated account manager</td><td><span class="check-no">—</span></td><td class="col-pro"><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div id="testimonials">
+        <h2>Loved by <em>Job Seekers</em></h2>
+        <div class="sub">Real people. Real results. Real careers changed.</div>
+        <div class="testi-grid">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-text">"I upgraded to Pro on a Monday, used the AI to rewrite my resume on Tuesday, and got a call from Google by Friday. The custom domain made me look incredibly professional."</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#7b4dff,#5E7CFF);">R</div>
+              <div><div class="testi-name">Rahul Menon</div><div class="testi-role">SDE-2 at Google · Bangalore</div></div>
+              <div class="testi-badge">Pro</div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-text">"₹299/month is genuinely nothing compared to what it's worth. I can see exactly which recruiters visited my portfolio and for how long. That intel is priceless."</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#49C6C6,#2F8DA8);">P</div>
+              <div><div class="testi-name">Priya Sharma</div><div class="testi-role">Product Manager · Hyderabad</div></div>
+              <div class="testi-badge">Pro</div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-text">"Our placement team uses the Team plan for all 80 students. The shared templates keep everyone on-brand and the analytics show us which portfolios are getting the most recruiter attention."</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ffe066);">A</div>
+              <div><div class="testi-name">Arjun Nair</div><div class="testi-role">Placement Director · IIT Madras</div></div>
+              <div class="testi-badge" style="background:rgba(255,224,102,0.12);color:#ffe066;border-color:rgba(255,224,102,0.25);">Team</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div id="faq-section">
+        <h2>Pricing <em>FAQs</em></h2>
+        <div class="faq-item open">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is there a free trial for Pro?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">Yes — all new accounts start on Free forever. You can use Prolio AI indefinitely on the Free plan. When you're ready to go further, upgrade to Pro. There's no time limit on Free, so you can evaluate the product fully before paying.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I cancel anytime?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">Yes, absolutely. Cancel anytime from Settings → Plan & Billing with one click. No questions asked, no cancellation fees. You keep Pro features until the end of your billing period, then automatically drop to Free. Your data is never deleted.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What happens to my resumes if I downgrade?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">Your data is always safe. If you have more than 3 resumes when downgrading to Free, the extras are archived — not deleted. You can access and restore them the moment you upgrade again. Nothing is ever permanently lost.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Do you offer student discounts?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">Yes! Students with a valid .edu email get <strong>50% off Pro</strong> — just ₹150/month. NGOs and open-source contributors get Pro free. Email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a292f2a2a35282e1a2a28353633353b3374393537">[email&#160;protected]</a> with proof of eligibility and we'll activate it within 24 hours.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What payment methods do you accept?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">We accept all major cards (Visa, Mastercard, RuPay), UPI (Google Pay, PhonePe, Paytm), Net Banking and EMI options. Payments are processed securely via Razorpay with 256-bit SSL encryption. We never store your card details.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is the annual plan worth it?</span><span class="faq-chev">›</span></div>
+          <div class="faq-a">Annual saves you 40% — Pro comes to ₹299/month billed annually (₹3,588/year) vs ₹179/month. That's ₹1,440 saved per year. If you're in active job search mode or use Prolio AI regularly, annual is the obvious choice. You can switch from monthly to annual anytime.</div>
+        </div>
+      </div>
+
+      <!-- CTA BANNER -->
+      <div id="cta-banner">
+        <h2>Ready to Land Your <em>Dream Job?</em></h2>
+        <p>Join 12,000+ professionals who upgraded their career with Prolio AI Pro. Start today — cancel anytime.</p>
+        <div class="cta-btns">
+          <button class="btn-main" onclick="location.href='payment-gateway.html?plan=pro&billing='+billing">🚀 Upgrade to Pro — ₹179/mo</button>
+          <button class="btn-sec" onclick="location.href='help-docs.html'">Questions? Read FAQs →</button>
+        </div>
+        <div class="cta-trust">🔒 Secure payment &nbsp;·&nbsp; 🔄 Cancel anytime &nbsp;·&nbsp; 💳 UPI &amp; Cards accepted &nbsp;·&nbsp; 🎓 Student discount available</div>
+      </div>
+
+    </div><!-- /page -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- UPGRADE MODAL -->
+<div id="modal-ov">
+  <div id="modal-box">
+    <div id="modal-top">
+      <div id="modal-icon">🚀</div>
+      <div id="modal-title">Upgrade to Pro</div>
+      <div id="modal-sub">You're one step away from unlimited everything.</div>
+    </div>
+    <div id="modal-plan-display">
+      <div class="mpd-row"><span class="mpd-label">Plan</span><span class="mpd-val" id="mpd-plan">Prolio AI Pro</span></div>
+      <div class="mpd-row"><span class="mpd-label">Billing</span><span class="mpd-val" id="mpd-billing">Monthly</span></div>
+      <div class="mpd-row"><span class="mpd-label">Price</span><span class="mpd-val" id="mpd-price">₹299 / month</span></div>
+      <div class="mpd-row"><span class="mpd-label">Due today</span><span class="mpd-val grad" id="mpd-due">₹299</span></div>
+    </div>
+    <div id="modal-form">
+      <div class="mf-group">
+        <label class="mf-label">Card Number</label>
+        <input class="mf-input" id="card-num" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtCard(this)">
+      </div>
+      <div class="mf-row">
+        <div class="mf-group"><label class="mf-label">Expiry</label><input class="mf-input" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"></div>
+        <div class="mf-group"><label class="mf-label">CVV</label><input class="mf-input" placeholder="•••" maxlength="3" type="password"></div>
+      </div>
+      <div class="mf-group">
+        <label class="mf-label">Cardholder Name</label>
+        <input class="mf-input" placeholder="Name on card">
+      </div>
+      <div style="margin-bottom:4px;">
+        <div style="font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:8px;">Or pay with</div>
+        <div class="mf-card-icons">
+          <div class="mf-card-icon">UPI</div>
+          <div class="mf-card-icon">GPay</div>
+          <div class="mf-card-icon">PhonePe</div>
+          <div class="mf-card-icon">Net Banking</div>
+        </div>
+      </div>
+    </div>
+    <div id="modal-footer">
+      <button class="mf-submit" id="pay-btn" onclick="processPayment()">
+        <span class="bt" id="pay-btn-text">🔒 Pay ₹299 Securely</span>
+        <div class="spin"></div>
+      </button>
+      <button class="mf-cancel" onclick="closeModal()">Cancel — stay on Free</button>
+      <div class="mf-trust">🔒 256-bit SSL &nbsp;·&nbsp; 🔄 Cancel anytime &nbsp;·&nbsp; 💳 Powered by Razorpay</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+
+<script>
+
+/* ── BILLING TOGGLE ── */
+var billing = 'monthly';
+var PRICES = {
+  monthly: { pro:'₹179', proFull:'₹179 / month', team:'₹479', teamFull:'₹479 / month · 5 seats' },
+  annual:  { pro:'₹299', proFull:'₹299 / month', team:'₹799', teamFull:'₹799 / month · 5 seats' }
+};
+
+function setBilling(type) {
+  billing = type;
+  var isAnnual = (type === 'annual');
+
+  /* toggle active class — use explicit add/remove for full browser support */
+  var btnM = document.getElementById('bt-monthly');
+  var btnA = document.getElementById('bt-annual');
+  if (btnM) { btnM.classList.remove('active'); if (!isAnnual) btnM.classList.add('active'); }
+  if (btnA) { btnA.classList.remove('active'); if (isAnnual)  btnA.classList.add('active'); }
+
+  var p = PRICES[type];
+
+  /* Pro price */
+  var elProPrice  = document.getElementById('pro-price');
+  var elProPeriod = document.getElementById('pro-period');
+  var elProOrig   = document.getElementById('pro-orig');
+  if (elProPrice)  elProPrice.textContent  = p.pro;
+  if (elProPeriod) elProPeriod.textContent = isAnnual ? 'per month · billed annually' : 'per month';
+  if (elProOrig)   elProOrig.style.display = isAnnual ? 'block' : 'none';
+
+  /* Team price */
+  var elTeamPrice  = document.getElementById('team-price');
+  var elTeamPeriod = document.getElementById('team-period');
+  var elTeamOrig   = document.getElementById('team-orig');
+  if (elTeamPrice)  elTeamPrice.textContent  = p.team;
+  if (elTeamPeriod) elTeamPeriod.textContent = isAnnual
+    ? 'per month · billed annually · 5 seats' : 'per month · up to 5 seats';
+  if (elTeamOrig)   elTeamOrig.style.display = isAnnual ? 'block' : 'none';
+}
+
+/* ── FAQ ── */
+function toggleFaq(head) { head.closest('.faq-item').classList.toggle('open'); }
+
+/* ── UPGRADE MODAL ── */
+var upgradeTarget = 'pro';
+function openUpgrade(plan) {
+  window.location.href = 'payment-gateway.html?plan=' + plan + '&billing=' + billing;
+}
+
+function calcAnnual(price) {
+  var n = parseInt(price.replace('₹','')) * 12;
+  return '₹' + n.toLocaleString('en-IN');
+}
+
+function closeModal() { document.getElementById('modal-ov').classList.remove('open'); }
+document.getElementById('modal-ov').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-ov')) closeModal();
+});
+
+/* ── CARD FORMATTING ── */
+function fmtCard(el) {
+  var v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1  ').trim();
+}
+function fmtExp(el) {
+  var v = el.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  el.value = v;
+}
+
+/* ── PAYMENT PROCESSING ── */
+function processPayment() {
+  var cardNum = document.getElementById('card-num').value.replace(/\s/g,'');
+  if (cardNum.length < 13) { toast('⚠️ Please enter a valid card number'); return; }
+  var btn = document.getElementById('pay-btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  setTimeout(() => {
+    btn.classList.remove('loading'); btn.disabled = false;
+    closeModal();
+    setTimeout(() => {
+      // Save plan to localStorage
+      var newPlan = upgradeTarget === 'team' ? 'team' : 'pro';
+      try { localStorage.setItem('prolio_plan', newPlan); } catch(e) {}
+      // Update sidebar role
+      var roleEl = document.getElementById('sb-user-role');
+      if (roleEl) { roleEl.textContent = newPlan==='team' ? 'Team Plan' : 'Pro Plan ✦'; roleEl.style.color='#c4b5fd'; }
+      var upg = document.getElementById('sb-upgrade');
+      if (upg) upg.style.display = 'none';
+      var badge = document.getElementById('plan-badge');
+      if (badge) { badge.textContent = newPlan==='team' ? '👥 Team' : '✦ Pro'; badge.style.display='inline-flex'; }
+      // Mark current plan on cards
+      document.querySelectorAll('.plan-card').forEach(function(card){card.classList.remove('current-active');});
+      var activeCard = document.getElementById('plan-'+newPlan);
+      if (activeCard) activeCard.classList.add('current-active');
+      // Show success modal
+      document.getElementById('modal-icon').textContent  = '🎉';
+      document.getElementById('modal-title').textContent = newPlan==='team' ? 'Welcome to Team!' : 'Welcome to Pro!';
+      document.getElementById('modal-sub').textContent   = 'Your account is upgraded. All features are now active.';
+      var planLabel = newPlan === 'team' ? 'Team' : 'Pro';
+      document.getElementById('modal-plan-display').innerHTML =
+        '<div style="text-align:center;padding:10px 0;">' +
+        '<div style="font-size:48px;margin-bottom:10px;">🎉</div>' +
+        '<div style="font-size:14px;font-weight:800;color:#c4b5fd;margin-bottom:6px;">You are now on ' + planLabel + '!</div>' +
+        '<div style="font-size:12px;color:var(--muted);line-height:1.6;">Unlimited resumes, AI credits, custom domain and more are now active across the entire app.</div>' +
+        '</div>';
+      document.getElementById('modal-form').innerHTML = '';
+      document.getElementById('modal-footer').innerHTML =
+        '<button class="mf-submit" onclick="closeModal();location.href=\'dashboard.html\'">🚀 Go to Dashboard</button>' +
+        '<button class="mf-cancel" onclick="closeModal()">Stay on Pricing</button>' +
+        '<div class="mf-trust">✅ Your Pro benefits are active immediately on all pages</div>';
+      document.getElementById('modal-ov').classList.add('open');
+    }, 400);
+  }, 2000);
+}
+
+/* ── SIDEBAR ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sb-overlay').classList.toggle('show'); }
+function closeSidebar(){  document.getElementById('sidebar').classList.remove('open');  document.getElementById('sb-overlay').classList.remove('show'); }
+
+/* ── TOAST ── */
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3000);}
+
+/* ── READ PLAN STATE ON LOAD ── */
+(function() {
+  var plan = 'free';
+  try { plan = localStorage.getItem('prolio_plan') || 'free'; } catch(e) {}
+  var isPro  = plan === 'pro'  || plan === 'team';
+  var isTeam = plan === 'team';
+  var roleEl = document.getElementById('sb-user-role');
+  if (roleEl && isPro) { roleEl.textContent = isTeam ? 'Team Plan' : 'Pro Plan ✦'; roleEl.style.color='#c4b5fd'; }
+  var upg = document.getElementById('sb-upgrade');
+  if (upg && isPro) upg.style.display = 'none';
+  var badge = document.getElementById('plan-badge');
+  if (badge && isPro) { badge.textContent = isTeam ? '👥 Team' : '✦ Pro'; badge.style.display = 'inline-flex'; }
+  if (plan === 'pro' || plan === 'team') {
+    var targetId = plan === 'team' ? 'plan-team-card' : 'plan-pro-card';
+    var card = document.getElementById(targetId);
+    if (card) {
+      var cta = card.querySelector('.plan-cta');
+      if (cta) { cta.className = 'plan-cta cta-free'; cta.textContent = '✓ Your Current Plan'; }
+      var topBadge = card.querySelector('.plan-top-badge');
+      if (topBadge) topBadge.textContent = '✓ Current Plan';
+    }
+  }
+})();
+
+</script>
+</body>
+</html>

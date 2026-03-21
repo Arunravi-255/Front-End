@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7b4dff;--purple-lt:#a78bff;--blue:#5E7CFF;--cyan:#49C6C6;
+  --green:#22c55e;--red:#ef4444;--gold:#ffe066;
+  --bg:#080c18;--bg2:#0d1220;--card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--border-lt:rgba(255,255,255,0.14);
+  --text:#f1f5f9;--muted:rgba(255,255,255,0.45);--muted2:rgba(255,255,255,0.22);
+  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 20%,rgba(123,77,255,0.2) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,rgba(73,198,198,0.15) 0%,transparent 50%);}
+
+/* ── BACK LINK ── */
+#back-link{position:fixed;top:20px;left:24px;display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;
+  transition:color 0.2s;z-index:10;text-decoration:none;}
+#back-link:hover{color:var(--text);}
+
+/* ── MAIN LAYOUT ── */
+#checkout{display:grid;grid-template-columns:1fr 420px;gap:28px;max-width:900px;
+  width:100%;position:relative;z-index:1;}
+
+/* ── ORDER SUMMARY (left) ── */
+#order-summary{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:28px;display:flex;flex-direction:column;gap:20px;height:fit-content;
+  position:sticky;top:20px;}
+.os-logo{font-size:18px;font-weight:900;letter-spacing:3px;font-style:italic;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:4px;}
+.os-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;
+  text-transform:uppercase;}
+.os-plan-card{background:linear-gradient(135deg,rgba(123,77,255,0.15),rgba(73,198,198,0.08));
+  border:1px solid rgba(123,77,255,0.3);border-radius:14px;padding:18px;}
+.osp-name{font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:4px;}
+.osp-billing{font-size:11px;color:var(--muted);margin-bottom:14px;}
+.osp-price{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;}
+.osp-period{font-size:12px;color:var(--muted);margin-top:4px;}
+.os-features{display:flex;flex-direction:column;gap:8px;}
+.os-feat{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+.os-feat-dot{width:16px;height:16px;border-radius:50%;background:rgba(34,197,94,0.18);
+  color:#4ade80;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+.os-divider{border:none;border-top:1px solid var(--border);}
+.os-line{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;}
+.os-line:last-child{margin-bottom:0;font-weight:800;font-size:14px;}
+.os-line .label{color:var(--muted);}
+.os-line .val{font-weight:700;}
+.os-line.total .val{background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.os-trust{display:flex;flex-direction:column;gap:7px;}
+.trust-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted2);}
+.trust-icon{font-size:14px;}
+
+/* ── PAYMENT FORM (right) ── */
+#payment-box{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;}
+
+/* Step header */
+#step-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);}
+.step-progress{display:flex;align-items:center;gap:0;margin-bottom:18px;}
+.step-item{display:flex;align-items:center;flex:1;}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;transition:all 0.3s;flex-shrink:0;}
+.step-dot.done{background:var(--green);color:white;}
+.step-dot.active{background:var(--grad);color:white;box-shadow:0 0 0 3px rgba(123,77,255,0.25);}
+.step-dot.pending{background:rgba(255,255,255,0.07);color:var(--muted);border:1px solid var(--border);}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 4px;transition:background 0.3s;}
+.step-line.done{background:var(--green);}
+.step-label{font-size:10px;font-weight:700;color:var(--muted);margin-top:4px;text-align:center;
+  white-space:nowrap;}
+.step-active-label{color:#c4b5fd;}
+#step-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;margin-bottom:4px;}
+#step-header h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#step-subtitle{font-size:12px;color:var(--muted);}
+
+/* Step panels */
+.step-panel{display:none;padding:24px 28px;}
+.step-panel.active{display:block;}
+
+/* Method tabs */
+#method-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px;}
+.method-tab{padding:12px 8px;border-radius:12px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.2s;text-align:center;}
+.method-tab:hover{border-color:rgba(123,77,255,0.4);background:rgba(123,77,255,0.06);}
+.method-tab.active{border-color:var(--purple);background:rgba(123,77,255,0.12);
+  box-shadow:0 0 0 2px rgba(123,77,255,0.2);}
+.mt-icon{font-size:20px;margin-bottom:5px;}
+.mt-label{font-size:10px;font-weight:800;color:var(--muted);}
+.method-tab.active .mt-label{color:#c4b5fd;}
+
+/* Method content panels */
+.method-panel{display:none;}
+.method-panel.active{display:block;}
+
+/* Form elements */
+.fgroup{margin-bottom:14px;}
+.fgroup:last-child{margin-bottom:0;}
+.flabel{font-size:10px;font-weight:800;color:var(--muted2);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.finput,.fselect{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;font-family:'Montserrat',sans-serif;
+  color:var(--text);outline:none;transition:all 0.2s;}
+.finput::placeholder{color:var(--muted2);}
+.finput:focus,.fselect:focus{border-color:rgba(123,77,255,0.7);background:rgba(255,255,255,0.09);
+  box-shadow:0 0 0 3px rgba(123,77,255,0.12);}
+.finput.valid{border-color:rgba(34,197,94,0.5);}
+.finput.error{border-color:rgba(239,68,68,0.6);}
+.finput-icon{position:relative;}
+.finput-icon .finput{padding-right:42px;}
+.finput-icon .fi-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  font-size:16px;pointer-events:none;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ferror{font-size:11px;color:#f87171;margin-top:5px;display:none;}
+.ferror.show{display:block;}
+.fhint{font-size:11px;color:var(--muted2);margin-top:5px;}
+
+/* Card brand logo */
+#card-brand{position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  font-size:13px;font-weight:800;color:var(--purple-lt);pointer-events:none;
+  font-family:'Fira Code',monospace;}
+
+/* UPI panel */
+.upi-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.upi-app{padding:14px 8px;border-radius:12px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.2s;text-align:center;}
+.upi-app:hover{border-color:rgba(123,77,255,0.4);background:rgba(123,77,255,0.06);}
+.upi-app.selected{border-color:var(--purple);background:rgba(123,77,255,0.12);}
+.upi-icon{font-size:22px;margin-bottom:5px;}
+.upi-name{font-size:10px;font-weight:800;color:var(--muted);}
+.upi-app.selected .upi-name{color:#c4b5fd;}
+.or-divider{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--muted2);font-size:11px;font-weight:700;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Net banking */
+.bank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.bank-opt{padding:12px 8px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.2s;text-align:center;
+  font-size:11px;font-weight:700;color:var(--muted);}
+.bank-opt:hover{border-color:rgba(123,77,255,0.4);color:var(--text);}
+.bank-opt.selected{border-color:var(--purple);background:rgba(123,77,255,0.12);color:#c4b5fd;}
+.bank-icon{font-size:18px;margin-bottom:4px;}
+.more-banks{width:100%;padding:10px;border-radius:9px;background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.more-banks:hover{border-color:var(--border-lt);color:var(--text);}
+
+/* Wallet grid */
+.wallet-list{display:flex;flex-direction:column;gap:8px;}
+.wallet-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s;
+  background:rgba(255,255,255,0.03);}
+.wallet-opt:hover{border-color:rgba(123,77,255,0.4);background:rgba(123,77,255,0.06);}
+.wallet-opt.selected{border-color:var(--purple);background:rgba(123,77,255,0.12);}
+.wallet-icon{font-size:22px;flex-shrink:0;}
+.wallet-name{font-size:13px;font-weight:700;}
+.wallet-bal{font-size:11px;color:var(--muted);margin-top:1px;}
+.wallet-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);
+  margin-left:auto;flex-shrink:0;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;}
+.wallet-opt.selected .wallet-radio{border-color:var(--purple);background:var(--purple);}
+.wallet-opt.selected .wallet-radio::after{content:'';width:7px;height:7px;
+  border-radius:50%;background:white;}
+
+/* EMI panel */
+.emi-banks{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.emi-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s;
+  background:rgba(255,255,255,0.03);}
+.emi-opt:hover{border-color:rgba(123,77,255,0.4);background:rgba(123,77,255,0.06);}
+.emi-opt.selected{border-color:var(--purple);background:rgba(123,77,255,0.12);}
+.emi-bank{font-size:13px;font-weight:700;}
+.emi-detail{font-size:11px;color:var(--muted);margin-top:1px;}
+.emi-rate{font-size:12px;font-weight:800;color:#4ade80;margin-left:auto;white-space:nowrap;}
+
+/* Pay button */
+#pay-btn-wrap{padding:0 28px 24px;}
+.pay-btn{width:100%;padding:15px;border-radius:14px;background:var(--grad);border:none;
+  color:white;font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;
+  cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;
+  gap:10px;position:relative;overflow:hidden;}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(123,77,255,0.5);}
+.pay-btn:active{transform:translateY(0);}
+.pay-btn.loading{cursor:wait;opacity:0.85;}
+.pay-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,
+  transparent,rgba(255,255,255,0.12),transparent);transform:translateX(-100%);
+  transition:transform 0.6s;}
+.pay-btn.shimmer::before{transform:translateX(100%);}
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.35);
+  border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+.pay-btn.loading .spinner{display:inline-block;}
+.pay-btn.loading .pay-text{opacity:0.7;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.pay-secure-note{text-align:center;font-size:11px;color:var(--muted2);
+  margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.powered-by{text-align:center;margin-top:8px;font-size:10px;color:var(--muted2);
+  display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* ── PROCESSING OVERLAY ── */
+#processing{display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(8,12,24,0.95);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;flex-direction:column;gap:24px;}
+#processing.show{display:flex;}
+.proc-ring{width:80px;height:80px;border:4px solid rgba(123,77,255,0.2);
+  border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;}
+.proc-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;}
+.proc-sub{font-size:13px;color:var(--muted);text-align:center;max-width:280px;line-height:1.6;}
+.proc-steps{display:flex;flex-direction:column;gap:10px;width:280px;}
+.proc-step{display:flex;align-items:center;gap:12px;font-size:13px;}
+.proc-step-dot{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.1);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;
+  transition:all 0.4s;}
+.proc-step-dot.done{background:rgba(34,197,94,0.2);color:#4ade80;}
+.proc-step-dot.active{background:rgba(123,77,255,0.3);color:#c4b5fd;
+  animation:pulse-dot 1s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(123,77,255,0.4);}
+  50%{box-shadow:0 0 0 6px rgba(123,77,255,0);}}
+.proc-step-text{color:var(--muted);}
+.proc-step-text.done{color:var(--text);}
+
+/* ── SUCCESS ── */
+#success{display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(8,12,24,0.97);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;}
+#success.show{display:flex;}
+#success-box{background:#0d1220;border:1px solid rgba(34,197,94,0.3);border-radius:24px;
+  padding:40px;max-width:420px;width:100%;text-align:center;
+  animation:successIn 0.5s cubic-bezier(0.22,1,0.36,1);}
+@keyframes successIn{from{opacity:0;transform:scale(0.85);}to{opacity:1;transform:scale(1);}}
+.success-ring{width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(34,197,94,0.08));
+  border:2px solid rgba(34,197,94,0.4);display:flex;align-items:center;
+  justify-content:center;font-size:36px;margin:0 auto 20px;}
+#success h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:8px;}
+#success h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+#success p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:22px;}
+.success-receipt{background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-bottom:22px;text-align:left;}
+.sr-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;}
+.sr-row:last-child{margin-bottom:0;font-weight:800;padding-top:8px;
+  border-top:1px solid var(--border);}
+.sr-label{color:var(--muted);}
+.sr-val{font-weight:700;}
+.success-btns{display:flex;gap:10px;}
+.sbtn-primary{flex:1;padding:13px;border-radius:12px;background:var(--grad);border:none;
+  color:white;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.sbtn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(123,77,255,0.4);}
+.sbtn-ghost{padding:13px 18px;border-radius:12px;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:700;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.sbtn-ghost:hover{border-color:var(--border-lt);color:var(--text);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:780px){
+  #checkout{grid-template-columns:1fr;}
+  #order-summary{position:static;order:-1;}
+}
+@media(max-width:500px){
+  #method-tabs{grid-template-columns:repeat(2,1fr);}
+  .upi-apps{grid-template-columns:repeat(3,1fr);}
+  .frow{grid-template-columns:1fr;}
+  #payment-box .step-panel{padding:18px;}
+  #pay-btn-wrap{padding:0 18px 20px;}
+}
+</style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<a id="back-link" href="pricing.html">← Back to Plans</a>
+
+<div id="checkout">
+
+  <!-- ORDER SUMMARY -->
+  <div id="order-summary">
+    <div>
+      <div class="os-logo">Prolio AI</div>
+      <div class="os-title">Secure Checkout</div>
+    </div>
+    <div class="os-plan-card">
+      <div class="osp-name" id="os-plan-name">Pro Plan</div>
+      <div class="osp-billing" id="os-plan-billing">Monthly billing · Cancel anytime</div>
+      <div class="osp-price" id="os-price">₹179</div>
+      <div class="osp-period" id="os-period">per month</div>
+    </div>
+    <div class="os-features">
+      <div class="os-feat"><div class="os-feat-dot">✓</div>Unlimited resumes &amp; portfolios</div>
+      <div class="os-feat"><div class="os-feat-dot">✓</div>Unlimited AI credits</div>
+      <div class="os-feat"><div class="os-feat-dot">✓</div>Custom domain connect</div>
+      <div class="os-feat"><div class="os-feat-dot">✓</div>Advanced analytics</div>
+      <div class="os-feat"><div class="os-feat-dot">✓</div>Priority support &lt; 2h</div>
+      <div class="os-feat"><div class="os-feat-dot">✓</div>AI Cover Letter generator</div>
+    </div>
+    <hr class="os-divider">
+    <div>
+      <div class="os-line"><span class="label">Subtotal</span><span class="val" id="os-subtotal">₹179</span></div>
+      <div class="os-line"><span class="label">GST (18%)</span><span class="val" id="os-gst">₹32</span></div>
+      <div class="os-line"><span class="label">Discount</span><span class="val" style="color:#4ade80;" id="os-discount">—</span></div>
+      <hr class="os-divider" style="margin:10px 0;">
+      <div class="os-line total"><span class="label" style="font-weight:800;color:var(--text);">Total Due Today</span><span class="val" id="os-total">₹211</span></div>
+    </div>
+    <hr class="os-divider">
+    <div class="os-trust">
+      <div class="trust-row"><span class="trust-icon">🔒</span>256-bit SSL encrypted payment</div>
+      <div class="trust-row"><span class="trust-icon">🔄</span>Cancel anytime — no questions asked</div>
+      <div class="trust-row"><span class="trust-icon">💳</span>Secured by Razorpay</div>
+      <div class="trust-row"><span class="trust-icon">🧾</span>GST invoice sent automatically</div>
+    </div>
+    <!-- Coupon -->
+    <div style="display:flex;gap:8px;">
+      <input class="finput" id="coupon-input" placeholder="Coupon code" style="font-size:12px;padding:9px 12px;">
+      <button onclick="applyCoupon()" style="padding:9px 14px;border-radius:9px;background:rgba(123,77,255,0.2);border:1px solid rgba(123,77,255,0.3);color:#c4b5fd;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;white-space:nowrap;transition:all 0.2s;">Apply</button>
+    </div>
+    <div id="coupon-msg" style="font-size:11px;display:none;margin-top:-8px;"></div>
+  </div>
+
+  <!-- PAYMENT FORM -->
+  <div id="payment-box">
+
+    <!-- Step header -->
+    <div id="step-header">
+      <div class="step-progress">
+        <div class="step-item">
+          <div>
+            <div class="step-dot active" id="dot-1">1</div>
+            <div class="step-label step-active-label">Payment</div>
+          </div>
+          <div class="step-line" id="line-1"></div>
+        </div>
+        <div class="step-item">
+          <div>
+            <div class="step-dot pending" id="dot-2">2</div>
+            <div class="step-label">Review</div>
+          </div>
+          <div class="step-line" id="line-2"></div>
+        </div>
+        <div class="step-item" style="flex:0;">
+          <div>
+            <div class="step-dot pending" id="dot-3">3</div>
+            <div class="step-label">Confirm</div>
+          </div>
+        </div>
+      </div>
+      <h2 id="step-title">Choose <em>Payment Method</em></h2>
+      <div id="step-subtitle">All transactions are encrypted and secure.</div>
+    </div>
+
+    <!-- STEP 1: Choose method -->
+    <div class="step-panel active" id="panel-1">
+      <div id="method-tabs">
+        <div class="method-tab active" id="tab-card" onclick="switchMethod('card')">
+          <div class="mt-icon">💳</div>
+          <div class="mt-label">Card</div>
+        </div>
+        <div class="method-tab" id="tab-upi" onclick="switchMethod('upi')">
+          <div class="mt-icon">📱</div>
+          <div class="mt-label">UPI</div>
+        </div>
+        <div class="method-tab" id="tab-netbanking" onclick="switchMethod('netbanking')">
+          <div class="mt-icon">🏦</div>
+          <div class="mt-label">Net Banking</div>
+        </div>
+        <div class="method-tab" id="tab-wallet" onclick="switchMethod('wallet')">
+          <div class="mt-icon">👛</div>
+          <div class="mt-label">Wallets</div>
+        </div>
+      </div>
+
+      <!-- CARD -->
+      <div class="method-panel active" id="mp-card">
+        <div class="fgroup">
+          <label class="flabel">Card Number <span id="card-brand-lbl" style="font-size:11px;font-weight:800;color:var(--purple-lt);margin-left:4px;"></span></label>
+          <div class="finput-icon">
+            <input class="finput" id="card-num" placeholder="1234  5678  9012  3456" maxlength="19"
+              oninput="fmtCard(this)" autocomplete="cc-number">
+            <span id="card-brand">💳</span>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fgroup">
+            <label class="flabel">Expiry Date</label>
+            <input class="finput" id="card-exp" placeholder="MM / YY" maxlength="7"
+              oninput="fmtExp(this)" autocomplete="cc-exp">
+          </div>
+          <div class="fgroup">
+            <label class="flabel">CVV <span style="font-size:10px;color:var(--muted2);">🔒</span></label>
+            <input class="finput" id="card-cvv" placeholder="•••" maxlength="4"
+              type="password" autocomplete="cc-csc">
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Cardholder Name</label>
+          <input class="finput" id="card-name" placeholder="As printed on card"
+            autocomplete="cc-name" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+          <span style="font-size:11px;color:var(--muted2);">Accepted:</span>
+          <span style="font-size:11px;font-weight:800;color:var(--muted);">VISA</span>
+          <span style="font-size:11px;font-weight:800;color:var(--muted);">MASTERCARD</span>
+          <span style="font-size:11px;font-weight:800;color:var(--muted);">RUPAY</span>
+          <span style="font-size:11px;font-weight:800;color:var(--muted);">AMEX</span>
+        </div>
+        <div id="card-err" class="ferror"></div>
+      </div>
+
+      <!-- UPI -->
+      <div class="method-panel" id="mp-upi">
+        <div class="upi-apps">
+          <div class="upi-app" id="ua-gpay" onclick="selectUpiApp('gpay')">
+            <div class="upi-icon">🟢</div>
+            <div class="upi-name">Google Pay</div>
+          </div>
+          <div class="upi-app" id="ua-phonepe" onclick="selectUpiApp('phonepe')">
+            <div class="upi-icon">🔵</div>
+            <div class="upi-name">PhonePe</div>
+          </div>
+          <div class="upi-app" id="ua-paytm" onclick="selectUpiApp('paytm')">
+            <div class="upi-icon">🔷</div>
+            <div class="upi-name">Paytm</div>
+          </div>
+          <div class="upi-app" id="ua-bhim" onclick="selectUpiApp('bhim')">
+            <div class="upi-icon">🇮🇳</div>
+            <div class="upi-name">BHIM</div>
+          </div>
+        </div>
+        <div class="or-divider">or enter UPI ID</div>
+        <div class="fgroup">
+          <label class="flabel">UPI ID</label>
+          <div class="finput-icon">
+            <input class="finput" id="upi-id" placeholder="yourname@upi" autocomplete="off">
+            <span class="fi-icon">@</span>
+          </div>
+          <div class="fhint">e.g. arun@oksbi · arun@paytm · 9876543210@ybl</div>
+        </div>
+        <div id="upi-err" class="ferror"></div>
+      </div>
+
+      <!-- NET BANKING -->
+      <div class="method-panel" id="mp-netbanking">
+        <div class="bank-grid">
+          <div class="bank-opt" id="bank-sbi" onclick="selectBank('sbi')">
+            <div class="bank-icon">🔵</div>SBI
+          </div>
+          <div class="bank-opt" id="bank-hdfc" onclick="selectBank('hdfc')">
+            <div class="bank-icon">🔴</div>HDFC
+          </div>
+          <div class="bank-opt" id="bank-icici" onclick="selectBank('icici')">
+            <div class="bank-icon">🟠</div>ICICI
+          </div>
+          <div class="bank-opt" id="bank-axis" onclick="selectBank('axis')">
+            <div class="bank-icon">🟣</div>Axis
+          </div>
+          <div class="bank-opt" id="bank-kotak" onclick="selectBank('kotak')">
+            <div class="bank-icon">🔴</div>Kotak
+          </div>
+          <div class="bank-opt" id="bank-pnb" onclick="selectBank('pnb')">
+            <div class="bank-icon">🔵</div>PNB
+          </div>
+        </div>
+        <button class="more-banks" onclick="showToast('Showing all 50+ banks...')">View all banks ▾</button>
+        <div id="nb-err" class="ferror" style="margin-top:8px;"></div>
+      </div>
+
+      <!-- WALLETS -->
+      <div class="method-panel" id="mp-wallet">
+        <div class="wallet-list">
+          <div class="wallet-opt" id="w-paytm" onclick="selectWallet('paytm')">
+            <div class="wallet-icon">🔷</div>
+            <div><div class="wallet-name">Paytm Wallet</div><div class="wallet-bal">Balance: ₹450</div></div>
+            <div class="wallet-radio"></div>
+          </div>
+          <div class="wallet-opt" id="w-amazonpay" onclick="selectWallet('amazonpay')">
+            <div class="wallet-icon">🟡</div>
+            <div><div class="wallet-name">Amazon Pay</div><div class="wallet-bal">Balance: ₹0</div></div>
+            <div class="wallet-radio"></div>
+          </div>
+          <div class="wallet-opt" id="w-mobikwik" onclick="selectWallet('mobikwik')">
+            <div class="wallet-icon">🔵</div>
+            <div><div class="wallet-name">MobiKwik</div><div class="wallet-bal">Balance: ₹120</div></div>
+            <div class="wallet-radio"></div>
+          </div>
+          <div class="wallet-opt" id="w-freecharge" onclick="selectWallet('freecharge')">
+            <div class="wallet-icon">🟢</div>
+            <div><div class="wallet-name">Freecharge</div><div class="wallet-bal">Balance: ₹0</div></div>
+            <div class="wallet-radio"></div>
+          </div>
+        </div>
+        <div id="wallet-err" class="ferror" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Review -->
+    <div class="step-panel" id="panel-2">
+      <div id="review-content"></div>
+    </div>
+
+    <!-- STEP 3: OTP / Auth -->
+    <div class="step-panel" id="panel-3">
+      <div id="auth-content"></div>
+    </div>
+
+    <!-- PAY BUTTON -->
+    <div id="pay-btn-wrap">
+      <button class="pay-btn" id="pay-btn" onclick="handlePayBtn()">
+        <span class="pay-text" id="pay-btn-text">🔒 Pay ₹211 Securely</span>
+        <div class="spinner"></div>
+      </button>
+      <div class="pay-secure-note">🔒 Secured by 256-bit SSL &nbsp;·&nbsp; PCI DSS Compliant</div>
+      <div class="powered-by">Powered by <strong style="color:var(--purple-lt);margin-left:3px;">Razorpay</strong></div>
+    </div>
+
+  </div><!-- /payment-box -->
+</div><!-- /checkout -->
+
+<!-- PROCESSING -->
+<div id="processing">
+  <div class="proc-ring"></div>
+  <div class="proc-title">Processing Payment…</div>
+  <div class="proc-sub">Please do not close this window.</div>
+  <div class="proc-steps">
+    <div class="proc-step" id="ps-1"><div class="proc-step-dot active">⋯</div><span class="proc-step-text">Initiating secure connection</span></div>
+    <div class="proc-step" id="ps-2"><div class="proc-step-dot pending">2</div><span class="proc-step-text">Verifying payment details</span></div>
+    <div class="proc-step" id="ps-3"><div class="proc-step-dot pending">3</div><span class="proc-step-text">Authorising with bank</span></div>
+    <div class="proc-step" id="ps-4"><div class="proc-step-dot pending">4</div><span class="proc-step-text">Activating Pro features</span></div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success">
+  <div id="success-box">
+    <div class="success-ring">✓</div>
+    <h2>Payment <em>Successful!</em></h2>
+    <p>Your Prolio AI Pro plan is now active. All features have been unlocked across the entire app.</p>
+    <div class="success-receipt">
+      <div class="sr-row"><span class="sr-label">Transaction ID</span><span class="sr-val" style="font-family:'Fira Code',monospace;font-size:11px;" id="txn-id">pay_ProAI2026</span></div>
+      <div class="sr-row"><span class="sr-label">Plan</span><span class="sr-val" id="sr-plan">Pro Monthly</span></div>
+      <div class="sr-row"><span class="sr-label">Amount Paid</span><span class="sr-val" id="sr-amount">₹211</span></div>
+      <div class="sr-row"><span class="sr-label">Next Billing</span><span class="sr-val" id="sr-next">21 Apr 2026</span></div>
+      <div class="sr-row"><span class="sr-label">Invoice</span><span class="sr-val" style="color:#c4b5fd;cursor:pointer;" onclick="showToast('Invoice sent to your email!')">📧 Sent to email</span></div>
+    </div>
+    <div class="success-btns">
+      <button class="sbtn-primary" onclick="goDashboard()">🚀 Go to Dashboard</button>
+      <button class="sbtn-ghost" onclick="showToast('Invoice downloaded!')">⬇ Invoice</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:99999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;border:1px solid rgba(255,255,255,0.08);"></div>
+
+<script>
+/* ── STATE ── */
+var currentMethod = 'card';
+var currentStep   = 1;
+var selectedUpi   = '';
+var selectedBank  = '';
+var selectedWallet= '';
+var planData      = { name:'Pro', billing:'Monthly', price:'₹179', gst:'₹32', total:'₹211' };
+
+/* ── READ PLAN FROM URL or localStorage ── */
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var plan    = params.get('plan')    || 'pro';
+  var billing = params.get('billing') || 'monthly';
+  
+  var prices = {
+    pro:  { monthly:{price:'₹179',gst:'₹32', total:'₹211'},  annual:{price:'₹299',gst:'₹54',total:'₹353'} },
+    team: { monthly:{price:'₹479',gst:'₹86', total:'₹565'},  annual:{price:'₹799',gst:'₹144',total:'₹943'} }
+  };
+  
+  var p = (prices[plan] || prices.pro)[billing] || prices.pro.monthly;
+  planData = { name: plan==='team'?'Team':'Pro', billing: billing==='annual'?'Annual':'Monthly',
+    price: p.price, gst: p.gst, total: p.total };
+  
+  document.getElementById('os-plan-name').textContent  = 'Prolio AI ' + planData.name + ' Plan';
+  document.getElementById('os-plan-billing').textContent = planData.billing + ' billing · Cancel anytime';
+  document.getElementById('os-price').textContent       = planData.price;
+  document.getElementById('os-period').textContent      = billing==='annual' ? 'per month · billed annually' : 'per month';
+  document.getElementById('os-subtotal').textContent    = planData.price;
+  document.getElementById('os-gst').textContent         = planData.gst;
+  document.getElementById('os-total').textContent       = planData.total;
+  document.getElementById('pay-btn-text').textContent   = '🔒 Pay ' + planData.total + ' Securely';
+
+  // Next billing date
+  var next = new Date(); next.setMonth(next.getMonth() + 1);
+  document.getElementById('sr-next').textContent = next.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('sr-amount').textContent  = planData.total;
+  document.getElementById('sr-plan').textContent    = 'Pro ' + planData.billing;
+  document.getElementById('txn-id').textContent     = 'pay_' + Math.random().toString(36).substr(2,10).toUpperCase();
+})();
+
+/* ── METHOD SWITCH ── */
+function switchMethod(m) {
+  currentMethod = m;
+  ['card','upi','netbanking','wallet'].forEach(function(x) {
+    document.getElementById('tab-'+x).classList.toggle('active', x===m);
+    document.getElementById('mp-'+x).classList.toggle('active', x===m);
+  });
+  // Reset step 1 button
+  var payText = '🔒 Pay ' + planData.total + ' Securely';
+  if (m === 'netbanking' && selectedBank)  payText = '🏦 Continue with ' + selectedBank.toUpperCase();
+  if (m === 'upi')                         payText = '📱 Verify & Pay ' + planData.total;
+  if (m === 'wallet' && selectedWallet)    payText = '👛 Pay with ' + selectedWallet;
+  document.getElementById('pay-btn-text').textContent = payText;
+}
+
+/* ── UPI APP SELECT ── */
+function selectUpiApp(app) {
+  selectedUpi = app;
+  ['gpay','phonepe','paytm','bhim'].forEach(function(a) {
+    document.getElementById('ua-'+a).classList.toggle('selected', a===app);
+  });
+  document.getElementById('upi-id').value = '';
+  document.getElementById('pay-btn-text').textContent = '📱 Pay with ' + app.charAt(0).toUpperCase() + app.slice(1);
+}
+
+/* ── BANK SELECT ── */
+function selectBank(bank) {
+  selectedBank = bank;
+  ['sbi','hdfc','icici','axis','kotak','pnb'].forEach(function(b) {
+    document.getElementById('bank-'+b).classList.toggle('selected', b===bank);
+  });
+  document.getElementById('pay-btn-text').textContent = '🏦 Continue with ' + bank.toUpperCase();
+}
+
+/* ── WALLET SELECT ── */
+function selectWallet(w) {
+  selectedWallet = w;
+  ['paytm','amazonpay','mobikwik','freecharge'].forEach(function(x) {
+    document.getElementById('w-'+x).classList.toggle('selected', x===w);
+  });
+  var names = {paytm:'Paytm',amazonpay:'Amazon Pay',mobikwik:'MobiKwik',freecharge:'Freecharge'};
+  document.getElementById('pay-btn-text').textContent = '👛 Pay with ' + names[w];
+}
+
+/* ── CARD FORMATTING ── */
+function fmtCard(el) {
+  var raw = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = raw.replace(/(.{4})/g,'$1  ').trim();
+  var brand = document.getElementById('card-brand');
+  var lbl   = document.getElementById('card-brand-lbl');
+  if (raw.startsWith('4'))      { brand.textContent='VISA';  lbl.textContent='Visa'; }
+  else if (/^5[1-5]/.test(raw)) { brand.textContent='MC';    lbl.textContent='Mastercard'; }
+  else if (raw.startsWith('6')) { brand.textContent='RuPay'; lbl.textContent='RuPay'; }
+  else if (raw.startsWith('3')) { brand.textContent='AMEX';  lbl.textContent='Amex'; }
+  else                          { brand.textContent='💳';    lbl.textContent=''; }
+}
+function fmtExp(el) {
+  var v = el.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  el.value = v;
+}
+
+/* ── VALIDATION ── */
+function validateCard() {
+  var num  = document.getElementById('card-num').value.replace(/\s/g,'');
+  var exp  = document.getElementById('card-exp').value;
+  var cvv  = document.getElementById('card-cvv').value;
+  var name = document.getElementById('card-name').value.trim();
+  var err  = document.getElementById('card-err');
+  if (num.length < 13)   { showErr(err, 'Please enter a valid card number.'); return false; }
+  if (exp.length < 7)    { showErr(err, 'Please enter a valid expiry date.'); return false; }
+  if (cvv.length < 3)    { showErr(err, 'Please enter your CVV.'); return false; }
+  if (name.length < 2)   { showErr(err, 'Please enter the cardholder name.'); return false; }
+  hideErr(err); return true;
+}
+function validateUpi() {
+  var id  = document.getElementById('upi-id').value.trim();
+  var err = document.getElementById('upi-err');
+  if (!selectedUpi && !id) { showErr(err, 'Please select a UPI app or enter your UPI ID.'); return false; }
+  if (id && !id.includes('@')) { showErr(err, 'Invalid UPI ID. Format: name@upi'); return false; }
+  hideErr(err); return true;
+}
+function validateNB() {
+  var err = document.getElementById('nb-err');
+  if (!selectedBank) { showErr(err, 'Please select your bank.'); return false; }
+  hideErr(err); return true;
+}
+function validateWallet() {
+  var err = document.getElementById('wallet-err');
+  if (!selectedWallet) { showErr(err, 'Please select a wallet.'); return false; }
+  hideErr(err); return true;
+}
+function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
+function hideErr(el) { el.classList.remove('show'); }
+
+/* ── COUPON ── */
+var COUPONS = { 'PROLIO20':'20% off', 'LAUNCH50':'50% off', 'STUDENT50':'50% off for students' };
+var couponApplied = false;
+function applyCoupon() {
+  var code = document.getElementById('coupon-input').value.trim().toUpperCase();
+  var msg  = document.getElementById('coupon-msg');
+  if (!code) { showCouponMsg('Please enter a coupon code.', false); return; }
+  if (COUPONS[code] && !couponApplied) {
+    couponApplied = true;
+    document.getElementById('os-discount').textContent = '🎉 ' + COUPONS[code] + ' applied!';
+    document.getElementById('os-discount').style.color = '#4ade80';
+    document.getElementById('coupon-input').disabled = true;
+    showCouponMsg('✅ Coupon applied successfully!', true);
+    showToast('🎉 Coupon applied: ' + COUPONS[code]);
+  } else if (couponApplied) {
+    showCouponMsg('A coupon is already applied.', false);
+  } else {
+    showCouponMsg('Invalid coupon code. Try PROLIO20', false);
+  }
+}
+function showCouponMsg(msg, ok) {
+  var el = document.getElementById('coupon-msg');
+  el.textContent = msg;
+  el.style.color = ok ? '#4ade80' : '#f87171';
+  el.style.display = 'block';
+}
+
+/* ── STEP NAVIGATION ── */
+function goToStep(n) {
+  currentStep = n;
+  [1,2,3].forEach(function(i) {
+    document.getElementById('panel-'+i).classList.toggle('active', i===n);
+    var dot = document.getElementById('dot-'+i);
+    dot.classList.remove('active','done','pending');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+    else dot.classList.add('pending');
+    if (i < 3 && i < n) document.getElementById('line-'+i).classList.add('done');
+    else if (i < 3)     document.getElementById('line-'+i).classList.remove('done');
+  });
+}
+
+function buildReview() {
+  var methodLabels = {card:'Credit / Debit Card', upi:'UPI', netbanking:'Net Banking', wallet:'Wallet'};
+  var methodDetail = '';
+  if (currentMethod === 'card') {
+    var num = document.getElementById('card-num').value;
+    methodDetail = 'Card ending ' + num.replace(/\s/g,'').slice(-4);
+  } else if (currentMethod === 'upi') {
+    var uid = document.getElementById('upi-id').value.trim();
+    methodDetail = uid || (selectedUpi.charAt(0).toUpperCase() + selectedUpi.slice(1));
+  } else if (currentMethod === 'netbanking') {
+    methodDetail = selectedBank.toUpperCase();
+  } else if (currentMethod === 'wallet') {
+    methodDetail = selectedWallet.charAt(0).toUpperCase() + selectedWallet.slice(1);
+  }
+  document.getElementById('review-content').innerHTML =
+    '<div style="margin-bottom:20px;">' +
+    '<div style="font-size:12px;font-weight:800;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Review Your Order</div>' +
+    '<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;overflow:hidden;">' +
+    reviewRow('Plan', planData.name + ' — ' + planData.billing) +
+    reviewRow('Amount', planData.price + '/month') +
+    reviewRow('GST (18%)', planData.gst) +
+    reviewRow('Payment via', methodLabels[currentMethod] + ' · ' + methodDetail) +
+    reviewRow('Total', '<strong style="color:#c4b5fd;">' + planData.total + '</strong>') +
+    '</div></div>' +
+    '<div style="background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:13px 15px;font-size:12px;color:#4ade80;margin-bottom:4px;">✅ Your Pro features activate <strong>immediately</strong> after payment.</div>';
+  document.getElementById('step-title').innerHTML = 'Review & <em>Confirm</em>';
+  document.getElementById('step-subtitle').textContent = 'Check your details before paying.';
+  document.getElementById('pay-btn-text').textContent = '✅ Confirm & Pay ' + planData.total;
+}
+function reviewRow(label, val) {
+  return '<div style="display:flex;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;">' +
+    '<span style="color:var(--muted);">' + label + '</span>' +
+    '<span style="font-weight:700;">' + val + '</span></div>';
+}
+
+function buildOtp() {
+  document.getElementById('auth-content').innerHTML =
+    '<div style="text-align:center;padding:10px 0 20px;">' +
+    '<div style="font-size:36px;margin-bottom:12px;">📲</div>' +
+    '<div style="font-size:14px;font-weight:800;margin-bottom:6px;">Enter OTP to Confirm</div>' +
+    '<div style="font-size:12px;color:var(--muted);margin-bottom:20px;">A 6-digit OTP has been sent to your registered mobile number ending in <strong>••••43</strong></div>' +
+    '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;" id="otp-boxes">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,0)">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,1)">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,2)">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,3)">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,4)">' +
+    '<input class="finput" style="width:48px;height:52px;text-align:center;font-size:20px;font-weight:800;padding:0;" maxlength="1" oninput="otpInput(this,5)">' +
+    '</div>' +
+    '<div style="font-size:12px;color:var(--muted2);">Didn\'t receive it? <span style="color:#c4b5fd;cursor:pointer;font-weight:700;" onclick="showToast(\'OTP resent!\')">Resend OTP</span> (30s)</div>' +
+    '</div>';
+  document.getElementById('step-title').innerHTML = 'Enter <em>OTP</em>';
+  document.getElementById('step-subtitle').textContent = 'Sent to your registered mobile number.';
+  document.getElementById('pay-btn-text').textContent = '🔒 Verify & Complete Payment';
+}
+
+function otpInput(el, idx) {
+  el.value = el.value.replace(/\D/g,'');
+  if (el.value && idx < 5) {
+    var boxes = document.getElementById('otp-boxes').querySelectorAll('input');
+    if (boxes[idx+1]) boxes[idx+1].focus();
+  }
+}
+
+/* ── MAIN PAY BUTTON HANDLER ── */
+function handlePayBtn() {
+  if (currentStep === 1) {
+    var valid = false;
+    if (currentMethod === 'card')       valid = validateCard();
+    else if (currentMethod === 'upi')   valid = validateUpi();
+    else if (currentMethod === 'netbanking') valid = validateNB();
+    else if (currentMethod === 'wallet') valid = validateWallet();
+    if (!valid) return;
+    goToStep(2);
+    buildReview();
+  } else if (currentStep === 2) {
+    goToStep(3);
+    buildOtp();
+  } else if (currentStep === 3) {
+    var boxes = document.getElementById('otp-boxes') &&
+                document.getElementById('otp-boxes').querySelectorAll('input');
+    if (boxes) {
+      var otp = Array.from(boxes).map(function(b){return b.value;}).join('');
+      if (otp.length < 6) { showToast('⚠️ Please enter the 6-digit OTP'); return; }
+    }
+    launchRazorpay();
+  }
+}
+
+/* ── RAZORPAY INTEGRATION ── */
+function launchRazorpay() {
+  /* Convert price to paise (₹1 = 100 paise) */
+  var amountStr = planData.total.replace('₹','').replace(',','');
+  var amountPaise = Math.round(parseFloat(amountStr) * 100);
+
+  var options = {
+    key:         'rzp_live_STrVmAesmhYdNX',
+    amount:      amountPaise,
+    currency:    'INR',
+    name:        'Prolio AI',
+    description: 'Prolio AI ' + planData.name + ' Plan — ' + planData.billing,
+    image:       'https://prolio-ai.netlify.app/favicon.ico',
+    prefill: {
+      name:    document.getElementById('card-name') ? document.getElementById('card-name').value : '',
+      email:   '',
+      contact: ''
+    },
+    notes: {
+      plan:    planData.name,
+      billing: planData.billing
+    },
+    theme: {
+      color: '#7b4dff'
+    },
+    modal: {
+      ondismiss: function() {
+        showToast('⚠️ Payment cancelled. You can try again.');
+      }
+    },
+    handler: function(response) {
+      /* Payment successful — Razorpay calls this with payment_id */
+      onPaymentSuccess(response.razorpay_payment_id);
+    }
+  };
+
+  /* Load Razorpay script if not already loaded */
+  if (typeof Razorpay === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = function() {
+      var rzp = new Razorpay(options);
+      rzp.open();
+    };
+    script.onerror = function() {
+      showToast('⚠️ Could not load payment gateway. Check internet connection.');
+    };
+    document.head.appendChild(script);
+  } else {
+    var rzp = new Razorpay(options);
+    rzp.open();
+  }
+}
+
+function onPaymentSuccess(paymentId) {
+  /* Save plan and show success */
+  try { localStorage.setItem('prolio_plan', 'pro'); } catch(e) {}
+  /* Update receipt */
+  var txnEl = document.getElementById('txn-id');
+  if (txnEl) txnEl.textContent = paymentId;
+  /* Show processing animation then success */
+  startProcessing();
+}
+
+/* ── PROCESSING ANIMATION ── */
+function startProcessing() {
+  document.getElementById('processing').classList.add('show');
+  var steps = ['ps-1','ps-2','ps-3','ps-4'];
+  var labels = [
+    'Initiating secure connection',
+    'Verifying payment details',
+    'Authorising with bank',
+    'Activating Pro features'
+  ];
+  var i = 0;
+  function nextStep() {
+    if (i > 0) {
+      var prev = document.getElementById(steps[i-1]);
+      prev.querySelector('.proc-step-dot').classList.remove('active');
+      prev.querySelector('.proc-step-dot').classList.add('done');
+      prev.querySelector('.proc-step-dot').textContent = '✓';
+      prev.querySelector('.proc-step-text').classList.add('done');
+    }
+    if (i < steps.length) {
+      var cur = document.getElementById(steps[i]);
+      cur.querySelector('.proc-step-dot').classList.add('active');
+      cur.querySelector('.proc-step-dot').textContent = '⋯';
+      i++;
+      setTimeout(nextStep, 900);
+    } else {
+      setTimeout(showSuccess, 600);
+    }
+  }
+  nextStep();
+}
+
+/* ── SUCCESS ── */
+function showSuccess() {
+  document.getElementById('processing').classList.remove('show');
+  // Save plan to localStorage
+  try { localStorage.setItem('prolio_plan', 'pro'); } catch(e) {}
+  document.getElementById('success').classList.add('show');
+}
+
+function goDashboard() {
+  window.location.href = 'dashboard.html';
+}
+
+/* ── PLAN STATE ── */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+})();
+
+/* ── TOAST ── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.style.transform = 'translateX(-50%) translateY(80px)'; }, 3000);
+}
+</script>
+</body>
+</html>

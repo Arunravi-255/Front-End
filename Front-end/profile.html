@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS & RESET
+══════════════════════════════════════════ */
+:root {
+  --purple:    #7b4dff;
+  --purple-lt: #a78bff;
+  --blue:      #5E7CFF;
+  --cyan:      #49C6C6;
+  --green:     #22c55e;
+  --red:       #ef4444;
+  --gold:      #ffe066;
+  --bg:        #080c18;
+  --bg2:       #0d1220;
+  --bg3:       #111827;
+  --card:      rgba(255,255,255,0.04);
+  --card-hover:rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.08);
+  --border-lt: rgba(255,255,255,0.14);
+  --text:      #f1f5f9;
+  --muted:     rgba(255,255,255,0.45);
+  --muted2:    rgba(255,255,255,0.25);
+  --grad:      linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
+  --header-h:  64px;
+  --sidebar-w: 240px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Montserrat',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; overflow-x:hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 0% 0%,   rgba(123,77,255,0.16) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.12) 0%,transparent 50%),
+    radial-gradient(ellipse at 55% 40%,  rgba(94,124,255,0.07) 0%,transparent 55%);
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT SHELL
+══════════════════════════════════════════ */
+#shell { display:flex; min-height:100vh; position:relative; z-index:1; }
+
+/* ══════════════════════════════════════════
+   SIDEBAR (matches dashboard exactly)
+══════════════════════════════════════════ */
+#sidebar {
+  width:var(--sidebar-w); min-height:100vh;
+  background:rgba(8,12,24,0.92); border-right:1px solid var(--border);
+  backdrop-filter:blur(20px); display:flex; flex-direction:column;
+  position:fixed; left:0; top:0; bottom:0; z-index:200;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+#sb-logo {
+  padding:22px 20px 18px;
+  font-family:'Montserrat',sans-serif; font-size:20px; font-weight:900;
+  letter-spacing:3px; font-style:italic;
+  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  border-bottom:1px solid var(--border); cursor:pointer; user-select:none; flex-shrink:0;
+}
+#sb-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+.sb-section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:14px 10px 6px; }
+.sb-section-label:first-child { padding-top:4px; }
+.nav-item {
+  display:flex; align-items:center; gap:12px; padding:10px 12px;
+  border-radius:10px; font-size:13px; font-weight:600; color:var(--muted);
+  cursor:pointer; transition:all 0.2s; text-decoration:none; margin-bottom:2px; position:relative;
+}
+.nav-item:hover { background:rgba(255,255,255,0.06); color:var(--text); }
+.nav-item.active { background:rgba(123,77,255,0.18); color:#c4b5fd; border:1px solid rgba(123,77,255,0.25); }
+.nav-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.nav-item.active .nav-icon { background:rgba(123,77,255,0.25); }
+.nav-item:hover:not(.active) .nav-icon { background:rgba(255,255,255,0.07); }
+.nav-badge { margin-left:auto; background:var(--purple); color:white; font-size:10px; font-weight:800; padding:2px 7px; border-radius:50px; }
+#sb-upgrade {
+  margin:12px; padding:16px; border-radius:14px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));
+  border:1px solid rgba(123,77,255,0.3); flex-shrink:0;
+}
+#sb-upgrade h4 { font-size:13px; font-weight:800; margin-bottom:4px; color:#c4b5fd; }
+#sb-upgrade p  { font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:12px; }
+#sb-upgrade-btn {
+  width:100%; padding:8px; border:none; border-radius:8px; background:var(--grad);
+  color:white; font-size:12px; font-weight:800; font-family:'Montserrat',sans-serif;
+  cursor:pointer; transition:opacity 0.2s;
+}
+#sb-upgrade-btn:hover { opacity:0.88; }
+#sb-user {
+  padding:14px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; cursor:pointer; transition:background 0.2s; flex-shrink:0;
+}
+#sb-user:hover { background:rgba(255,255,255,0.04); }
+#sb-avatar {
+  width:36px; height:36px; border-radius:50%; background:var(--grad);
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+  font-weight:900; font-family:'Playfair Display',serif; flex-shrink:0;
+}
+#sb-user-name { font-size:13px; font-weight:700; color:var(--text); }
+#sb-user-role { font-size:11px; color:var(--muted); }
+#sb-user-arrow { margin-left:auto; color:var(--muted); font-size:12px; }
+#sb-overlay {
+  display:none; position:fixed; inset:0; z-index:150;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+}
+#sb-overlay.show { display:block; }
+
+/* ══════════════════════════════════════════
+   MAIN AREA
+══════════════════════════════════════════ */
+#main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+
+/* ══════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════ */
+#topbar {
+  height:var(--header-h); background:rgba(8,12,24,0.8);
+  backdrop-filter:blur(16px); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 clamp(20px,3vw,40px); gap:16px;
+  position:sticky; top:0; z-index:100;
+}
+#mobile-menu-btn { display:none; background:none; border:none; color:var(--text); font-size:20px; cursor:pointer; padding:4px; flex-shrink:0; }
+#topbar-title { font-size:16px; font-weight:800; color:var(--text); }
+#topbar-subtitle { font-size:12px; color:var(--muted); margin-left:2px; }
+#topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.topbar-icon-btn {
+  width:36px; height:36px; border-radius:9px; background:rgba(255,255,255,0.06);
+  border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+  font-size:16px; cursor:pointer; transition:background 0.2s,border-color 0.2s; position:relative;
+}
+.topbar-icon-btn:hover { background:rgba(255,255,255,0.1); border-color:var(--border-lt); }
+.notif-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:#ef4444; border:1.5px solid var(--bg); }
+#topbar-avatar {
+  width:36px; height:36px; border-radius:50%; background:var(--grad);
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+  font-weight:900; font-family:'Playfair Display',serif; cursor:pointer;
+  border:2px solid rgba(123,77,255,0.4); transition:border-color 0.2s;
+}
+#topbar-avatar:hover { border-color:rgba(123,77,255,0.8); }
+
+/* ══════════════════════════════════════════
+   CONTENT WRAPPER
+══════════════════════════════════════════ */
+#content { padding:clamp(24px,3vw,40px) clamp(20px,3vw,40px); flex:1; max-width:1200px; width:100%; }
+
+/* ══════════════════════════════════════════
+   PAGE HEADER
+══════════════════════════════════════════ */
+#page-header { margin-bottom:32px; }
+#page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(22px,3vw,32px); font-weight:900; margin-bottom:4px; }
+#page-header h1 em { font-style:italic; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+#page-header p { font-size:13px; color:var(--muted); }
+
+/* ══════════════════════════════════════════
+   PROFILE GRID LAYOUT
+══════════════════════════════════════════ */
+#profile-grid { display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
+
+/* ══════════════════════════════════════════
+   CARD BASE
+══════════════════════════════════════════ */
+.card {
+  background:var(--card); border:1px solid var(--border); border-radius:18px;
+  overflow:hidden; transition:border-color 0.25s;
+}
+.card:hover { border-color:var(--border-lt); }
+.card-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 20px; border-bottom:1px solid var(--border);
+}
+.card-head h3 { font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; }
+.card-head h3 span { font-size:16px; }
+.card-body { padding:20px; }
+.edit-btn {
+  display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:8px;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  color:var(--muted); font-size:11px; font-weight:700; cursor:pointer;
+  font-family:'Montserrat',sans-serif; transition:all 0.2s;
+}
+.edit-btn:hover { background:rgba(123,77,255,0.18); border-color:rgba(123,77,255,0.35); color:#c4b5fd; }
+.edit-btn.active { background:rgba(123,77,255,0.25); border-color:rgba(123,77,255,0.45); color:#c4b5fd; }
+
+/* ══════════════════════════════════════════
+   LEFT COLUMN — AVATAR CARD
+══════════════════════════════════════════ */
+#avatar-card .card-body { display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px 20px; }
+#avatar-wrap {
+  position:relative; width:110px; height:110px; margin-bottom:16px;
+}
+#avatar-img {
+  width:110px; height:110px; border-radius:50%; object-fit:cover;
+  background:var(--grad); display:flex; align-items:center; justify-content:center;
+  font-size:36px; font-weight:900; font-family:'Playfair Display',serif; color:white;
+  border:3px solid rgba(123,77,255,0.35); box-shadow:0 0 0 6px rgba(123,77,255,0.1);
+  overflow:hidden; cursor:pointer;
+}
+#avatar-initials { pointer-events:none; }
+#avatar-img img { width:100%; height:100%; object-fit:cover; display:none; border-radius:50%; }
+#avatar-edit-btn {
+  position:absolute; bottom:2px; right:2px;
+  width:30px; height:30px; border-radius:50%;
+  background:var(--grad); border:2px solid var(--bg2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; cursor:pointer; transition:transform 0.2s;
+}
+#avatar-edit-btn:hover { transform:scale(1.1); }
+#avatar-file { display:none; }
+#profile-name { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; margin-bottom:3px; }
+#profile-role-tag {
+  font-size:11px; font-weight:700; color:var(--purple-lt);
+  background:rgba(123,77,255,0.15); border:1px solid rgba(123,77,255,0.25);
+  padding:4px 12px; border-radius:50px; margin-bottom:12px; display:inline-block;
+}
+#profile-url {
+  font-size:11px; color:var(--muted); background:rgba(255,255,255,0.05);
+  border:1px solid var(--border); border-radius:8px; padding:7px 12px;
+  width:100%; text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;
+  cursor:pointer; transition:all 0.2s; font-family:'Montserrat',sans-serif; margin-bottom:12px;
+}
+#profile-url:hover { border-color:rgba(123,77,255,0.35); color:#c4b5fd; }
+#profile-strength-wrap { width:100%; margin-bottom:4px; }
+.strength-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:600; }
+.strength-bar { height:6px; background:rgba(255,255,255,0.08); border-radius:6px; overflow:hidden; }
+.strength-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,#7b4dff,#49C6C6); transition:width 0.6s cubic-bezier(0.22,1,0.36,1); }
+#strength-pct { font-size:12px; font-weight:800; color:#7bedff; margin-top:5px; text-align:right; display:block; }
+
+/* Plan badge */
+#plan-badge {
+  width:100%; margin-top:14px; padding:12px 14px; border-radius:12px;
+  background:linear-gradient(135deg,rgba(123,77,255,0.18),rgba(73,198,198,0.12));
+  border:1px solid rgba(123,77,255,0.28); display:flex; align-items:center; gap:10px;
+}
+#plan-badge .plan-icon { font-size:20px; flex-shrink:0; }
+#plan-badge .plan-info h4 { font-size:12px; font-weight:800; color:#c4b5fd; margin-bottom:2px; }
+#plan-badge .plan-info p { font-size:10px; color:var(--muted); line-height:1.4; }
+#upgrade-link { margin-left:auto; font-size:10px; font-weight:800; color:#49C6C6; text-decoration:none; white-space:nowrap; cursor:pointer; }
+#upgrade-link:hover { text-decoration:underline; }
+
+/* Quick stats row */
+#quick-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:14px; width:100%; }
+.qs-item { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:10px 8px; text-align:center; }
+.qs-val { font-family:'Playfair Display',serif; font-size:18px; font-weight:900; color:#c4b5fd; }
+.qs-lbl { font-size:9px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+
+/* ══════════════════════════════════════════
+   LEFT COLUMN — SOCIAL LINKS CARD
+══════════════════════════════════════════ */
+.social-link-row {
+  display:flex; align-items:center; gap:10px; padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.social-link-row:last-child { border-bottom:none; }
+.social-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.si-linkedin { background:rgba(10,102,194,0.2); }
+.si-github   { background:rgba(255,255,255,0.08); }
+.si-twitter  { background:rgba(29,161,242,0.15); }
+.si-website  { background:rgba(123,77,255,0.15); }
+.si-behance  { background:rgba(0,100,255,0.15); }
+.social-info { flex:1; min-width:0; }
+.social-name { font-size:11px; font-weight:700; color:var(--text); margin-bottom:1px; }
+.social-val  { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.social-edit-inline { background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; padding:4px; border-radius:5px; transition:color 0.2s; }
+.social-edit-inline:hover { color:#c4b5fd; }
+
+/* ══════════════════════════════════════════
+   FORM ELEMENTS (shared)
+══════════════════════════════════════════ */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-row.single { grid-template-columns:1fr; }
+.form-row.triple { grid-template-columns:1fr 1fr 1fr; }
+.fgroup { display:flex; flex-direction:column; gap:5px; }
+.flabel { font-size:11px; font-weight:700; color:rgba(255,255,255,0.55); letter-spacing:0.8px; text-transform:uppercase; }
+.finput, .fselect, .ftextarea {
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  border-radius:9px; padding:10px 13px; font-size:13px;
+  font-family:'Montserrat',sans-serif; color:var(--text); outline:none;
+  transition:border-color 0.2s, background 0.2s; width:100%;
+}
+.finput::placeholder, .ftextarea::placeholder { color:var(--muted2); }
+.finput:focus, .fselect:focus, .ftextarea:focus {
+  border-color:rgba(123,77,255,0.6); background:rgba(255,255,255,0.09);
+  box-shadow:0 0 0 3px rgba(123,77,255,0.12);
+}
+.finput:disabled { opacity:0.55; cursor:not-allowed; }
+.fselect { appearance:none; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; }
+.fselect option { background:#0f172a; color:#f1f5f9; }
+.ftextarea { resize:vertical; min-height:90px; line-height:1.6; }
+
+/* Read-only display mode */
+.field-display {
+  font-size:13px; color:var(--text); padding:10px 13px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05);
+  border-radius:9px; min-height:40px; display:flex; align-items:center;
+  line-height:1.5;
+}
+.field-display.empty { color:var(--muted2); font-style:italic; }
+
+/* Edit mode toggle */
+.edit-fields { display:none; }
+.view-fields  { display:block; }
+.section-editing .edit-fields { display:block; }
+.section-editing .view-fields { display:none; }
+
+/* ══════════════════════════════════════════
+   SECTION ACTION BUTTONS
+══════════════════════════════════════════ */
+.section-actions {
+  display:none; gap:8px; margin-top:16px; padding-top:16px;
+  border-top:1px solid var(--border);
+}
+.section-editing .section-actions { display:flex; }
+.btn-save {
+  padding:9px 20px; border-radius:9px; background:var(--grad);
+  border:none; color:white; font-size:12px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; gap:7px;
+}
+.btn-save:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(123,77,255,0.4); }
+.btn-save.loading { opacity:0.7; pointer-events:none; }
+.btn-cancel {
+  padding:9px 16px; border-radius:9px; background:rgba(255,255,255,0.05);
+  border:1px solid var(--border); color:var(--muted);
+  font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+}
+.btn-cancel:hover { border-color:var(--border-lt); color:var(--text); }
+.btn-danger {
+  padding:9px 16px; border-radius:9px; background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.2); color:#f87171;
+  font-size:12px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; margin-left:auto;
+}
+.btn-danger:hover { background:rgba(239,68,68,0.18); }
+.spinner { width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+.btn-save.loading .spinner { display:inline-block; }
+.btn-save.loading .btn-text { opacity:0.7; }
+@keyframes spin { to{ transform:rotate(360deg); } }
+
+/* ══════════════════════════════════════════
+   SKILL TAGS
+══════════════════════════════════════════ */
+#skills-display { display:flex; flex-wrap:wrap; gap:7px; }
+.skill-tag-view {
+  padding:5px 13px; border-radius:50px; font-size:11px; font-weight:700;
+  background:rgba(123,77,255,0.14); border:1px solid rgba(123,77,255,0.25); color:#c4b5fd;
+}
+.skill-tag-view.empty-pill {
+  background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08);
+  color:var(--muted2); font-style:italic; font-weight:400;
+}
+#skills-tags-edit { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; min-height:36px; }
+.skill-tag-edit {
+  display:flex; align-items:center; gap:5px; padding:5px 10px 5px 12px;
+  border-radius:50px; background:rgba(123,77,255,0.18); border:1px solid rgba(123,77,255,0.3);
+  font-size:12px; font-weight:700; color:#c4b5fd;
+  animation:tagPop 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes tagPop { from{transform:scale(0);opacity:0;} to{transform:scale(1);opacity:1;} }
+.skill-tag-edit button { background:none; border:none; color:#a78bff; cursor:pointer; font-size:12px; padding:0; line-height:1; }
+.skill-tag-edit button:hover { color:#ef4444; }
+#skill-input-row { display:flex; gap:8px; }
+#skill-input-row .finput { flex:1; }
+#add-skill-btn {
+  padding:10px 14px; border-radius:9px; background:rgba(123,77,255,0.25);
+  border:1px solid rgba(123,77,255,0.35); color:#c4b5fd;
+  font-size:13px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+#add-skill-btn:hover { background:rgba(123,77,255,0.4); }
+.skill-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.skill-sugg {
+  padding:4px 11px; border-radius:50px; background:rgba(255,255,255,0.05);
+  border:1px solid var(--border); font-size:11px; font-weight:600; color:var(--muted); cursor:pointer; transition:all 0.2s;
+}
+.skill-sugg:hover { background:rgba(123,77,255,0.16); border-color:rgba(123,77,255,0.3); color:#c4b5fd; }
+
+/* ══════════════════════════════════════════
+   EXPERIENCE / EDUCATION REPEAT CARDS
+══════════════════════════════════════════ */
+.repeat-item {
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+  border-radius:12px; margin-bottom:12px; overflow:hidden; transition:border-color 0.2s;
+}
+.repeat-item:hover { border-color:var(--border-lt); }
+.repeat-item:last-child { margin-bottom:0; }
+.repeat-head {
+  display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer;
+}
+.repeat-icon { font-size:20px; flex-shrink:0; }
+.repeat-title-wrap { flex:1; min-width:0; }
+.repeat-title { font-size:13px; font-weight:700; color:var(--text); }
+.repeat-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+.repeat-chevron { font-size:12px; color:var(--muted); transition:transform 0.25s; flex-shrink:0; }
+.repeat-item.open .repeat-chevron { transform:rotate(90deg); }
+.repeat-body { display:none; padding:14px 16px; border-top:1px solid var(--border); }
+.repeat-item.open .repeat-body { display:block; }
+.repeat-del {
+  padding:4px 9px; border-radius:6px; background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.18); color:#f87171;
+  font-size:11px; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; flex-shrink:0;
+}
+.repeat-del:hover { background:rgba(239,68,68,0.18); }
+.add-repeat-btn {
+  width:100%; margin-top:12px; padding:10px; background:rgba(255,255,255,0.03);
+  border:1.5px dashed rgba(123,77,255,0.28); border-radius:10px; color:#a78bff;
+  font-size:12px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer;
+  transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:7px;
+}
+.add-repeat-btn:hover { background:rgba(123,77,255,0.08); border-color:rgba(123,77,255,0.45); }
+
+/* Current job toggle */
+.current-toggle { display:flex; align-items:center; gap:8px; margin-bottom:12px; cursor:pointer; }
+.current-toggle input[type=checkbox] { accent-color:#7b4dff; width:14px; height:14px; cursor:pointer; }
+.current-toggle span { font-size:12px; color:var(--muted); font-weight:600; }
+
+/* ══════════════════════════════════════════
+   PASSWORD CARD
+══════════════════════════════════════════ */
+.pwd-row { position:relative; }
+.pwd-toggle-btn {
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:0;
+}
+.pwd-toggle-btn:hover { color:#c4b5fd; }
+#pwd-strength-bar { height:4px; border-radius:4px; background:rgba(255,255,255,0.08); margin-top:6px; overflow:hidden; }
+#pwd-strength-fill { height:100%; border-radius:4px; width:0%; transition:width 0.3s, background 0.3s; }
+#pwd-strength-text { font-size:10px; font-weight:700; margin-top:3px; color:var(--muted); }
+
+/* ══════════════════════════════════════════
+   NOTIFICATION PREFERENCES
+══════════════════════════════════════════ */
+.notif-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0; border-bottom:1px solid var(--border);
+}
+.notif-row:last-child { border-bottom:none; }
+.notif-info h4 { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.notif-info p  { font-size:11px; color:var(--muted); line-height:1.5; }
+/* Toggle switch */
+.tog-switch { position:relative; display:inline-block; width:40px; height:22px; flex-shrink:0; }
+.tog-switch input { opacity:0; width:0; height:0; }
+.tog-track {
+  position:absolute; inset:0; border-radius:22px;
+  background:rgba(255,255,255,0.1); cursor:pointer; transition:background 0.25s;
+  border:1px solid var(--border);
+}
+.tog-track::before {
+  content:''; position:absolute; left:3px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; border-radius:50%; background:rgba(255,255,255,0.5);
+  transition:left 0.25s, background 0.25s;
+}
+.tog-switch input:checked + .tog-track { background:rgba(123,77,255,0.5); border-color:rgba(123,77,255,0.4); }
+.tog-switch input:checked + .tog-track::before { left:21px; background:white; }
+
+/* ══════════════════════════════════════════
+   CONNECTED ACCOUNTS
+══════════════════════════════════════════ */
+.connected-row {
+  display:flex; align-items:center; gap:12px;
+  padding:13px 0; border-bottom:1px solid var(--border);
+}
+.connected-row:last-child { border-bottom:none; }
+.connected-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.ci-google   { background:rgba(234,67,53,0.15); }
+.ci-github   { background:rgba(255,255,255,0.08); }
+.ci-linkedin { background:rgba(10,102,194,0.2); }
+.connected-info { flex:1; }
+.connected-info h4 { font-size:13px; font-weight:700; color:var(--text); margin-bottom:1px; }
+.connected-info p  { font-size:11px; color:var(--muted); }
+.connect-btn {
+  padding:6px 14px; border-radius:8px; font-size:11px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; border:none;
+}
+.connect-btn.connected { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+.connect-btn.connected:hover { background:rgba(239,68,68,0.12); color:#f87171; border-color:rgba(239,68,68,0.25); }
+.connect-btn.disconnected { background:rgba(123,77,255,0.2); color:#c4b5fd; border:1px solid rgba(123,77,255,0.3); }
+.connect-btn.disconnected:hover { background:rgba(123,77,255,0.35); }
+
+/* ══════════════════════════════════════════
+   DANGER ZONE CARD
+══════════════════════════════════════════ */
+#danger-card { border-color:rgba(239,68,68,0.2); }
+#danger-card .card-head { border-bottom-color:rgba(239,68,68,0.15); }
+#danger-card .card-head h3 { color:#f87171; }
+.danger-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid rgba(239,68,68,0.1);
+}
+.danger-row:last-child { border-bottom:none; }
+.danger-info h4 { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.danger-info p  { font-size:11px; color:var(--muted); }
+.danger-action {
+  padding:7px 14px; border-radius:8px; font-size:11px; font-weight:800;
+  font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s;
+  background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25);
+  color:#f87171; white-space:nowrap;
+}
+.danger-action:hover { background:rgba(239,68,68,0.22); }
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+#modal-overlay {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+  align-items:center; justify-content:center; padding:20px;
+}
+#modal-overlay.show { display:flex; }
+#modal-box {
+  background:#0f172a; border:1px solid rgba(123,77,255,0.25);
+  border-radius:18px; padding:clamp(24px,3vw,36px); max-width:440px; width:100%;
+  box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  animation:modalIn 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+@keyframes modalIn { from{opacity:0;transform:scale(0.95)translateY(16px);} to{opacity:1;transform:scale(1)translateY(0);} }
+#modal-icon { font-size:36px; margin-bottom:12px; }
+#modal-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; margin-bottom:6px; }
+#modal-body  { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+#modal-input { width:100%; margin-bottom:16px; }
+.modal-actions { display:flex; gap:10px; }
+.modal-confirm { flex:1; padding:11px; border-radius:9px; border:none; background:rgba(239,68,68,0.8); color:white; font-size:13px; font-weight:800; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; }
+.modal-confirm:hover { background:#ef4444; }
+.modal-confirm.safe { background:var(--grad); }
+.modal-cancel-btn { padding:11px 20px; border-radius:9px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--muted); font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.2s; }
+.modal-cancel-btn:hover { border-color:var(--border-lt); color:var(--text); }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:#1e293b; color:white; padding:11px 22px; border-radius:50px;
+  font-size:13px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); z-index:9999;
+  white-space:nowrap; border:1px solid rgba(255,255,255,0.08);
+}
+#toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width:1100px) {
+  #profile-grid { grid-template-columns:260px 1fr; }
+}
+@media (max-width:900px) {
+  #sidebar { transform:translateX(-100%); }
+  #sidebar.open { transform:translateX(0); }
+  #sb-overlay.show { display:block; }
+  #main { margin-left:0; }
+  #mobile-menu-btn { display:block; }
+  #profile-grid { grid-template-columns:1fr; }
+}
+@media (max-width:600px) {
+  .form-row { grid-template-columns:1fr; }
+  .form-row.triple { grid-template-columns:1fr 1fr; }
+  #content { padding:20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div id="shell">
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside id="sidebar">
+  <div id="sb-logo" onclick="window.location.href='dashboard.html'">Prolio AI</div>
+  <nav id="sb-nav">
+    <div class="sb-section-label">Main</div>
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+      <div class="nav-icon">📊</div> Dashboard
+    </div>
+    <div class="nav-item" onclick="window.location.href='resume-builder.html'">
+      <div class="nav-icon">📝</div> Resume Builder
+      <span class="nav-badge">AI</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='portfolio.html'">
+      <div class="nav-icon">🌐</div> My Portfolio
+    </div>
+    <div class="sb-section-label">Manage</div>
+    <div class="nav-item active">
+      <div class="nav-icon">👤</div> Profile
+    </div>
+    <div class="nav-item" onclick="window.location.href='settings.html'">
+      <div class="nav-icon">⚙️</div> Settings
+    </div>
+    <div class="nav-item" onclick="window.location.href='developer-api.html'">
+      <div class="nav-icon">🔗</div> Developer API
+    </div>
+    <div class="sb-section-label">Support</div>
+    <div class="nav-item" onclick="window.location.href='help-docs.html'">
+      <div class="nav-icon">💬</div> Help &amp; Docs
+    </div>
+  </nav>
+  <div id="sb-upgrade">
+    <h4>✨ Go Pro</h4>
+    <p>Unlock unlimited resumes, custom domains and advanced AI features.</p>
+    <button id="sb-upgrade-btn" onclick="window.location.href='pricing.html'">Upgrade to Pro</button>
+  </div>
+  <div id="sb-user">
+    <div id="sb-avatar" id="sb-av">A</div>
+    <div>
+      <div id="sb-user-name">Arun R</div>
+      <div id="sb-user-role">Free Plan</div>
+    </div>
+    <span id="sb-user-arrow">›</span>
+  </div>
+</aside>
+
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div id="main">
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <button id="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+    <div>
+      <div id="topbar-title">My Profile</div>
+      <div id="topbar-subtitle">Manage your account, skills and preferences</div>
+    </div>
+    <div id="topbar-right">
+      <div class="topbar-icon-btn" onclick="showToast('No new notifications')">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-icon-btn" onclick="window.location.href='help-docs.html'">💡</div>
+      <div id="topbar-avatar">A</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <div id="page-header">
+      <h1>Your <em>Profile</em></h1>
+      <p>All changes are saved instantly. Your portfolio syncs automatically.</p>
+    </div>
+
+    <div id="profile-grid">
+
+      <!-- ══════ LEFT COLUMN ══════ -->
+      <div id="left-col" style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- AVATAR CARD -->
+        <div class="card" id="avatar-card">
+          <div class="card-body">
+            <div id="avatar-wrap">
+              <div id="avatar-img">
+                <img id="avatar-photo" src="" alt="Profile photo">
+                <span id="avatar-initials">A</span>
+              </div>
+              <div id="avatar-edit-btn" onclick="document.getElementById('avatar-file').click()" title="Change photo">✏️</div>
+              <input type="file" id="avatar-file" accept="image/*" onchange="handleAvatarUpload(event)">
+            </div>
+            <div id="profile-name">Arun R</div>
+            <div id="profile-role-tag">Full Stack Developer</div>
+            <div id="profile-url" onclick="copyProfileUrl()">
+              <span>🔗</span>
+              <span id="profile-url-text">prolioai.com/u/arunr</span>
+            </div>
+            <div id="profile-strength-wrap">
+              <div class="strength-label">
+                <span>Profile Strength</span>
+                <span>68%</span>
+              </div>
+              <div class="strength-bar"><div class="strength-fill" id="strength-fill" style="width:68%"></div></div>
+              <span id="strength-pct">68% Complete</span>
+            </div>
+            <div id="plan-badge">
+              <div class="plan-icon">🚀</div>
+              <div class="plan-info">
+                <h4>Free Plan</h4>
+                <p>3 resumes · 1 portfolio · Basic AI</p>
+              </div>
+              <span id="upgrade-link" onclick="window.location.href='pricing.html'">Upgrade →</span>
+            </div>
+            <div id="quick-stats">
+              <div class="qs-item"><div class="qs-val" id="qs-res">3</div><div class="qs-lbl">Resumes</div></div>
+              <div class="qs-item"><div class="qs-val" id="qs-views">124</div><div class="qs-lbl">Views</div></div>
+              <div class="qs-item"><div class="qs-val" id="qs-links">7</div><div class="qs-lbl">Shares</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOCIAL LINKS CARD -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🔗</span> Social Links</h3>
+            <button class="edit-btn" id="social-edit-btn" onclick="toggleSection('social')">✏️ Edit</button>
+          </div>
+          <div class="card-body" id="social-section">
+            <div class="view-fields">
+              <div class="social-link-row">
+                <div class="social-icon si-linkedin">🔗</div>
+                <div class="social-info">
+                  <div class="social-name">LinkedIn</div>
+                  <div class="social-val" id="sv-linkedin">linkedin.com/in/arunr</div>
+                </div>
+                <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
+              </div>
+              <div class="social-link-row">
+                <div class="social-icon si-github">🐙</div>
+                <div class="social-info">
+                  <div class="social-name">GitHub</div>
+                  <div class="social-val" id="sv-github">github.com/arunr</div>
+                </div>
+                <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
+              </div>
+              <div class="social-link-row">
+                <div class="social-icon si-twitter">🐦</div>
+                <div class="social-info">
+                  <div class="social-name">Twitter / X</div>
+                  <div class="social-val" id="sv-twitter">—</div>
+                </div>
+                <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
+              </div>
+              <div class="social-link-row">
+                <div class="social-icon si-website">🌐</div>
+                <div class="social-info">
+                  <div class="social-name">Website</div>
+                  <div class="social-val" id="sv-website">—</div>
+                </div>
+                <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
+              </div>
+            </div>
+            <div class="edit-fields">
+              <div class="form-row single" style="margin-bottom:10px;">
+                <div class="fgroup">
+                  <label class="flabel">LinkedIn</label>
+                  <input class="finput" id="fi-linkedin" placeholder="linkedin.com/in/yourname" value="linkedin.com/in/arunr">
+                </div>
+              </div>
+              <div class="form-row single" style="margin-bottom:10px;">
+                <div class="fgroup">
+                  <label class="flabel">GitHub</label>
+                  <input class="finput" id="fi-github" placeholder="github.com/yourname" value="github.com/arunr">
+                </div>
+              </div>
+              <div class="form-row single" style="margin-bottom:10px;">
+                <div class="fgroup">
+                  <label class="flabel">Twitter / X</label>
+                  <input class="finput" id="fi-twitter" placeholder="twitter.com/yourhandle">
+                </div>
+              </div>
+              <div class="form-row single" style="margin-bottom:0;">
+                <div class="fgroup">
+                  <label class="flabel">Website / Portfolio</label>
+                  <input class="finput" id="fi-website" placeholder="yourwebsite.com">
+                </div>
+              </div>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('social')">
+                <span class="btn-text">💾 Save</span>
+                <div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('social')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /left-col -->
+
+      <!-- ══════ RIGHT COLUMN ══════ -->
+      <div id="right-col" style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- ── PERSONAL INFO ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>👤</span> Personal Information</h3>
+            <button class="edit-btn" id="personal-edit-btn" onclick="toggleSection('personal')">✏️ Edit</button>
+          </div>
+          <div class="card-body" id="personal-section">
+            <div class="view-fields">
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">First Name</label><div class="field-display" id="vd-fname">Arun</div></div>
+                <div class="fgroup"><label class="flabel">Last Name</label><div class="field-display" id="vd-lname">Ravi</div></div>
+              </div>
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">Job Title</label><div class="field-display" id="vd-role">Full Stack Developer</div></div>
+                <div class="fgroup"><label class="flabel">Location</label><div class="field-display" id="vd-location">Chennai, India</div></div>
+              </div>
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">Email</label><div class="field-display" id="vd-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="036271766d43667b626e736f662d606c6e">[email&#160;protected]</a></div></div>
+                <div class="fgroup"><label class="flabel">Phone</label><div class="field-display" id="vd-phone">+91 81241 81771</div></div>
+              </div>
+              <div class="form-row single">
+                <div class="fgroup"><label class="flabel">Bio</label><div class="field-display" id="vd-bio" style="align-items:flex-start;min-height:64px;">Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.</div></div>
+              </div>
+            </div>
+            <div class="edit-fields">
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">First Name *</label><input class="finput" id="fi-fname" value="Arun" autocomplete="given-name"></div>
+                <div class="fgroup"><label class="flabel">Last Name</label><input class="finput" id="fi-lname" value="Ravi" autocomplete="family-name"></div>
+              </div>
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">Job Title *</label><input class="finput" id="fi-role" value="Full Stack Developer"></div>
+                <div class="fgroup"><label class="flabel">Location</label><input class="finput" id="fi-location" value="Chennai, India"></div>
+              </div>
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">Email *</label><input class="finput" id="fi-email" type="email" value="arun@example.com" autocomplete="email"></div>
+                <div class="fgroup"><label class="flabel">Phone</label><input class="finput" id="fi-phone" type="tel" value="+91 81241 81771" autocomplete="tel"></div>
+              </div>
+              <div class="form-row triple">
+                <div class="fgroup"><label class="flabel">Date of Birth</label><input class="finput" id="fi-dob" type="date"></div>
+                <div class="fgroup"><label class="flabel">Gender</label>
+                  <select class="fselect" id="fi-gender">
+                    <option value="">Prefer not to say</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="fgroup"><label class="flabel">Availability</label>
+                  <select class="fselect" id="fi-availability">
+                    <option value="open">Open to work</option>
+                    <option value="not">Not looking</option>
+                    <option value="freelance">Freelance only</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row single">
+                <div class="fgroup"><label class="flabel">Bio / About</label><textarea class="ftextarea" id="fi-bio">Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.</textarea></div>
+              </div>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('personal')">
+                <span class="btn-text">💾 Save Changes</span><div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('personal')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SKILLS ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🔧</span> Skills</h3>
+            <button class="edit-btn" id="skills-edit-btn" onclick="toggleSection('skills')">✏️ Edit</button>
+          </div>
+          <div class="card-body" id="skills-section">
+            <div class="view-fields">
+              <div id="skills-display"></div>
+            </div>
+            <div class="edit-fields">
+              <div id="skills-tags-edit"></div>
+              <div id="skill-input-row">
+                <input class="finput" id="skill-new-input" placeholder="Type a skill and press Enter…" onkeydown="if(event.key==='Enter'){addSkillTag();}">
+                <button id="add-skill-btn" onclick="addSkillTag()">+ Add</button>
+              </div>
+              <div class="skill-suggestions" id="skill-sugg-wrap"></div>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('skills')">
+                <span class="btn-text">💾 Save Skills</span><div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('skills')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WORK EXPERIENCE ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>💼</span> Work Experience</h3>
+            <button class="edit-btn" id="exp-edit-btn" onclick="toggleSection('exp')">✏️ Edit</button>
+          </div>
+          <div class="card-body" id="exp-section">
+            <div class="view-fields" id="exp-view"></div>
+            <div class="edit-fields">
+              <div class="repeat-section" id="exp-edit-list"></div>
+              <button class="add-repeat-btn" onclick="addExpEntry()">＋ Add Experience</button>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('exp')">
+                <span class="btn-text">💾 Save Experience</span><div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('exp')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── EDUCATION ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🎓</span> Education</h3>
+            <button class="edit-btn" id="edu-edit-btn" onclick="toggleSection('edu')">✏️ Edit</button>
+          </div>
+          <div class="card-body" id="edu-section">
+            <div class="view-fields" id="edu-view"></div>
+            <div class="edit-fields">
+              <div class="repeat-section" id="edu-edit-list"></div>
+              <button class="add-repeat-btn" onclick="addEduEntry()">＋ Add Education</button>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('edu')">
+                <span class="btn-text">💾 Save Education</span><div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('edu')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ACCOUNT & PASSWORD ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🔒</span> Account &amp; Password</h3>
+            <button class="edit-btn" id="account-edit-btn" onclick="toggleSection('account')">✏️ Change Password</button>
+          </div>
+          <div class="card-body" id="account-section">
+            <div class="view-fields">
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">Username</label><div class="field-display">arunr</div></div>
+                <div class="fgroup"><label class="flabel">Password</label><div class="field-display">••••••••••••</div></div>
+              </div>
+              <div class="form-row single">
+                <div class="fgroup"><label class="flabel">Account Created</label><div class="field-display">15 March 2026</div></div>
+              </div>
+            </div>
+            <div class="edit-fields">
+              <div class="form-row single">
+                <div class="fgroup"><label class="flabel">Current Password</label>
+                  <div class="pwd-row">
+                    <input class="finput" id="fi-current-pwd" type="password" placeholder="Enter current password" style="padding-right:44px;">
+                    <button class="pwd-toggle-btn" onclick="togglePwd('fi-current-pwd',this)">👁</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="fgroup"><label class="flabel">New Password</label>
+                  <div class="pwd-row">
+                    <input class="finput" id="fi-new-pwd" type="password" placeholder="Min 8 characters" oninput="checkPwdStrength(this.value)" style="padding-right:44px;">
+                    <button class="pwd-toggle-btn" onclick="togglePwd('fi-new-pwd',this)">👁</button>
+                  </div>
+                  <div id="pwd-strength-bar"><div id="pwd-strength-fill"></div></div>
+                  <div id="pwd-strength-text">Enter a new password</div>
+                </div>
+                <div class="fgroup"><label class="flabel">Confirm New Password</label>
+                  <div class="pwd-row">
+                    <input class="finput" id="fi-confirm-pwd" type="password" placeholder="Repeat new password" style="padding-right:44px;">
+                    <button class="pwd-toggle-btn" onclick="togglePwd('fi-confirm-pwd',this)">👁</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-actions">
+              <button class="btn-save" onclick="saveSection('account')">
+                <span class="btn-text">🔒 Update Password</span><div class="spinner"></div>
+              </button>
+              <button class="btn-cancel" onclick="cancelSection('account')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── NOTIFICATIONS ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🔔</span> Notification Preferences</h3>
+          </div>
+          <div class="card-body">
+            <div class="notif-row">
+              <div class="notif-info"><h4>Portfolio Views</h4><p>Get notified when someone views your portfolio</p></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="saveNotif(this,'views')"><div class="tog-track"></div></label>
+            </div>
+            <div class="notif-row">
+              <div class="notif-info"><h4>Resume Downloads</h4><p>Alert when your resume is downloaded</p></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="saveNotif(this,'downloads')"><div class="tog-track"></div></label>
+            </div>
+            <div class="notif-row">
+              <div class="notif-info"><h4>AI Tips &amp; Suggestions</h4><p>Weekly AI-powered profile improvement tips</p></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="saveNotif(this,'ai-tips')"><div class="tog-track"></div></label>
+            </div>
+            <div class="notif-row">
+              <div class="notif-info"><h4>Product Updates</h4><p>News about new features and improvements</p></div>
+              <label class="tog-switch"><input type="checkbox" onchange="saveNotif(this,'updates')"><div class="tog-track"></div></label>
+            </div>
+            <div class="notif-row">
+              <div class="notif-info"><h4>Marketing Emails</h4><p>Tips, offers and Prolio AI news</p></div>
+              <label class="tog-switch"><input type="checkbox" onchange="saveNotif(this,'marketing')"><div class="tog-track"></div></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CONNECTED ACCOUNTS ── -->
+        <div class="card">
+          <div class="card-head">
+            <h3><span>🔌</span> Connected Accounts</h3>
+          </div>
+          <div class="card-body">
+            <div class="connected-row">
+              <div class="connected-icon ci-google">🔴</div>
+              <div class="connected-info"><h4>Google</h4><p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="29485b5c47694e44484045074a4644">[email&#160;protected]</a> · Connected 15 Mar 2026</p></div>
+              <button class="connect-btn connected" onclick="toggleConnect(this,'Google')">✓ Connected</button>
+            </div>
+            <div class="connected-row">
+              <div class="connected-icon ci-github">🐙</div>
+              <div class="connected-info"><h4>GitHub</h4><p>github.com/arunr · Connected 15 Mar 2026</p></div>
+              <button class="connect-btn connected" onclick="toggleConnect(this,'GitHub')">✓ Connected</button>
+            </div>
+            <div class="connected-row">
+              <div class="connected-icon ci-linkedin">🔗</div>
+              <div class="connected-info"><h4>LinkedIn</h4><p>Not connected</p></div>
+              <button class="connect-btn disconnected" onclick="toggleConnect(this,'LinkedIn')">+ Connect</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DANGER ZONE ── -->
+        <div class="card" id="danger-card">
+          <div class="card-head">
+            <h3><span>⚠️</span> Danger Zone</h3>
+          </div>
+          <div class="card-body">
+            <div class="danger-row">
+              <div class="danger-info"><h4>Export My Data</h4><p>Download all your resumes, portfolio data and account info as a ZIP file.</p></div>
+              <button class="danger-action" style="background:rgba(123,77,255,0.1);border-color:rgba(123,77,255,0.25);color:#c4b5fd;" onclick="showToast('📦 Preparing your data export…')">⬇ Export</button>
+            </div>
+            <div class="danger-row">
+              <div class="danger-info"><h4>Deactivate Account</h4><p>Temporarily hide your profile and portfolio from public view.</p></div>
+              <button class="danger-action" onclick="openModal('deactivate')">Deactivate</button>
+            </div>
+            <div class="danger-row">
+              <div class="danger-info"><h4>Delete Account</h4><p>Permanently delete your account and all associated data. This cannot be undone.</p></div>
+              <button class="danger-action" onclick="openModal('delete')">Delete Account</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+    </div><!-- /profile-grid -->
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ══════════ MODAL ══════════ -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <div id="modal-icon">⚠️</div>
+    <div id="modal-title">Are you sure?</div>
+    <div id="modal-body">This action cannot be undone.</div>
+    <input class="finput" id="modal-input" placeholder="" style="display:none;">
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ══════════════════════════════════════
+   DATA MODEL
+══════════════════════════════════════ */
+var DATA = {
+  personal: { fname:'Arun', lname:'Ravi', role:'Full Stack Developer', location:'Chennai, India', email:'arun@example.com', phone:'+91 81241 81771', bio:'Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.', dob:'', gender:'', availability:'open' },
+  social: { linkedin:'linkedin.com/in/arunr', github:'github.com/arunr', twitter:'', website:'' },
+  skills: ['HTML','CSS','JavaScript','React.js','Node.js','Python','MySQL','MongoDB','Git','Figma','TypeScript','REST API'],
+  experience: [
+    { id:1, role:'Full Stack Developer Intern', company:'TechNova Solutions', location:'Bangalore, India', start:'2024-06', end:'2024-12', current:false, desc:'• Developed responsive web apps using React.js and Node.js, improving page load time by 40%.\n• Designed RESTful APIs and integrated third-party services.\n• Participated in code reviews, reducing bug reports by 25%.' },
+    { id:2, role:'Frontend Developer (Freelance)', company:'Self-Employed', location:'Remote', start:'2024-01', end:'', current:true, desc:'• Built 8+ client websites with modern frameworks and pixel-perfect designs.\n• Delivered on time with 100% client satisfaction.' }
+  ],
+  education: [
+    { id:1, degree:'B.E. Information Technology', institution:'GRTIET', location:'Tamil Nadu', start:'2022', end:'2026', grade:'8.5 CGPA', desc:'' },
+    { id:2, degree:'Higher Secondary (12th)', institution:"St. Joseph's School", location:'Tamil Nadu', start:'2020', end:'2022', grade:'92%', desc:'' }
+  ]
+};
+
+var editSkills = DATA.skills.slice();
+var expIdCounter = 10;
+var eduIdCounter = 10;
+var modalAction = '';
+
+var SKILL_SUGGESTIONS = ['React.js','Vue.js','Angular','Node.js','Express.js','Django','Flask','Python','TypeScript','Docker','AWS','Firebase','GraphQL','Tailwind CSS','PostgreSQL','Redis','Flutter','Swift'];
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+(function init() {
+  renderAllViews();
+  renderSkillSuggestions();
+  animateStats();
+  // Animate strength bar
+  setTimeout(function(){ document.getElementById('strength-fill').style.width = '68%'; }, 300);
+})();
+
+function renderAllViews() {
+  renderExpView();
+  renderEduView();
+  renderSkillsView();
+}
+
+/* ══════════════════════════════════════
+   SECTION TOGGLE
+══════════════════════════════════════ */
+function toggleSection(id) {
+  var section = document.getElementById(id + '-section');
+  var btn     = document.getElementById(id + '-edit-btn');
+  var isEditing = section.classList.contains('section-editing');
+  if (isEditing) {
+    cancelSection(id);
+  } else {
+    section.classList.add('section-editing');
+    if (btn) { btn.textContent = '✕ Cancel'; btn.classList.add('active'); }
+    // Populate edit fields
+    if (id === 'skills') { renderSkillsEdit(); }
+    if (id === 'exp')    { renderExpEdit(); }
+    if (id === 'edu')    { renderEduEdit(); }
+  }
+}
+
+function cancelSection(id) {
+  var section = document.getElementById(id + '-section');
+  var btn     = document.getElementById(id + '-edit-btn');
+  section.classList.remove('section-editing');
+  if (btn) { btn.textContent = '✏️ Edit'; btn.classList.remove('active'); }
+  // Restore edit skills from saved
+  if (id === 'skills') { editSkills = DATA.skills.slice(); }
+}
+
+/* ══════════════════════════════════════
+   SAVE SECTIONS
+══════════════════════════════════════ */
+function saveSection(id) {
+  var section = document.getElementById(id + '-section');
+  var saveBtn = section.parentElement.querySelector('.btn-save');
+  saveBtn.classList.add('loading');
+
+  setTimeout(function() {
+    saveBtn.classList.remove('loading');
+
+    if (id === 'personal') {
+      var fname = document.getElementById('fi-fname').value.trim();
+      if (!fname) { showToast('⚠️ First name is required'); return; }
+      DATA.personal.fname    = fname;
+      DATA.personal.lname    = document.getElementById('fi-lname').value.trim();
+      DATA.personal.role     = document.getElementById('fi-role').value.trim();
+      DATA.personal.location = document.getElementById('fi-location').value.trim();
+      DATA.personal.email    = document.getElementById('fi-email').value.trim();
+      DATA.personal.phone    = document.getElementById('fi-phone').value.trim();
+      DATA.personal.bio      = document.getElementById('fi-bio').value.trim();
+      DATA.personal.dob      = document.getElementById('fi-dob').value;
+      DATA.personal.gender   = document.getElementById('fi-gender').value;
+      DATA.personal.availability = document.getElementById('fi-availability').value;
+      updatePersonalView();
+    }
+    if (id === 'social') {
+      DATA.social.linkedin = document.getElementById('fi-linkedin').value.trim();
+      DATA.social.github   = document.getElementById('fi-github').value.trim();
+      DATA.social.twitter  = document.getElementById('fi-twitter').value.trim();
+      DATA.social.website  = document.getElementById('fi-website').value.trim();
+      updateSocialView();
+    }
+    if (id === 'skills') {
+      DATA.skills = editSkills.slice();
+      renderSkillsView();
+    }
+    if (id === 'exp') { renderExpView(); }
+    if (id === 'edu') { renderEduView(); }
+    if (id === 'account') {
+      var curr = document.getElementById('fi-current-pwd').value;
+      var nw   = document.getElementById('fi-new-pwd').value;
+      var conf = document.getElementById('fi-confirm-pwd').value;
+      if (!curr) { showToast('⚠️ Enter your current password'); return; }
+      if (nw.length < 8) { showToast('⚠️ New password must be at least 8 characters'); return; }
+      if (nw !== conf)   { showToast('⚠️ Passwords do not match'); return; }
+      document.getElementById('fi-current-pwd').value = '';
+      document.getElementById('fi-new-pwd').value = '';
+      document.getElementById('fi-confirm-pwd').value = '';
+      document.getElementById('pwd-strength-fill').style.width = '0%';
+      document.getElementById('pwd-strength-text').textContent = 'Enter a new password';
+    }
+
+    cancelSection(id);
+    showToast('✅ Changes saved successfully!');
+  }, 900);
+}
+
+/* ══════════════════════════════════════
+   PERSONAL VIEW UPDATE
+══════════════════════════════════════ */
+function updatePersonalView() {
+  var d = DATA.personal;
+  var fullName = (d.fname + ' ' + d.lname).trim();
+  set('vd-fname', d.fname || '—');
+  set('vd-lname', d.lname || '—');
+  set('vd-role',  d.role  || '—');
+  set('vd-location', d.location || '—');
+  set('vd-email', d.email || '—');
+  set('vd-phone', d.phone || '—');
+  set('vd-bio',   d.bio   || '—');
+  set('profile-name', fullName);
+  set('profile-role-tag', d.role || 'Your Role');
+  set('avatar-initials', (d.fname||'U').charAt(0).toUpperCase());
+  set('sb-user-name', fullName);
+  document.getElementById('topbar-avatar').textContent = (d.fname||'U').charAt(0).toUpperCase();
+}
+
+function updateSocialView() {
+  var d = DATA.social;
+  set('sv-linkedin', d.linkedin || '—');
+  set('sv-github',   d.github   || '—');
+  set('sv-twitter',  d.twitter  || '—');
+  set('sv-website',  d.website  || '—');
+}
+
+/* ══════════════════════════════════════
+   SKILLS
+══════════════════════════════════════ */
+function renderSkillsView() {
+  var wrap = document.getElementById('skills-display');
+  if (!DATA.skills.length) {
+    wrap.innerHTML = '<span class="skill-tag-view empty-pill">No skills added yet — click Edit to add</span>';
+    return;
+  }
+  wrap.innerHTML = DATA.skills.map(function(s){ return '<span class="skill-tag-view">' + esc(s) + '</span>'; }).join('');
+}
+function renderSkillsEdit() {
+  editSkills = DATA.skills.slice();
+  renderSkillTagsEdit();
+}
+function renderSkillTagsEdit() {
+  var wrap = document.getElementById('skills-tags-edit');
+  wrap.innerHTML = editSkills.map(function(s){
+    return '<span class="skill-tag-edit">' + esc(s) +
+      '<button onclick="removeSkillTag(\'' + esc(s) + '\')">×</button></span>';
+  }).join('');
+}
+function addSkillTag() {
+  var val = document.getElementById('skill-new-input').value.trim();
+  if (!val) return;
+  if (editSkills.indexOf(val) !== -1) { showToast('Already added!'); return; }
+  editSkills.push(val);
+  renderSkillTagsEdit();
+  document.getElementById('skill-new-input').value = '';
+}
+function removeSkillTag(s) {
+  editSkills = editSkills.filter(function(x){ return x !== s; });
+  renderSkillTagsEdit();
+}
+function renderSkillSuggestions() {
+  var wrap = document.getElementById('skill-sugg-wrap');
+  wrap.innerHTML = SKILL_SUGGESTIONS.map(function(s){
+    return '<span class="skill-sugg" onclick="addSkillFromSugg(\'' + esc(s) + '\')">' + s + '</span>';
+  }).join('');
+}
+function addSkillFromSugg(s) {
+  if (editSkills.indexOf(s) !== -1) { showToast('Already added!'); return; }
+  editSkills.push(s);
+  renderSkillTagsEdit();
+}
+
+/* ══════════════════════════════════════
+   EXPERIENCE VIEW & EDIT
+══════════════════════════════════════ */
+function renderExpView() {
+  var wrap = document.getElementById('exp-view');
+  if (!DATA.experience.length) {
+    wrap.innerHTML = '<div style="color:var(--muted2);font-size:13px;font-style:italic;padding:8px 0;">No experience added yet.</div>';
+    return;
+  }
+  wrap.innerHTML = DATA.experience.map(function(e){
+    var period = fmtDate(e.start) + ' – ' + (e.current ? 'Present' : fmtDate(e.end));
+    return '<div class="repeat-item">'
+      + '<div class="repeat-head" onclick="toggleRepeat(this)">'
+        + '<div class="repeat-icon">💼</div>'
+        + '<div class="repeat-title-wrap">'
+          + '<div class="repeat-title">' + esc(e.role) + '</div>'
+          + '<div class="repeat-sub">' + esc(e.company) + (e.location ? ' · ' + esc(e.location) : '') + ' &nbsp;|&nbsp; ' + period + '</div>'
+        + '</div>'
+        + '<span class="repeat-chevron">›</span>'
+      + '</div>'
+      + '<div class="repeat-body" style="white-space:pre-line;font-size:12px;color:var(--muted);line-height:1.7;">' + esc(e.desc) + '</div>'
+      + '</div>';
+  }).join('');
+}
+function renderExpEdit() {
+  var wrap = document.getElementById('exp-edit-list');
+  wrap.innerHTML = DATA.experience.map(function(e){ return expCardHTML(e); }).join('');
+}
+function expCardHTML(e) {
+  var period = fmtDate(e.start) + ' – ' + (e.current ? 'Present' : fmtDate(e.end));
+  return '<div class="repeat-item open" id="exp-card-' + e.id + '">'
+    + '<div class="repeat-head" onclick="toggleRepeat(this)">'
+      + '<div class="repeat-icon">💼</div>'
+      + '<div class="repeat-title-wrap">'
+        + '<div class="repeat-title" id="ertitle-' + e.id + '">' + esc(e.role || 'New Experience') + '</div>'
+        + '<div class="repeat-sub">' + esc(e.company || 'Company') + ' · ' + period + '</div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;">'
+        + '<span class="repeat-chevron">›</span>'
+        + '<button class="repeat-del" onclick="event.stopPropagation();deleteExp(' + e.id + ')">✕</button>'
+      + '</div>'
+    + '</div>'
+    + '<div class="repeat-body">'
+      + '<div class="form-row">'
+        + '<div class="fgroup"><label class="flabel">Job Title *</label><input class="finput" value="' + esc(e.role) + '" oninput="updateExpField(' + e.id + ',\'role\',this.value)" placeholder="Software Engineer"></div>'
+        + '<div class="fgroup"><label class="flabel">Company *</label><input class="finput" value="' + esc(e.company) + '" oninput="updateExpField(' + e.id + ',\'company\',this.value)" placeholder="Google"></div>'
+      + '</div>'
+      + '<div class="form-row single"><div class="fgroup"><label class="flabel">Location</label><input class="finput" value="' + esc(e.location) + '" oninput="updateExpField(' + e.id + ',\'location\',this.value)" placeholder="Remote / City, Country"></div></div>'
+      + '<div class="form-row">'
+        + '<div class="fgroup"><label class="flabel">Start Date</label><input class="finput" type="month" value="' + e.start + '" oninput="updateExpField(' + e.id + ',\'start\',this.value)"></div>'
+        + '<div class="fgroup"><label class="flabel">End Date</label><input class="finput" type="month" value="' + e.end + '" id="exp-end-' + e.id + '" ' + (e.current ? 'disabled' : '') + ' oninput="updateExpField(' + e.id + ',\'end\',this.value)"></div>'
+      + '</div>'
+      + '<label class="current-toggle"><input type="checkbox" ' + (e.current ? 'checked' : '') + ' onchange="toggleCurrent(' + e.id + ',this)"><span>Currently working here</span></label>'
+      + '<div class="form-row single"><div class="fgroup"><label class="flabel">Description / Achievements</label><textarea class="ftextarea" oninput="updateExpField(' + e.id + ',\'desc\',this.value)" placeholder="• What you built and achieved...">' + esc(e.desc) + '</textarea></div></div>'
+    + '</div>'
+  + '</div>';
+}
+function addExpEntry() {
+  var id = ++expIdCounter;
+  DATA.experience.push({ id:id, role:'', company:'', location:'', start:'', end:'', current:false, desc:'' });
+  renderExpEdit();
+  // Scroll to new card
+  setTimeout(function(){
+    var el = document.getElementById('exp-card-' + id);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 100);
+}
+function deleteExp(id) {
+  DATA.experience = DATA.experience.filter(function(e){ return e.id !== id; });
+  renderExpEdit();
+}
+function updateExpField(id, key, val) {
+  var e = DATA.experience.find(function(x){ return x.id === id; });
+  if (!e) return;
+  e[key] = val;
+  var title = document.getElementById('ertitle-' + id);
+  if (title && key === 'role') title.textContent = val || 'New Experience';
+}
+function toggleCurrent(id, cb) {
+  var e = DATA.experience.find(function(x){ return x.id === id; });
+  if (!e) return;
+  e.current = cb.checked;
+  var endInput = document.getElementById('exp-end-' + id);
+  if (endInput) endInput.disabled = cb.checked;
+}
+
+/* ══════════════════════════════════════
+   EDUCATION VIEW & EDIT
+══════════════════════════════════════ */
+function renderEduView() {
+  var wrap = document.getElementById('edu-view');
+  if (!DATA.education.length) {
+    wrap.innerHTML = '<div style="color:var(--muted2);font-size:13px;font-style:italic;padding:8px 0;">No education added yet.</div>';
+    return;
+  }
+  wrap.innerHTML = DATA.education.map(function(e){
+    return '<div class="repeat-item">'
+      + '<div class="repeat-head" onclick="toggleRepeat(this)">'
+        + '<div class="repeat-icon">🎓</div>'
+        + '<div class="repeat-title-wrap">'
+          + '<div class="repeat-title">' + esc(e.degree) + '</div>'
+          + '<div class="repeat-sub">' + esc(e.institution) + ' · ' + esc(e.start) + (e.end ? ' – ' + esc(e.end) : '') + (e.grade ? ' &nbsp;·&nbsp; ⭐ ' + esc(e.grade) : '') + '</div>'
+        + '</div>'
+        + '<span class="repeat-chevron">›</span>'
+      + '</div>'
+      + (e.desc ? '<div class="repeat-body" style="font-size:12px;color:var(--muted);line-height:1.7;">' + esc(e.desc) + '</div>' : '')
+    + '</div>';
+  }).join('');
+}
+function renderEduEdit() {
+  var wrap = document.getElementById('edu-edit-list');
+  wrap.innerHTML = DATA.education.map(function(e){ return eduCardHTML(e); }).join('');
+}
+function eduCardHTML(e) {
+  return '<div class="repeat-item open" id="edu-card-' + e.id + '">'
+    + '<div class="repeat-head" onclick="toggleRepeat(this)">'
+      + '<div class="repeat-icon">🎓</div>'
+      + '<div class="repeat-title-wrap">'
+        + '<div class="repeat-title" id="edtitle-' + e.id + '">' + esc(e.degree || 'New Degree') + '</div>'
+        + '<div class="repeat-sub">' + esc(e.institution || 'Institution') + '</div>'
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;">'
+        + '<span class="repeat-chevron">›</span>'
+        + '<button class="repeat-del" onclick="event.stopPropagation();deleteEdu(' + e.id + ')">✕</button>'
+      + '</div>'
+    + '</div>'
+    + '<div class="repeat-body">'
+      + '<div class="form-row">'
+        + '<div class="fgroup"><label class="flabel">Degree / Course *</label><input class="finput" value="' + esc(e.degree) + '" oninput="updateEduField(' + e.id + ',\'degree\',this.value)" placeholder="B.E. Computer Science"></div>'
+        + '<div class="fgroup"><label class="flabel">Institution *</label><input class="finput" value="' + esc(e.institution) + '" oninput="updateEduField(' + e.id + ',\'institution\',this.value)" placeholder="MIT"></div>'
+      + '</div>'
+      + '<div class="form-row">'
+        + '<div class="fgroup"><label class="flabel">Start Year</label><input class="finput" value="' + esc(e.start) + '" oninput="updateEduField(' + e.id + ',\'start\',this.value)" placeholder="2020"></div>'
+        + '<div class="fgroup"><label class="flabel">End Year</label><input class="finput" value="' + esc(e.end) + '" oninput="updateEduField(' + e.id + ',\'end\',this.value)" placeholder="2024 or Present"></div>'
+      + '</div>'
+      + '<div class="form-row">'
+        + '<div class="fgroup"><label class="flabel">Grade / GPA</label><input class="finput" value="' + esc(e.grade) + '" oninput="updateEduField(' + e.id + ',\'grade\',this.value)" placeholder="8.5 CGPA or 3.8/4.0"></div>'
+        + '<div class="fgroup"><label class="flabel">Location</label><input class="finput" value="' + esc(e.location) + '" oninput="updateEduField(' + e.id + ',\'location\',this.value)" placeholder="City, Country"></div>'
+      + '</div>'
+      + '<div class="form-row single"><div class="fgroup"><label class="flabel">Additional Notes</label><textarea class="ftextarea" style="min-height:70px;" oninput="updateEduField(' + e.id + ',\'desc\',this.value)" placeholder="Achievements, clubs, thesis...">' + esc(e.desc) + '</textarea></div></div>'
+    + '</div>'
+  + '</div>';
+}
+function addEduEntry() {
+  var id = ++eduIdCounter;
+  DATA.education.push({ id:id, degree:'', institution:'', location:'', start:'', end:'', grade:'', desc:'' });
+  renderEduEdit();
+  setTimeout(function(){
+    var el = document.getElementById('edu-card-' + id);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 100);
+}
+function deleteEdu(id) {
+  DATA.education = DATA.education.filter(function(e){ return e.id !== id; });
+  renderEduEdit();
+}
+function updateEduField(id, key, val) {
+  var e = DATA.education.find(function(x){ return x.id === id; });
+  if (!e) return;
+  e[key] = val;
+  var title = document.getElementById('edtitle-' + id);
+  if (title && key === 'degree') title.textContent = val || 'New Degree';
+}
+
+/* ══════════════════════════════════════
+   TOGGLE REPEAT CARDS (accordion)
+══════════════════════════════════════ */
+function toggleRepeat(head) {
+  var card = head.closest('.repeat-item');
+  card.classList.toggle('open');
+}
+
+/* ══════════════════════════════════════
+   AVATAR UPLOAD
+══════════════════════════════════════ */
+function handleAvatarUpload(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = document.getElementById('avatar-photo');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    document.getElementById('avatar-initials').style.display = 'none';
+    showToast('✅ Profile photo updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ══════════════════════════════════════
+   PASSWORD
+══════════════════════════════════════ */
+function togglePwd(id, btn) {
+  var inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+function checkPwdStrength(val) {
+  var score = 0;
+  if (val.length >= 8)        score++;
+  if (/[A-Z]/.test(val))      score++;
+  if (/[0-9]/.test(val))      score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  var levels = [
+    { w:'0%',   bg:'#64748b', lbl:'Enter a new password' },
+    { w:'25%',  bg:'#ef4444', lbl:'⚠ Too weak' },
+    { w:'50%',  bg:'#f59e0b', lbl:'🔶 Fair' },
+    { w:'75%',  bg:'#3b82f6', lbl:'🔷 Good' },
+    { w:'100%', bg:'#22c55e', lbl:'✅ Strong' }
+  ];
+  var lvl = val.length === 0 ? levels[0] : levels[score];
+  var fill = document.getElementById('pwd-strength-fill');
+  fill.style.width = lvl.w; fill.style.background = lvl.bg;
+  document.getElementById('pwd-strength-text').textContent = lvl.lbl;
+  document.getElementById('pwd-strength-text').style.color = lvl.bg;
+}
+
+/* ══════════════════════════════════════
+   NOTIFICATIONS
+══════════════════════════════════════ */
+function saveNotif(cb, type) {
+  showToast((cb.checked ? '🔔 Enabled' : '🔕 Disabled') + ' — ' + type + ' notifications');
+}
+
+/* ══════════════════════════════════════
+   CONNECTED ACCOUNTS
+══════════════════════════════════════ */
+function toggleConnect(btn, name) {
+  var isConnected = btn.classList.contains('connected');
+  if (isConnected) {
+    openModal('disconnect', name, btn);
+  } else {
+    btn.classList.remove('disconnected'); btn.classList.add('connected');
+    btn.textContent = '✓ Connected';
+    btn.closest('.connected-row').querySelector('.connected-info p').textContent = name + ' · Just connected';
+    showToast('✅ ' + name + ' connected successfully!');
+  }
+}
+
+/* ══════════════════════════════════════
+   COPY PROFILE URL
+══════════════════════════════════════ */
+function copyProfileUrl() {
+  var url = 'https://prolioai.com/u/arunr';
+  try { navigator.clipboard.writeText(url); } catch(e) {}
+  showToast('🔗 Profile URL copied to clipboard!');
+}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+var modalMeta = {};
+function openModal(action, extra, ref) {
+  modalAction = action; modalMeta = { extra:extra, ref:ref };
+  var overlay = document.getElementById('modal-overlay');
+  var inp = document.getElementById('modal-input');
+  var confirmBtn = document.getElementById('modal-confirm-btn');
+  inp.style.display = 'none'; inp.value = '';
+  confirmBtn.className = 'modal-confirm';
+
+  if (action === 'delete') {
+    document.getElementById('modal-icon').textContent  = '🗑️';
+    document.getElementById('modal-title').textContent = 'Delete Account';
+    document.getElementById('modal-body').textContent  = 'This will permanently delete your account, all resumes, portfolio and data. Type DELETE to confirm.';
+    inp.style.display = 'block'; inp.placeholder = 'Type DELETE to confirm';
+  } else if (action === 'deactivate') {
+    document.getElementById('modal-icon').textContent  = '⏸️';
+    document.getElementById('modal-title').textContent = 'Deactivate Account';
+    document.getElementById('modal-body').textContent  = 'Your profile and portfolio will be hidden from public view. You can reactivate anytime.';
+    confirmBtn.classList.add('safe');
+  } else if (action === 'disconnect') {
+    document.getElementById('modal-icon').textContent  = '🔌';
+    document.getElementById('modal-title').textContent = 'Disconnect ' + extra;
+    document.getElementById('modal-body').textContent  = 'Are you sure you want to disconnect your ' + extra + ' account?';
+  }
+  overlay.classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  modalAction = ''; modalMeta = {};
+}
+function confirmModal() {
+  if (modalAction === 'delete') {
+    var inp = document.getElementById('modal-input').value.trim();
+    if (inp !== 'DELETE') { showToast('⚠️ Type DELETE in caps to confirm'); return; }
+    showToast('Account deletion requested — contact support to complete.');
+  } else if (modalAction === 'deactivate') {
+    showToast('⏸ Account deactivated. You can reactivate anytime from login.');
+  } else if (modalAction === 'disconnect') {
+    var btn = modalMeta.ref;
+    if (btn) {
+      btn.classList.remove('connected'); btn.classList.add('disconnected');
+      btn.textContent = '+ Connect';
+      btn.closest('.connected-row').querySelector('.connected-info p').textContent = 'Not connected';
+    }
+    showToast('🔌 ' + modalMeta.extra + ' disconnected.');
+  }
+  closeModal();
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+
+/* ══════════════════════════════════════
+   SIDEBAR MOBILE
+══════════════════════════════════════ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+}
+
+/* ══════════════════════════════════════
+   STAT COUNTER ANIMATION
+══════════════════════════════════════ */
+function animateStats() {
+  [{ id:'qs-res', end:3 }, { id:'qs-views', end:124 }, { id:'qs-links', end:7 }].forEach(function(t){
+    var el = document.getElementById(t.id); if (!el) return;
+    var cur = 0; var step = Math.max(1, Math.floor(t.end / 40));
+    var iv = setInterval(function(){
+      cur = Math.min(cur + step, t.end);
+      el.textContent = cur;
+      if (cur >= t.end) clearInterval(iv);
+    }, 30);
+  });
+}
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function set(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(val) {
+  if (!val) return '—';
+  var p = val.split('-');
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (p.length === 2) return months[parseInt(p[1],10)-1] + ' ' + p[0];
+  return val;
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+/* ── PLAN STATE ── */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');

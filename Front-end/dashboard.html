@@ -507,37 +507,42 @@
         <span class="nav-badge">AI</span>
       </div>
 
-      <div class="nav-item" onclick="switchView('portfolio', this)">
+      <div class="nav-item" onclick="window.location.href='portfolio.html'">
         <div class="nav-icon">🌐</div>
         My Portfolio
       </div>
       <div class="sb-section-label">Manage</div>
-      <div class="nav-item" onclick="switchView('profile', this)">
+      <div class="nav-item" onclick="window.location.href='profile.html'">
         <div class="nav-icon">👤</div>
         Profile
       </div>
-      <div class="nav-item" onclick="switchView('settings', this)">
+      <div class="nav-item" onclick="window.location.href='settings.html'">
         <div class="nav-icon">⚙️</div>
         Settings
       </div>
-      <div class="nav-item" onclick="showToast('Developer API docs coming soon!')">
+      <div class="nav-item" onclick="window.location.href='developer-api.html'">
         <div class="nav-icon">🔗</div>
         Developer API
       </div>
       <div class="sb-section-label">Support</div>
-      <div class="nav-item" onclick="showToast('Help centre coming soon!')">
+      <div class="nav-item" onclick="window.location.href='help-docs.html'">
         <div class="nav-icon">💬</div>
         Help &amp; Docs
+      </div>
+      <div class="sb-section-label">Upgrade</div>
+      <div class="nav-item" onclick="window.location.href='pricing.html'">
+        <div class="nav-icon">💎</div>
+        Pricing &amp; Plans
       </div>
     </nav>
 
     <div id="sb-upgrade">
       <h4>✨ Go Pro</h4>
       <p>Unlock unlimited resumes, custom domains and advanced AI features.</p>
-      <button id="sb-upgrade-btn" onclick="showToast('Pro plan coming soon!')">Upgrade to Pro</button>
+      <button id="sb-upgrade-btn" onclick="window.location.href='pricing.html'">Upgrade to Pro</button>
     </div>
 
-    <div id="sb-user" onclick="switchView('profile', null)">
+    <div id="sb-user" onclick="window.location.href='profile.html'">
       <div id="sb-avatar">A</div>
       <div>
         <div id="sb-user-name">Arun R</div>
@@ -557,10 +562,10 @@
         <span>🔍</span>
         <input type="text" placeholder="Search resumes, portfolios…">
       </div>
-      <div id="topbar-right">
+      <div id="topbar-right"><span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
         <div class="topbar-icon-btn" onclick="showToast('No new notifications')">🔔<span class="notif-dot"></span></div>
-        <div class="topbar-icon-btn" onclick="showToast('Help centre coming soon!')">💡</div>
-        <div id="topbar-avatar" onclick="switchView('profile', null)">A</div>
+        <div class="topbar-icon-btn" onclick="window.location.href='help-docs.html'">💡</div>
+        <div id="topbar-avatar" onclick="window.location.href='profile.html'">A</div>
       </div>
     </header>
 
@@ -664,7 +669,7 @@
                   </div>
                   <span class="qa-arrow">›</span>
                 </div>
-                <div class="qa-card" onclick="switchView('portfolio', null)">
+                <div class="qa-card" onclick="window.location.href='portfolio.html'">
                   <div class="qa-icon i-cyan">🌐</div>
                   <div class="qa-text">
                     <h4>View My Portfolio</h4>
@@ -749,6 +754,7 @@
           <span class="coming-tag">🌐 Live Site</span>
           <h2>My <em>Portfolio</em></h2>
           <p>The portfolio preview page auto-generates a beautiful public portfolio website from your resume data.</p>
+          <button onclick="window.location.href='portfolio.html'" style="margin-top:22px;padding:12px 32px;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;">🌐 Open Portfolio →</button>
         </div>
       </div>
 
@@ -759,6 +765,7 @@
           <span class="coming-tag">👤 Account</span>
           <h2>Your <em>Profile</em></h2>
           <p>Update your name, photo, password, email, and connected accounts here.</p>
+          <button onclick="window.location.href='profile.html'" style="margin-top:22px;padding:12px 32px;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;">👤 Open Profile →</button>
         </div>
       </div>
 
@@ -769,6 +776,7 @@
           <span class="coming-tag">⚙️ Settings</span>
           <h2>App <em>Settings</em></h2>
           <p>Notification preferences, theme options, privacy controls and account management will live here.</p>
+          <button onclick="window.location.href='settings.html'" style="margin-top:22px;padding:12px 32px;background:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;">⚙️ Open Settings →</button>
         </div>
       </div>
 
@@ -874,6 +882,68 @@ window.addEventListener('load', function() {
     });
   });
 });
+
+/* ════════════════════════════════════════
+   PLAN SYSTEM — persists across pages
+════════════════════════════════════════ */
+var PLAN = (function() {
+  try { return localStorage.getItem('prolio_plan') || 'free'; } catch(e) { return 'free'; }
+})();
+
+function setPlan(plan) {
+  PLAN = plan;
+  try { localStorage.setItem('prolio_plan', plan); } catch(e) {}
+  applyPlanUI();
+}
+
+function applyPlanUI() {
+  var isPro  = PLAN === 'pro' || PLAN === 'team';
+  var isTeam = PLAN === 'team';
+
+  // Sidebar badge
+  var roleEl = document.getElementById('sb-user-role');
+  if (roleEl) {
+    roleEl.textContent = isTeam ? 'Team Plan' : (isPro ? 'Pro Plan ✦' : 'Free Plan');
+    roleEl.style.color = isPro ? '#c4b5fd' : '';
+  }
+  var sbUsr = document.getElementById('sb-user');
+  if (sbUsr) sbUsr.style.borderTop = isPro
+    ? '1px solid rgba(123,77,255,0.3)' : '1px solid var(--border)';
+
+  // Topbar plan badge
+  var badge = document.getElementById('plan-badge');
+  if (badge) {
+    badge.textContent = isTeam ? '👥 Team' : (isPro ? '✦ Pro' : '');
+    badge.style.display = isPro ? 'inline-flex' : 'none';
+  }
+
+  // Upgrade block — hide if pro
+  var upg = document.getElementById('sb-upgrade');
+  if (upg) upg.style.display = isPro ? 'none' : '';
+
+  // Locked feature overlays
+  document.querySelectorAll('[data-pro]').forEach(function(el) {
+    var required = el.getAttribute('data-pro');
+    var unlocked = isPro || (isTeam && required === 'team');
+    el.style.opacity   = unlocked ? '1'    : '0.45';
+    el.style.pointerEvents = unlocked ? 'auto' : 'none';
+    var lock = el.querySelector('.pro-lock');
+    if (lock) lock.style.display = unlocked ? 'none' : 'flex';
+  });
+
+  // Pro-only resume count label
+  var resCount = document.getElementById('resume-count-label');
+  if (resCount) resCount.textContent = isPro ? 'Unlimited resumes' : '3 resumes (Free)';
+
+  // Dashboard stat — AI credits
+  var aiCredits = document.getElementById('ai-credits-stat');
+  if (aiCredits) aiCredits.textContent = isPro ? '∞ credits' : '53 left';
+}
+
+// Run on load
+applyPlanUI();
+
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show');},3000);}
 </script>
 </body>
 </html>

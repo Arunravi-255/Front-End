@@ -3,17 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resume Builder — Prolio AI v2</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;600;700&family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<title>Resume Builder — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Lora:wght@400;600;700&family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;700;800&family=Fira+Mono:wght@400;500&family=Raleway:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --purple:#7b4dff; --purple-lt:#a78bff; --blue:#5E7CFF;
-  --cyan:#49C6C6; --gold:#ffe066; --green:#22c55e;
-  --bg:#080c18; --bg2:#0d1220; --card:rgba(255,255,255,0.04);
-  --border:rgba(255,255,255,0.08); --text:#f1f5f9;
-  --muted:rgba(255,255,255,0.45);
-  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);
-  --header-h:60px;
+:root{
+  --purple:#7b4dff;--purple-lt:#a78bff;--blue:#5E7CFF;--cyan:#49C6C6;
+  --gold:#ffe066;--green:#22c55e;--bg:#080c18;--card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--text:#f1f5f9;--muted:rgba(255,255,255,0.45);
+  --grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);--header-h:60px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -22,7 +19,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse at 5% 10%,rgba(123,77,255,0.16) 0%,transparent 50%),
              radial-gradient(ellipse at 95% 85%,rgba(73,198,198,0.12) 0%,transparent 50%);}
 
-/* ── TOP BAR ── */
+/* ═══ TOPBAR ═══ */
 #topbar{height:var(--header-h);background:rgba(8,12,24,0.92);border-bottom:1px solid var(--border);
   backdrop-filter:blur(20px);display:flex;align-items:center;padding:0 clamp(16px,3vw,36px);
   gap:16px;position:sticky;top:0;z-index:100;}
@@ -31,8 +28,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;text-decoration:none;white-space:nowrap;}
 #tb-back:hover{background:rgba(255,255,255,0.1);color:var(--text);}
 #tb-logo{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;letter-spacing:3px;
-  font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;cursor:pointer;}
+  font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 #tb-title{font-size:14px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:8px;}
 #tb-title span{color:var(--text);}
 #tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
@@ -44,15 +40,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .tb-btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(123,77,255,0.45);}
 #tb-save-status{font-size:11px;color:var(--muted);font-weight:600;}
 
-/* ── MAIN LAYOUT ── */
-#builder-shell{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - var(--header-h));position:relative;z-index:1;}
+/* ═══ LAYOUT ═══ */
+#builder-shell{display:grid;grid-template-columns:380px 1fr;min-height:calc(100vh - var(--header-h));position:relative;z-index:1;}
 
-/* ── FORM PANEL ── */
-#form-panel{background:rgba(8,12,24,0.85);border-right:1px solid var(--border);display:flex;
+/* ═══ FORM PANEL ═══ */
+#form-panel{background:rgba(8,12,24,0.88);border-right:1px solid var(--border);display:flex;
   flex-direction:column;overflow-y:auto;max-height:calc(100vh - var(--header-h));position:sticky;top:var(--header-h);}
 #step-tabs{display:flex;overflow-x:auto;gap:0;border-bottom:1px solid var(--border);scrollbar-width:none;padding:0 4px;flex-shrink:0;}
 #step-tabs::-webkit-scrollbar{display:none;}
-.step-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 10px;
+.step-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 12px;
   font-size:9px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);
   cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;}
 .step-tab .tab-num{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.08);
@@ -62,7 +58,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .step-tab.active .tab-num{background:rgba(123,77,255,0.35);color:#c4b5fd;}
 .step-tab.done{color:var(--green);}
 .step-tab.done .tab-num{background:rgba(34,197,94,0.2);color:var(--green);}
-
 #form-area{flex:1;padding:20px;overflow-y:auto;}
 .form-step{display:none;animation:fadeUp 0.35s ease forwards;}
 .form-step.active{display:block;}
@@ -71,12 +66,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .step-heading h2{font-family:'Playfair Display',serif;font-size:clamp(18px,2vw,22px);font-weight:900;margin-bottom:4px;}
 .step-heading h2 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .step-heading p{font-size:12px;color:var(--muted);line-height:1.5;}
-
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .frow.single{grid-template-columns:1fr;}
 .frow.triple{grid-template-columns:1fr 1fr 1fr;}
 .fgroup{display:flex;flex-direction:column;gap:5px;}
-.fgroup.full{grid-column:1/-1;}
 .flabel{font-size:11px;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:0.5px;text-transform:uppercase;}
 .finput,.fselect,.ftextarea{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:9px;
   padding:10px 13px;font-size:13px;font-family:'Montserrat',sans-serif;color:var(--text);outline:none;
@@ -84,24 +77,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .finput::placeholder,.ftextarea::placeholder{color:var(--muted);}
 .finput:focus,.fselect:focus,.ftextarea:focus{border-color:rgba(123,77,255,0.6);background:rgba(255,255,255,0.09);}
 .ftextarea{resize:vertical;min-height:80px;line-height:1.6;}
-.ai-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;}
+.ai-row{display:flex;align-items:flex-start;gap:8px;}
 .ai-row .ftextarea{flex:1;}
-.ai-enhance-btn{padding:8px 11px;border-radius:9px;
-  background:linear-gradient(135deg,rgba(123,77,255,0.3),rgba(73,198,198,0.2));
+.ai-enhance-btn{padding:8px 10px;border-radius:9px;background:linear-gradient(135deg,rgba(123,77,255,0.3),rgba(73,198,198,0.2));
   border:1px solid rgba(123,77,255,0.35);color:#c4b5fd;font-size:11px;font-weight:800;
   font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;
   display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0;}
-.ai-enhance-btn:hover{background:linear-gradient(135deg,rgba(123,77,255,0.45),rgba(73,198,198,0.3));transform:translateY(-1px);}
+.ai-enhance-btn:hover{transform:translateY(-1px);}
 .ai-enhance-btn span{font-size:16px;}
 .ai-loading{animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
 #skills-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;min-height:36px;}
 .skill-tag{display:flex;align-items:center;gap:6px;background:rgba(123,77,255,0.18);
   border:1px solid rgba(123,77,255,0.3);border-radius:50px;padding:5px 12px;
   font-size:12px;font-weight:700;color:#c4b5fd;animation:tagPop 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;}
 @keyframes tagPop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
-.skill-tag button{background:none;border:none;color:#a78bff;cursor:pointer;font-size:13px;padding:0;line-height:1;transition:color 0.2s;}
+.skill-tag button{background:none;border:none;color:#a78bff;cursor:pointer;font-size:13px;padding:0;line-height:1;}
 .skill-tag button:hover{color:#ef4444;}
 #skills-input-row{display:flex;gap:8px;}
 #skills-input-row .finput{flex:1;}
@@ -113,10 +104,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .skill-suggestion{padding:4px 11px;border-radius:50px;background:rgba(255,255,255,0.06);
   border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;}
 .skill-suggestion:hover{background:rgba(123,77,255,0.18);border-color:rgba(123,77,255,0.3);color:#c4b5fd;}
-
 .repeat-list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
-.repeat-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s;}
-.repeat-card:hover{border-color:rgba(123,77,255,0.25);}
+.repeat-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .repeat-card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;border-bottom:1px solid transparent;transition:border-color 0.2s;}
 .repeat-card.open .repeat-card-head{border-bottom-color:var(--border);}
 .rch-left{display:flex;align-items:center;gap:10px;}
@@ -130,7 +119,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .rch-chevron{font-size:12px;color:var(--muted);transition:transform 0.25s;}
 .repeat-card.open .rch-chevron{transform:rotate(90deg);}
 .rch-del{padding:4px 8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);
-  color:#f87171;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+  color:#f87171;font-size:11px;font-weight:700;cursor:pointer;}
 .rch-del:hover{background:rgba(239,68,68,0.2);}
 .repeat-card-body{display:none;padding:14px;}
 .repeat-card.open .repeat-card-body{display:block;}
@@ -140,265 +129,523 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   display:flex;align-items:center;justify-content:center;gap:7px;}
 .add-more-btn:hover{background:rgba(123,77,255,0.1);border-color:rgba(123,77,255,0.5);}
 
-/* ── TEMPLATE GRID (2x5) ── */
-#template-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;}
-.tmpl-card{border-radius:10px;overflow:hidden;border:2px solid var(--border);cursor:pointer;transition:all 0.25s;position:relative;}
-.tmpl-card.selected{border-color:#7b4dff;box-shadow:0 0 0 3px rgba(123,77,255,0.2);}
-.tmpl-thumb{height:60px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.tmpl-name{padding:4px;text-align:center;font-size:9px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,0.04);}
+/* ═══ STEP 6 STYLE PANEL ═══ */
+.style-label{font-size:11px;font-weight:800;color:rgba(255,255,255,0.65);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.style-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.style-block{margin-bottom:20px;}
+
+/* Template grid 6 per row x 5 rows = 30 */
+#template-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+.tmpl-card{border-radius:8px;overflow:hidden;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;position:relative;}
+.tmpl-card:hover{border-color:rgba(123,77,255,0.5);transform:translateY(-2px);}
+.tmpl-card.selected{border-color:#7b4dff;box-shadow:0 0 0 2px rgba(123,77,255,0.3);}
+.tmpl-thumb{height:56px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.tmpl-name{padding:3px 2px;text-align:center;font-size:8px;font-weight:800;letter-spacing:0.3px;
+  text-transform:uppercase;color:var(--muted);background:rgba(0,0,0,0.4);line-height:1.2;}
 .tmpl-card.selected .tmpl-name{color:#c4b5fd;}
-.tmpl-check{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#7b4dff;
-  border:2px solid var(--bg);display:none;align-items:center;justify-content:center;font-size:8px;color:white;font-weight:900;}
+.tmpl-check{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;
+  background:#7b4dff;display:none;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:900;}
 .tmpl-card.selected .tmpl-check{display:flex;}
-.t1 .tmpl-thumb{background:linear-gradient(135deg,#1e1b4b,#312e81);}
-.t2 .tmpl-thumb{background:linear-gradient(135deg,#0f2027,#203a43);}
-.t3 .tmpl-thumb{background:linear-gradient(135deg,#1a0533,#2d1b69);}
-.t4 .tmpl-thumb{background:linear-gradient(135deg,#000,#1a1a1a);}
-.t5 .tmpl-thumb{background:linear-gradient(135deg,#fdf6e3,#e8dcc8);}
-.t6 .tmpl-thumb{background:linear-gradient(135deg,#0a192f,#172a45);}
-.t7 .tmpl-thumb{background:linear-gradient(135deg,#1a1a2e,#e94560);}
-.t8 .tmpl-thumb{background:linear-gradient(135deg,#f8f9fa,#dee2e6);}
-.t9 .tmpl-thumb{background:linear-gradient(135deg,#2d1b00,#8b5e3c);}
-.t10 .tmpl-thumb{background:linear-gradient(135deg,#0d0d0d,#00ff88);}
+.tmpl-badge{position:absolute;top:3px;left:3px;padding:1px 5px;border-radius:4px;font-size:7px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;}
+.badge-ats{background:#22c55e;color:white;}
+.badge-photo{background:#f59e0b;color:white;}
 
-#color-picker{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
-  border:2px solid transparent;position:relative;}
+/* Template thumb color schemes */
+.tt1{background:linear-gradient(135deg,#1e1b4b,#312e81);}
+.tt2{background:#fff;border:1px solid #e2e8f0;}
+.tt3{background:linear-gradient(135deg,#1a0533,#2d1b69);}
+.tt4{background:#0d0d0d;}
+.tt5{background:#fdf6e3;}
+.tt6{background:linear-gradient(135deg,#0a192f,#172a45);}
+.tt7{background:linear-gradient(135deg,#0f0f17,#1a1a2e);}
+.tt8{background:linear-gradient(90deg,#2563eb 38%,#fff 38%);}
+.tt9{background:linear-gradient(135deg,#fdf8f2,#e8dcc8);}
+.tt10{background:#0a0a0a;}
+.tt11{background:#ffffff;border:1px solid #e2e8f0;}
+.tt12{background:#ffffff;border:1px solid #e2e8f0;}
+.tt13{background:#ffffff;border:1px solid #e2e8f0;}
+.tt14{background:linear-gradient(135deg,#1e1b4b,#312e81);}
+.tt15{background:linear-gradient(90deg,#0f172a 38%,#f8fafc 38%);}
+.tt16{background:linear-gradient(135deg,#0c4a6e,#0891b2);}
+.tt17{background:linear-gradient(135deg,#3b0764,#7c3aed);}
+.tt18{background:linear-gradient(135deg,#0f172a,#1e293b);}
+.tt19{background:linear-gradient(135deg,#0f172a,#7b4dff);}
+.tt20{background:linear-gradient(135deg,#1a1a2e,#e94560);}
+.tt21{background:linear-gradient(135deg,#0d2137,#00b4d8);}
+.tt22{background:linear-gradient(135deg,#2d1b00,#8b5e3c);}
+.tt23{background:linear-gradient(135deg,#1a1a1a,#d4af37);}
+.tt24{background:linear-gradient(90deg,#7b4dff 4px,#fff 4px);}
+.tt25{background:linear-gradient(135deg,#0a2e0a,#16a34a);}
+.tt26{background:linear-gradient(135deg,#2c1810,#d4a96a);}
+.tt27{background:#f8f9fa;border:1px solid #dee2e6;}
+.tt28{background:linear-gradient(135deg,#1e3a5f,#4a90d9);}
+.tt29{background:linear-gradient(135deg,#1a0a00,#c2410c);}
+.tt30{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);}
+
+/* Small visual preview bars inside thumbs */
+.thumb-preview{position:absolute;inset:0;padding:5px 6px;display:flex;flex-direction:column;gap:2px;}
+.tp-n{height:6px;border-radius:1px;width:60%;}
+.tp-r{height:3px;border-radius:1px;width:40%;opacity:0.7;}
+.tp-l{height:1px;opacity:0.25;margin:1px 0;}
+.tp-b{height:2px;border-radius:1px;opacity:0.45;}
+.tp-b.s{width:55%;}
+.tp-b.xs{width:30%;}
+.tp-photo{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.3);}
+.tp-two{display:grid;grid-template-columns:35% 65%;height:100%;}
+.tp-left{padding:4px 3px;display:flex;flex-direction:column;gap:2px;}
+.tp-right{padding:4px 4px;display:flex;flex-direction:column;gap:2px;}
+
+/* Colors */
+#color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.color-dot{width:24px;height:24px;border-radius:50%;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;border:2px solid transparent;position:relative;flex-shrink:0;}
 .color-dot:hover{transform:scale(1.15);}
-.color-dot.selected{border-color:white;box-shadow:0 0 0 3px rgba(255,255,255,0.2);}
-.color-dot.selected::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;}
+.color-dot.selected{border-color:white;box-shadow:0 0 0 2px rgba(255,255,255,0.25);}
+.color-dot.selected::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:white;}
 
-/* ── ALIGNMENT CONTROLS ── */
-.align-section{margin-top:20px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;}
-.align-section-title{font-size:11px;font-weight:800;color:#c4b5fd;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+/* Photo upload */
+#photo-upload-section{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);
+  border-radius:12px;padding:14px;margin-bottom:16px;display:none;}
+#photo-upload-section.show{display:block;}
+.photo-upload-label{font-size:11px;font-weight:800;color:#fbbf24;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.photo-upload-area{display:flex;align-items:center;gap:14px;}
+#photo-preview-wrap{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.08);
+  border:2px dashed rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;
+  font-size:24px;overflow:hidden;flex-shrink:0;cursor:pointer;}
+#photo-preview-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+#photo-upload-info h4{font-size:12px;font-weight:700;margin-bottom:3px;}
+#photo-upload-info p{font-size:11px;color:var(--muted);line-height:1.4;}
+#photo-file-input{display:none;}
+#photo-upload-btn{margin-top:8px;padding:6px 14px;border-radius:8px;background:rgba(245,158,11,0.2);
+  border:1px solid rgba(245,158,11,0.35);color:#fbbf24;font-size:11px;font-weight:800;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+#photo-upload-btn:hover{background:rgba(245,158,11,0.3);}
+#photo-remove-btn{margin-top:4px;padding:4px 10px;border-radius:6px;background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.2);color:#f87171;font-size:10px;font-weight:700;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;display:none;}
+
+/* Alignment controls */
+.align-block{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;}
+.align-block-title{font-size:10px;font-weight:800;color:#c4b5fd;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 .align-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.align-label{font-size:11px;color:var(--muted);font-weight:600;}
-.align-btns{display:flex;gap:4px;}
-.align-btn{padding:5px 10px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid var(--border);
-  color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Montserrat',sans-serif;}
-.align-btn:hover{background:rgba(255,255,255,0.1);color:var(--text);}
-.align-btn.active{background:rgba(123,77,255,0.3);border-color:rgba(123,77,255,0.5);color:#c4b5fd;}
-.range-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.range-row label{font-size:11px;color:var(--muted);font-weight:600;width:100px;flex-shrink:0;}
-.range-row input[type=range]{flex:1;accent-color:#7b4dff;cursor:pointer;}
-.range-row .range-val{font-size:11px;color:#c4b5fd;font-weight:700;width:40px;text-align:right;}
-.section-order{margin-top:8px;}
-.order-item{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:6px;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;cursor:grab;}
-.order-item:active{cursor:grabbing;background:rgba(123,77,255,0.1);}
-.order-handle{color:var(--muted);font-size:14px;}
-.order-label{font-size:12px;font-weight:600;color:var(--text);flex:1;}
-.order-toggle{width:30px;height:16px;border-radius:50px;background:rgba(255,255,255,0.1);
-  border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
-.order-toggle.on{background:var(--green);}
-.order-toggle::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
-  background:white;transition:transform 0.2s;}
-.order-toggle.on::after{transform:translateX(14px);}
+.align-row:last-child{margin-bottom:0;}
+.align-row-label{font-size:11px;color:var(--muted);font-weight:600;min-width:90px;}
+.btn-group{display:flex;gap:3px;}
+.ab{padding:5px 9px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Montserrat',sans-serif;}
+.ab:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.ab.on{background:rgba(123,77,255,0.25);border-color:rgba(123,77,255,0.5);color:#c4b5fd;}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.slider-row:last-child{margin-bottom:0;}
+.slider-row label{font-size:11px;color:var(--muted);font-weight:600;min-width:90px;flex-shrink:0;}
+.slider-row input[type=range]{flex:1;accent-color:#7b4dff;cursor:pointer;height:3px;}
+.slider-val{font-size:11px;color:#c4b5fd;font-weight:700;min-width:38px;text-align:right;}
 
-#form-nav{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:rgba(8,12,24,0.95);}
+/* Section order */
+.order-list{display:flex;flex-direction:column;gap:5px;}
+.order-item{display:flex;align-items:center;gap:8px;padding:7px 10px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;
+  cursor:grab;user-select:none;transition:background 0.2s;}
+.order-item:hover{background:rgba(255,255,255,0.07);}
+.order-item:active{cursor:grabbing;}
+.order-handle{color:var(--muted);font-size:13px;}
+.order-name{font-size:12px;font-weight:600;flex:1;}
+.order-arrows{display:flex;flex-direction:column;gap:1px;}
+.arr{background:none;border:none;color:var(--muted);cursor:pointer;font-size:9px;padding:2px 5px;border-radius:4px;line-height:1;font-family:sans-serif;}
+.arr:hover{color:#c4b5fd;background:rgba(123,77,255,0.15);}
+.tog-switch{position:relative;width:32px;height:18px;flex-shrink:0;}
+.tog-switch input{opacity:0;width:0;height:0;}
+.tog-track{position:absolute;inset:0;border-radius:18px;background:rgba(255,255,255,0.1);cursor:pointer;transition:background 0.2s;}
+.tog-switch input:checked+.tog-track{background:#7b4dff;}
+.tog-track::before{content:'';position:absolute;width:12px;height:12px;left:3px;top:3px;border-radius:50%;background:white;transition:transform 0.2s;}
+.tog-switch input:checked+.tog-track::before{transform:translateX(14px);}
+
+#form-nav{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:rgba(8,12,24,0.95);}
 #btn-prev{padding:11px 18px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid var(--border);
-  color:var(--text);font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;display:none;}
+  color:var(--text);font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;display:none;}
 #btn-prev:hover{background:rgba(255,255,255,0.1);}
 #btn-next{flex:1;padding:11px;border-radius:9px;background:var(--grad);border:none;color:white;
-  font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;
+  font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;
   box-shadow:0 6px 18px rgba(123,77,255,0.35);display:flex;align-items:center;justify-content:center;gap:8px;}
-#btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(123,77,255,0.45);}
+#btn-next:hover{transform:translateY(-2px);}
 
-/* ── PREVIEW PANEL ── */
-#preview-panel{background:#e8ecf0;display:flex;flex-direction:column;overflow-y:auto;max-height:calc(100vh - var(--header-h));position:sticky;top:var(--header-h);}
-#preview-toolbar{background:white;border-bottom:1px solid #e2e8f0;padding:10px 20px;
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-#preview-toolbar span{font-size:12px;font-weight:700;color:#64748b;font-family:'Montserrat',sans-serif;}
-#preview-toolbar-right{display:flex;gap:8px;}
-.preview-ctrl-btn{padding:6px 12px;border-radius:7px;background:#f1f5f9;border:1px solid #e2e8f0;
-  font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:#475569;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;}
-.preview-ctrl-btn:hover{background:#e2e8f0;}
-.preview-ctrl-btn.active{background:#7b4dff;border-color:#7b4dff;color:white;}
-#preview-scroll{flex:1;overflow-y:auto;padding:24px;display:flex;justify-content:center;}
-#resume-paper{width:100%;max-width:700px;background:white;box-shadow:0 4px 40px rgba(0,0,0,0.18);border-radius:4px;
-  font-size:12px;color:#1e293b;min-height:900px;overflow:hidden;transition:all 0.3s ease;}
+/* ═══ PREVIEW PANEL ═══ */
+#preview-panel{background:#dde3ea;display:flex;flex-direction:column;overflow-y:auto;max-height:calc(100vh - var(--header-h));position:sticky;top:var(--header-h);}
+#preview-toolbar{background:white;border-bottom:1px solid #e2e8f0;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#preview-toolbar>span{font-size:12px;font-weight:700;color:#64748b;font-family:'Montserrat',sans-serif;}
+.pctrl-btn{padding:6px 12px;border-radius:7px;background:#f1f5f9;border:1px solid #e2e8f0;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;color:#475569;cursor:pointer;transition:all 0.2s;}
+.pctrl-btn:hover{background:#e2e8f0;}
+.pctrl-btn.active{background:#7b4dff;border-color:#7b4dff;color:white;}
+#preview-scroll{flex:1;overflow-y:auto;padding:24px;display:flex;justify-content:center;align-items:flex-start;}
 
-/* ════════════════════════════════════════
-   10 RESUME TEMPLATES
-════════════════════════════════════════ */
+/* ═══ RESUME PAPER ═══ */
+#resume-paper{width:100%;max-width:700px;background:white;box-shadow:0 4px 40px rgba(0,0,0,0.2);
+  border-radius:4px;min-height:900px;overflow:hidden;transition:all 0.3s ease;
+  font-family:'DM Sans',sans-serif;font-size:12px;color:#1e293b;}
 
-/* T1: Classic Dark Header */
-.tmpl-1 #rp-header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:28px 32px;color:white;}
-.tmpl-1 #rp-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px;}
-.tmpl-1 #rp-role{font-size:13px;font-weight:600;opacity:0.8;margin-bottom:12px;}
-.tmpl-1 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;opacity:0.75;}
-.tmpl-1 #rp-body{padding:24px 32px;}
-
-/* T2: Minimal Top Border */
-.tmpl-2 #rp-header{padding:28px 32px 20px;border-bottom:3px solid #0f2027;}
-.tmpl-2 #rp-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#0f172a;letter-spacing:-0.5px;margin-bottom:4px;}
-.tmpl-2 #rp-role{font-size:13px;color:#64748b;font-weight:600;margin-bottom:10px;}
-.tmpl-2 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:#64748b;}
-.tmpl-2 #rp-body{padding:20px 32px;}
-
-/* T3: Bold Purple */
-.tmpl-3 #rp-header{background:linear-gradient(135deg,#1a0533,#2d1b69);padding:28px 32px;color:white;}
-.tmpl-3 #rp-name{font-family:'Lora',serif;font-size:26px;font-weight:700;margin-bottom:4px;letter-spacing:1px;}
-.tmpl-3 #rp-role{font-size:12px;font-weight:600;opacity:0.75;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
-.tmpl-3 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;opacity:0.7;}
-.tmpl-3 #rp-body{padding:24px 32px;}
-
-/* T4: Brutalist Black — full black with white text header, bold serif name */
-.tmpl-4{font-family:'DM Sans',sans-serif;}
-.tmpl-4 #rp-header{background:#0d0d0d;padding:32px 32px;color:white;border-bottom:4px solid #fff;}
-.tmpl-4 #rp-name{font-family:'Bebas Neue',sans-serif;font-size:40px;font-weight:400;letter-spacing:3px;margin-bottom:2px;line-height:1;}
-.tmpl-4 #rp-role{font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;opacity:0.6;margin-bottom:14px;}
-.tmpl-4 #rp-contact-row{display:flex;flex-wrap:wrap;gap:16px;font-size:10px;opacity:0.55;letter-spacing:1px;}
-.tmpl-4 #rp-body{padding:24px 32px;}
-.tmpl-4 .rp-section-title{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:15px;font-weight:400;}
-
-/* T5: Vintage Parchment — warm cream tones */
-.tmpl-5{background:#fdf6e3 !important;font-family:'Crimson Pro',serif;}
-.tmpl-5 #rp-header{background:#e8dcc8;padding:28px 32px;border-bottom:2px solid #c9a96e;}
-.tmpl-5 #rp-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#3d2b1f;letter-spacing:-0.5px;margin-bottom:4px;}
-.tmpl-5 #rp-role{font-size:13px;color:#7a5c44;font-weight:600;font-style:italic;margin-bottom:10px;}
-.tmpl-5 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:#7a5c44;}
-.tmpl-5 #rp-body{padding:24px 32px;background:#fdf6e3;}
-.tmpl-5 .rp-section-title{color:#7a5c44 !important;border-bottom-color:#c9a96e !important;}
-.tmpl-5 .rp-item-title{color:#3d2b1f;}
-.tmpl-5 .rp-skill-pill{background:#e8dcc8 !important;border-color:#c9a96e !important;color:#7a5c44 !important;}
-
-/* T6: Tech/Navy — sidebar layout */
-.tmpl-6{display:grid !important;grid-template-columns:220px 1fr;min-height:900px;}
-.tmpl-6 #rp-header{background:#0a192f;padding:28px 20px;color:white;display:flex;flex-direction:column;}
-.tmpl-6 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;line-height:1.2;margin-bottom:6px;}
-.tmpl-6 #rp-role{font-size:11px;font-weight:500;opacity:0.65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
-.tmpl-6 #rp-contact-row{display:flex;flex-direction:column;gap:8px;font-size:10px;opacity:0.7;}
-.tmpl-6 #rp-contact-row span{display:flex;align-items:center;gap:5px;}
-.tmpl-6 #rp-body{padding:24px 24px;background:#fff;}
-.tmpl-6 .rp-section-title{color:#0a192f !important;border-bottom-color:#0a192f !important;}
-
-/* T7: Neon Noir — dark with hot pink accent */
-.tmpl-7{background:#0f0f17 !important;color:#e8e8f0 !important;}
-.tmpl-7 #rp-header{background:#0f0f17;padding:28px 32px;border-left:4px solid #e94560;}
-.tmpl-7 #rp-name{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#e8e8f0;margin-bottom:4px;letter-spacing:-0.5px;}
-.tmpl-7 #rp-role{font-size:12px;font-weight:500;color:#e94560;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
-.tmpl-7 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:rgba(232,232,240,0.55);}
-.tmpl-7 #rp-body{padding:24px 32px;background:#0f0f17;}
-.tmpl-7 .rp-section-title{color:#e94560 !important;border-bottom-color:#e94560 !important;font-family:'Syne',sans-serif;}
-.tmpl-7 .rp-item-title{color:#e8e8f0;}
-.tmpl-7 .rp-item-sub,.tmpl-7 .rp-item-date,.tmpl-7 .rp-item-desc,.tmpl-7 .rp-summary{color:rgba(232,232,240,0.65);}
-.tmpl-7 .rp-skill-pill{background:rgba(233,69,96,0.12) !important;border-color:rgba(233,69,96,0.3) !important;color:#e94560 !important;}
-
-/* T8: Clean Corporate — full left sidebar with colored band */
-.tmpl-8{display:grid !important;grid-template-columns:200px 1fr;min-height:900px;}
-.tmpl-8 #rp-header{background:#2563eb;padding:24px 18px;color:white;display:flex;flex-direction:column;align-items:flex-start;}
-.tmpl-8 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:6px;line-height:1.2;}
-.tmpl-8 #rp-role{font-size:10px;font-weight:600;opacity:0.8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
-.tmpl-8 #rp-contact-row{display:flex;flex-direction:column;gap:7px;font-size:10px;opacity:0.75;}
-.tmpl-8 #rp-contact-row span{display:flex;align-items:center;gap:4px;}
-.tmpl-8 #rp-body{padding:24px 24px;background:#fff;}
-.tmpl-8 .rp-section-title{color:#2563eb !important;border-bottom-color:#2563eb !important;}
-
-/* T9: Warm Executive — right-side accent bar */
-.tmpl-9{display:grid !important;grid-template-columns:1fr 180px;min-height:900px;}
-.tmpl-9 #rp-header{background:#fdf8f2;padding:32px 28px;border-bottom:2px solid #d4a96a;grid-column:1/-1;}
-.tmpl-9 #rp-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#2c1810;margin-bottom:4px;}
-.tmpl-9 #rp-role{font-size:13px;color:#8b5e3c;font-style:italic;margin-bottom:10px;}
-.tmpl-9 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:#8b5e3c;}
-.tmpl-9 #rp-body{padding:24px 28px;background:#fff;}
-.tmpl-9 #rp-sidebar{background:#fdf8f2;padding:24px 18px;border-left:2px solid #d4a96a;}
-.tmpl-9 .rp-section-title{color:#8b5e3c !important;border-bottom-color:#d4a96a !important;}
-.tmpl-9 .rp-skill-pill{background:#fdf8f2 !important;border-color:#d4a96a !important;color:#8b5e3c !important;}
-
-/* T10: Cyberpunk — dark with green matrix accent */
-.tmpl-10{background:#0a0a0a !important;color:#00ff88 !important;font-family:'Space Grotesk',sans-serif;}
-.tmpl-10 #rp-header{background:#0a0a0a;padding:28px 32px;border-bottom:1px solid #00ff88;border-top:3px solid #00ff88;}
-.tmpl-10 #rp-name{font-family:'Bebas Neue',sans-serif;font-size:36px;font-weight:400;color:#00ff88;letter-spacing:4px;margin-bottom:4px;}
-.tmpl-10 #rp-role{font-size:11px;font-weight:600;color:rgba(0,255,136,0.6);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
-.tmpl-10 #rp-contact-row{display:flex;flex-wrap:wrap;gap:16px;font-size:10px;color:rgba(0,255,136,0.5);}
-.tmpl-10 #rp-body{padding:24px 32px;background:#0a0a0a;}
-.tmpl-10 .rp-section-title{color:#00ff88 !important;border-bottom-color:#00ff88 !important;font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:15px;font-weight:400;}
-.tmpl-10 .rp-item-title{color:#00ff88;}
-.tmpl-10 .rp-item-sub,.tmpl-10 .rp-item-date{color:rgba(0,255,136,0.55);}
-.tmpl-10 .rp-item-desc,.tmpl-10 .rp-summary{color:rgba(0,255,136,0.7);}
-.tmpl-10 .rp-skill-pill{background:rgba(0,255,136,0.08) !important;border-color:rgba(0,255,136,0.3) !important;color:#00ff88 !important;}
-
-/* ── RESUME BODY SHARED ── */
-#rp-body{font-family:'DM Sans',sans-serif;}
-.rp-section{margin-bottom:20px;}
+/* ═══════════════════════════════
+   SHARED RESUME BODY ELEMENTS
+═══════════════════════════════ */
+#rp-body{font-family:inherit;}
+.rp-section{margin-bottom:18px;}
 .rp-section:last-child{margin-bottom:0;}
-.rp-section-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;
-  padding-bottom:5px;display:flex;align-items:center;gap:8px;}
-.tmpl-1 .rp-section-title,.tmpl-3 .rp-section-title{color:#312e81;border-bottom:2px solid #312e81;}
-.tmpl-2 .rp-section-title{color:#0f2027;border-bottom:2px solid #0f2027;}
-.tmpl-4 .rp-section-title{color:#0d0d0d;border-bottom:2px solid #0d0d0d;}
-.tmpl-6 .rp-section-title,.tmpl-8 .rp-section-title{border-bottom:2px solid;}
-.tmpl-7 .rp-section-title{border-bottom:2px solid;}
-.tmpl-9 .rp-section-title{border-bottom:2px solid;}
-.tmpl-10 .rp-section-title{border-bottom:1px solid;}
+.rp-section-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  padding-bottom:5px;margin-bottom:8px;border-bottom:2px solid #1e293b;color:#1e293b;}
+.rp-item{margin-bottom:10px;}
+.rp-item:last-child{margin-bottom:0;}
+.rp-item-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;}
+.rp-item-title{font-size:13px;font-weight:700;color:#0f172a;}
+.rp-item-date{font-size:10px;color:#64748b;font-weight:600;white-space:nowrap;margin-left:8px;}
+.rp-item-sub{font-size:11px;color:#475569;font-weight:600;margin-bottom:3px;}
+.rp-item-desc{font-size:11px;color:#475569;line-height:1.65;white-space:pre-line;}
+.rp-skills-wrap{display:flex;flex-wrap:wrap;gap:5px;}
+.rp-skill-pill{padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;}
+.rp-summary{font-size:12px;color:#475569;line-height:1.75;}
+.rp-placeholder{color:#cbd5e1!important;font-style:italic;font-size:12px!important;}
 
-/* accent color overrides */
+/* Photo in resume */
+.rp-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.rp-photo-sq{width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.rp-photo-placeholder{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+
+/* ═══════════════════════════════════════════════════════
+   30 TEMPLATE STYLES
+═══════════════════════════════════════════════════════ */
+
+/* ── T1: Classic Dark ── */
+.tmpl-1 #rp-header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:26px 30px;color:white;}
+.tmpl-1 #rp-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:3px;}
+.tmpl-1 #rp-role{font-size:12px;font-weight:600;opacity:0.8;margin-bottom:10px;}
+.tmpl-1 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.75;}
+.tmpl-1 #rp-body{padding:22px 30px;}
+.tmpl-1 .rp-section-title{color:#312e81;border-bottom-color:#312e81;}
+
+/* ── T2: Minimal ── */
+.tmpl-2 #rp-header{padding:26px 30px 18px;border-bottom:3px solid #0f172a;}
+.tmpl-2 #rp-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#0f172a;margin-bottom:3px;}
+.tmpl-2 #rp-role{font-size:12px;color:#64748b;font-weight:600;margin-bottom:8px;}
+.tmpl-2 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#64748b;}
+.tmpl-2 #rp-body{padding:18px 30px;}
+.tmpl-2 .rp-section-title{color:#0f172a;border-bottom-color:#0f172a;}
+
+/* ── T3: Bold Purple ── */
+.tmpl-3 #rp-header{background:linear-gradient(135deg,#1a0533,#2d1b69);padding:26px 30px;color:white;}
+.tmpl-3 #rp-name{font-family:'Lora',serif;font-size:24px;font-weight:700;margin-bottom:3px;letter-spacing:1px;}
+.tmpl-3 #rp-role{font-size:11px;font-weight:600;opacity:0.75;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.tmpl-3 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-3 #rp-body{padding:22px 30px;}
+.tmpl-3 .rp-section-title{color:#5b21b6;border-bottom-color:#5b21b6;}
+
+/* ── T4: Brutalist Black ── */
+.tmpl-4{font-family:'DM Sans',sans-serif;}
+.tmpl-4 #rp-header{background:#0d0d0d;padding:28px 30px;color:white;border-bottom:4px solid #fff;}
+.tmpl-4 #rp-name{font-family:'Bebas Neue',sans-serif;font-size:38px;font-weight:400;letter-spacing:3px;margin-bottom:2px;line-height:1;}
+.tmpl-4 #rp-role{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;opacity:0.55;margin-bottom:12px;}
+.tmpl-4 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:10px;opacity:0.5;letter-spacing:1px;}
+.tmpl-4 #rp-body{padding:22px 30px;}
+.tmpl-4 .rp-section-title{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:15px;font-weight:400;color:#0d0d0d;border-bottom-color:#0d0d0d;}
+
+/* ── T5: Vintage Parchment ── */
+.tmpl-5{background:#fdf6e3!important;font-family:'Crimson Pro',serif;}
+.tmpl-5 #rp-header{background:#e8dcc8;padding:26px 30px;border-bottom:2px solid #c9a96e;}
+.tmpl-5 #rp-name{font-family:'Playfair Display',serif;font-size:27px;font-weight:900;color:#3d2b1f;margin-bottom:3px;}
+.tmpl-5 #rp-role{font-size:13px;color:#7a5c44;font-weight:600;font-style:italic;margin-bottom:8px;}
+.tmpl-5 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#7a5c44;}
+.tmpl-5 #rp-body{padding:22px 30px;background:#fdf6e3;}
+.tmpl-5 .rp-section-title{color:#7a5c44!important;border-bottom-color:#c9a96e!important;}
+.tmpl-5 .rp-skill-pill{background:#e8dcc8!important;border-color:#c9a96e!important;color:#7a5c44!important;}
+
+/* ── T6: Tech Navy Sidebar ── */
+.tmpl-6{display:flex!important;min-height:900px;}
+.tmpl-6 #rp-header{background:#0a192f;width:200px;min-width:200px;padding:24px 18px;color:white;display:flex;flex-direction:column;flex-shrink:0;}
+.tmpl-6 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.tmpl-6 #rp-role{font-size:10px;font-weight:500;opacity:0.65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+.tmpl-6 #rp-contact-row{display:flex;flex-direction:column;gap:7px;font-size:10px;opacity:0.65;}
+.tmpl-6 #rp-body{padding:22px 22px;background:#fff;flex:1;}
+.tmpl-6 .rp-section-title{color:#0a192f;border-bottom-color:#0a192f;}
+
+/* ── T7: Neon Noir ── */
+.tmpl-7{background:#0f0f17!important;color:#e8e8f0!important;}
+.tmpl-7 #rp-header{background:#0f0f17;padding:26px 30px;border-left:4px solid #e94560;}
+.tmpl-7 #rp-name{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#e8e8f0;margin-bottom:3px;}
+.tmpl-7 #rp-role{font-size:11px;color:#e94560;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.tmpl-7 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:rgba(232,232,240,0.5);}
+.tmpl-7 #rp-body{padding:22px 30px;background:#0f0f17;}
+.tmpl-7 .rp-section-title{color:#e94560!important;border-bottom-color:#e94560!important;font-family:'Syne',sans-serif;}
+.tmpl-7 .rp-item-title{color:#e8e8f0!important;}
+.tmpl-7 .rp-item-sub,.tmpl-7 .rp-item-date,.tmpl-7 .rp-item-desc,.tmpl-7 .rp-summary{color:rgba(232,232,240,0.6)!important;}
+.tmpl-7 .rp-skill-pill{background:rgba(233,69,96,0.1)!important;border-color:rgba(233,69,96,0.3)!important;color:#e94560!important;}
+
+/* ── T8: Corporate Blue Sidebar ── */
+.tmpl-8{display:flex!important;min-height:900px;}
+.tmpl-8 #rp-header{background:#2563eb;width:190px;min-width:190px;padding:22px 16px;color:white;display:flex;flex-direction:column;flex-shrink:0;}
+.tmpl-8 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;margin-bottom:5px;line-height:1.2;}
+.tmpl-8 #rp-role{font-size:9px;font-weight:600;opacity:0.8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.tmpl-8 #rp-contact-row{display:flex;flex-direction:column;gap:6px;font-size:10px;opacity:0.72;}
+.tmpl-8 #rp-body{padding:22px 22px;background:#fff;flex:1;}
+.tmpl-8 .rp-section-title{color:#2563eb!important;border-bottom-color:#2563eb!important;}
+
+/* ── T9: Warm Executive ── */
+.tmpl-9{display:flex!important;min-height:900px;}
+.tmpl-9 #rp-header{background:#fdf8f2;width:100%;padding:24px 26px;border-bottom:2px solid #d4a96a;order:-1;display:flex;flex-direction:column;}
+.tmpl-9 #rp-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#2c1810;margin-bottom:3px;}
+.tmpl-9 #rp-role{font-size:12px;color:#8b5e3c;font-style:italic;margin-bottom:8px;}
+.tmpl-9 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#8b5e3c;}
+.tmpl-9 #rp-body{padding:22px 26px;background:#fff;flex:1;}
+.tmpl-9 #rp-sidebar-right{width:160px;min-width:160px;background:#fdf8f2;border-left:2px solid #d4a96a;padding:20px 14px;}
+.tmpl-9 .rp-section-title{color:#8b5e3c!important;border-bottom-color:#d4a96a!important;}
+.tmpl-9{flex-wrap:wrap;}
+
+/* ── T10: Cyberpunk ── */
+.tmpl-10{background:#0a0a0a!important;color:#00ff88!important;font-family:'Space Grotesk',sans-serif;}
+.tmpl-10 #rp-header{background:#0a0a0a;padding:26px 30px;border-bottom:1px solid #00ff88;border-top:3px solid #00ff88;}
+.tmpl-10 #rp-name{font-family:'Bebas Neue',sans-serif;font-size:34px;font-weight:400;color:#00ff88;letter-spacing:4px;margin-bottom:3px;}
+.tmpl-10 #rp-role{font-size:10px;font-weight:600;color:rgba(0,255,136,0.55);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.tmpl-10 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:10px;color:rgba(0,255,136,0.45);}
+.tmpl-10 #rp-body{padding:22px 30px;background:#0a0a0a;}
+.tmpl-10 .rp-section-title{color:#00ff88!important;border-bottom-color:rgba(0,255,136,0.4)!important;font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:15px;font-weight:400;}
+.tmpl-10 .rp-item-title{color:#00ff88!important;}
+.tmpl-10 .rp-item-sub,.tmpl-10 .rp-item-date{color:rgba(0,255,136,0.5)!important;}
+.tmpl-10 .rp-item-desc,.tmpl-10 .rp-summary{color:rgba(0,255,136,0.65)!important;}
+.tmpl-10 .rp-skill-pill{background:rgba(0,255,136,0.07)!important;border-color:rgba(0,255,136,0.25)!important;color:#00ff88!important;}
+
+/* ── T11: ATS Clean ── */
+.tmpl-11{font-family:'DM Sans',sans-serif!important;}
+.tmpl-11 #rp-header{background:#fff;padding:22px 28px;border-bottom:2px solid #1e293b;}
+.tmpl-11 #rp-name{font-size:22px;font-weight:700;color:#0f172a;margin-bottom:2px;font-family:'DM Sans',sans-serif;}
+.tmpl-11 #rp-role{font-size:13px;color:#475569;font-weight:500;margin-bottom:8px;}
+.tmpl-11 #rp-contact-row{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:#475569;}
+.tmpl-11 #rp-body{padding:18px 28px;}
+.tmpl-11 .rp-section-title{font-size:12px;font-weight:700;letter-spacing:0;text-transform:uppercase;color:#0f172a;border-bottom:1.5px solid #1e293b;padding-bottom:4px;margin-bottom:8px;}
+.tmpl-11 .rp-item-title{font-size:12px;}
+.tmpl-11 .rp-skill-pill{background:#f1f5f9;border-color:#cbd5e1;color:#334155;}
+
+/* ── T12: ATS Professional ── */
+.tmpl-12{font-family:'DM Sans',sans-serif!important;}
+.tmpl-12 #rp-header{background:#fff;padding:24px 28px;}
+.tmpl-12 #rp-name{font-size:24px;font-weight:700;color:#0f172a;margin-bottom:4px;}
+.tmpl-12 #rp-role{font-size:12px;color:#334155;font-weight:600;margin-bottom:6px;}
+.tmpl-12 #rp-contact-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:#64748b;}
+.tmpl-12 #rp-contact-row span::after{content:' |';margin-left:8px;color:#cbd5e1;}
+.tmpl-12 #rp-contact-row span:last-child::after{content:'';}
+.tmpl-12 #rp-body{padding:14px 28px;}
+.tmpl-12 .rp-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;
+  color:#1e293b;border-bottom:1px solid #94a3b8;border-top:1px solid #94a3b8;
+  padding:4px 0;margin-bottom:8px;}
+.tmpl-12 .rp-skill-pill{background:none;border:none;padding:0;font-size:11px;color:#334155;}
+.tmpl-12 .rp-skill-pill::after{content:' · ';}
+.tmpl-12 .rp-skill-pill:last-child::after{content:'';}
+.tmpl-12 .rp-skills-wrap{gap:0;}
+
+/* ── T13: ATS Minimal ── */
+.tmpl-13{font-family:'DM Sans',sans-serif!important;}
+.tmpl-13 #rp-header{background:#fff;padding:20px 26px;border-bottom:1px solid #334155;}
+.tmpl-13 #rp-name{font-size:20px;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:1px;}
+.tmpl-13 #rp-role{font-size:12px;color:#64748b;margin-bottom:6px;}
+.tmpl-13 #rp-contact-row{font-size:11px;color:#64748b;display:flex;flex-wrap:wrap;gap:10px;}
+.tmpl-13 #rp-body{padding:16px 26px;}
+.tmpl-13 .rp-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+  color:#334155;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:7px;}
+.tmpl-13 .rp-item{border-left:2px solid #e2e8f0;padding-left:10px;margin-bottom:8px;}
+.tmpl-13 .rp-skill-pill{background:#f8fafc;color:#475569;border-color:#e2e8f0;font-size:10px;}
+
+/* ── T14: Photo Executive (Photo) ── */
+.tmpl-14 #rp-header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:24px 28px;color:white;display:flex;align-items:center;gap:20px;}
+.tmpl-14 #rp-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:3px;}
+.tmpl-14 #rp-role{font-size:11px;font-weight:600;opacity:0.8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.tmpl-14 #rp-contact-row{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;opacity:0.7;}
+.tmpl-14 #rp-name-block{flex:1;}
+.tmpl-14 #rp-body{padding:22px 28px;}
+.tmpl-14 .rp-section-title{color:#312e81;border-bottom-color:#312e81;}
+
+/* ── T15: Photo Sidebar (Photo) ── */
+.tmpl-15{display:flex!important;min-height:900px;}
+.tmpl-15 #rp-header{background:#0f172a;width:200px;min-width:200px;padding:24px 16px;color:white;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.tmpl-15 #rp-photo-wrap{margin-bottom:14px;}
+.tmpl-15 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;text-align:center;margin-bottom:5px;line-height:1.2;}
+.tmpl-15 #rp-role{font-size:10px;font-weight:500;opacity:0.6;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.tmpl-15 #rp-contact-row{display:flex;flex-direction:column;gap:7px;font-size:10px;opacity:0.65;align-self:stretch;}
+.tmpl-15 #rp-body{padding:22px 20px;background:#fff;flex:1;}
+.tmpl-15 .rp-section-title{color:#0f172a;border-bottom-color:#0f172a;}
+
+/* ── T16: Photo Modern (Photo) ── */
+.tmpl-16 #rp-header{background:linear-gradient(135deg,#0c4a6e,#0891b2);padding:22px 28px;color:white;display:flex;align-items:center;gap:18px;}
+.tmpl-16 #rp-name{font-family:'Syne',sans-serif;font-size:23px;font-weight:800;margin-bottom:3px;}
+.tmpl-16 #rp-role{font-size:11px;font-weight:600;opacity:0.8;margin-bottom:8px;}
+.tmpl-16 #rp-contact-row{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;opacity:0.7;}
+.tmpl-16 #rp-name-block{flex:1;}
+.tmpl-16 #rp-body{padding:22px 28px;}
+.tmpl-16 .rp-section-title{color:#0891b2;border-bottom-color:#0891b2;}
+
+/* ── T17: Photo Creative (Photo) ── */
+.tmpl-17 #rp-header{background:linear-gradient(135deg,#3b0764,#7c3aed);padding:22px 28px;color:white;display:flex;align-items:flex-start;gap:18px;}
+.tmpl-17 #rp-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:4px;letter-spacing:0.5px;}
+.tmpl-17 #rp-role{font-size:11px;font-weight:600;opacity:0.75;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.tmpl-17 #rp-contact-row{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;opacity:0.65;}
+.tmpl-17 #rp-name-block{flex:1;}
+.tmpl-17 #rp-body{padding:22px 28px;}
+.tmpl-17 .rp-section-title{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tmpl-17 .rp-photo,.tmpl-17 .rp-photo-placeholder{border-radius:8px!important;width:85px!important;height:85px!important;}
+
+/* ── T18: Photo Corporate ID (Photo) ── */
+.tmpl-18{display:flex!important;min-height:900px;}
+.tmpl-18 #rp-header{background:#1e293b;width:195px;min-width:195px;padding:22px 16px;color:white;display:flex;flex-direction:column;align-items:center;flex-shrink:0;border-right:3px solid #7b4dff;}
+.tmpl-18 #rp-photo-wrap{margin-bottom:12px;}
+.tmpl-18 .rp-photo,.tmpl-18 .rp-photo-placeholder{border-radius:8px!important;border:2px solid rgba(123,77,255,0.5)!important;}
+.tmpl-18 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;text-align:center;margin-bottom:4px;line-height:1.2;}
+.tmpl-18 #rp-role{font-size:9px;font-weight:700;opacity:0.65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.tmpl-18 #rp-contact-row{display:flex;flex-direction:column;gap:6px;font-size:10px;opacity:0.6;align-self:stretch;}
+.tmpl-18 #rp-body{padding:20px 20px;background:#fff;flex:1;}
+.tmpl-18 .rp-section-title{color:#7b4dff;border-bottom-color:#7b4dff;}
+
+/* ── T19: Gradient Accent ── */
+.tmpl-19 #rp-header{background:linear-gradient(135deg,#0f172a,#7b4dff);padding:26px 30px;color:white;}
+.tmpl-19 #rp-name{font-family:'Raleway',sans-serif;font-size:26px;font-weight:800;margin-bottom:3px;letter-spacing:-0.5px;}
+.tmpl-19 #rp-role{font-size:12px;font-weight:600;opacity:0.8;letter-spacing:1px;margin-bottom:10px;}
+.tmpl-19 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-19 #rp-body{padding:22px 30px;}
+.tmpl-19 .rp-section-title{color:#7b4dff;border-bottom-color:#7b4dff;}
+
+/* ── T20: Neon Pink ── */
+.tmpl-20{background:#1a1a2e!important;}
+.tmpl-20 #rp-header{background:#1a1a2e;padding:26px 30px;border-left:5px solid #e94560;}
+.tmpl-20 #rp-name{font-family:'Syne',sans-serif;font-size:27px;font-weight:800;color:#fff;margin-bottom:3px;}
+.tmpl-20 #rp-role{font-size:11px;color:#e94560;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}
+.tmpl-20 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:rgba(255,255,255,0.45);}
+.tmpl-20 #rp-body{padding:22px 30px;background:#1a1a2e;}
+.tmpl-20 .rp-section-title{color:#e94560!important;border-bottom-color:#e94560!important;}
+.tmpl-20 .rp-item-title{color:#fff!important;}
+.tmpl-20 .rp-item-sub,.tmpl-20 .rp-item-date,.tmpl-20 .rp-item-desc,.tmpl-20 .rp-summary{color:rgba(255,255,255,0.55)!important;}
+.tmpl-20 .rp-skill-pill{background:rgba(233,69,96,0.1)!important;border-color:rgba(233,69,96,0.3)!important;color:#e94560!important;}
+
+/* ── T21: Ocean Depths ── */
+.tmpl-21 #rp-header{background:linear-gradient(135deg,#0d2137,#00b4d8);padding:26px 30px;color:white;}
+.tmpl-21 #rp-name{font-family:'Raleway',sans-serif;font-size:25px;font-weight:800;margin-bottom:3px;}
+.tmpl-21 #rp-role{font-size:11px;font-weight:600;opacity:0.8;margin-bottom:10px;}
+.tmpl-21 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-21 #rp-body{padding:22px 30px;}
+.tmpl-21 .rp-section-title{color:#0077b6;border-bottom-color:#0077b6;}
+.tmpl-21 .rp-skill-pill{background:rgba(0,180,216,0.08);border-color:rgba(0,180,216,0.25);color:#0077b6;}
+
+/* ── T22: Warm Coffee ── */
+.tmpl-22{background:#fdf8f2!important;}
+.tmpl-22 #rp-header{background:linear-gradient(135deg,#2d1b00,#8b5e3c);padding:26px 30px;color:white;}
+.tmpl-22 #rp-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;margin-bottom:3px;letter-spacing:0.5px;}
+.tmpl-22 #rp-role{font-size:12px;font-style:italic;opacity:0.8;margin-bottom:10px;}
+.tmpl-22 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-22 #rp-body{padding:22px 30px;background:#fdf8f2;}
+.tmpl-22 .rp-section-title{color:#8b5e3c;border-bottom-color:#d4a96a;}
+.tmpl-22 .rp-skill-pill{background:#f0e6d3;border-color:#d4a96a;color:#8b5e3c;}
+
+/* ── T23: Royal Gold ── */
+.tmpl-23{background:#1a1a1a!important;}
+.tmpl-23 #rp-header{background:#1a1a1a;padding:28px 30px;border-bottom:2px solid #d4af37;text-align:center;}
+.tmpl-23 #rp-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#d4af37;margin-bottom:3px;letter-spacing:2px;}
+.tmpl-23 #rp-role{font-size:11px;color:rgba(212,175,55,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.tmpl-23 #rp-contact-row{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;font-size:11px;color:rgba(212,175,55,0.5);}
+.tmpl-23 #rp-body{padding:22px 30px;background:#1a1a1a;}
+.tmpl-23 .rp-section-title{color:#d4af37!important;border-bottom-color:rgba(212,175,55,0.4)!important;text-align:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;letter-spacing:3px;}
+.tmpl-23 .rp-item-title{color:#d4af37!important;}
+.tmpl-23 .rp-item-sub,.tmpl-23 .rp-item-date,.tmpl-23 .rp-item-desc,.tmpl-23 .rp-summary{color:rgba(255,255,255,0.55)!important;}
+.tmpl-23 .rp-skill-pill{background:rgba(212,175,55,0.08)!important;border-color:rgba(212,175,55,0.25)!important;color:#d4af37!important;}
+
+/* ── T24: Purple Accent Bar ── */
+.tmpl-24 #rp-header{background:white;padding:22px 28px 18px 36px;border-left:6px solid #7b4dff;}
+.tmpl-24 #rp-name{font-family:'Raleway',sans-serif;font-size:26px;font-weight:800;color:#0f172a;margin-bottom:3px;}
+.tmpl-24 #rp-role{font-size:12px;color:#7b4dff;font-weight:700;margin-bottom:8px;}
+.tmpl-24 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#64748b;}
+.tmpl-24 #rp-body{padding:18px 28px 18px 36px;}
+.tmpl-24 .rp-section-title{color:#7b4dff;border-bottom-color:#7b4dff;}
+.tmpl-24 .rp-item{border-left:2px solid #e2e8f0;padding-left:10px;}
+
+/* ── T25: Forest Green ── */
+.tmpl-25 #rp-header{background:linear-gradient(135deg,#0a2e0a,#16a34a);padding:26px 30px;color:white;}
+.tmpl-25 #rp-name{font-family:'Raleway',sans-serif;font-size:25px;font-weight:800;margin-bottom:3px;}
+.tmpl-25 #rp-role{font-size:12px;font-weight:600;opacity:0.8;margin-bottom:10px;}
+.tmpl-25 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-25 #rp-body{padding:22px 30px;}
+.tmpl-25 .rp-section-title{color:#15803d;border-bottom-color:#15803d;}
+.tmpl-25 .rp-skill-pill{background:rgba(22,163,74,0.08);border-color:rgba(22,163,74,0.25);color:#15803d;}
+
+/* ── T26: Serif Classic ── */
+.tmpl-26{background:#fdf8f2!important;font-family:'Cormorant Garamond',serif;}
+.tmpl-26 #rp-header{background:#2c1810;padding:26px 30px;color:white;}
+.tmpl-26 #rp-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-bottom:3px;letter-spacing:1px;}
+.tmpl-26 #rp-role{font-size:13px;font-style:italic;opacity:0.75;margin-bottom:10px;}
+.tmpl-26 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.65;}
+.tmpl-26 #rp-body{padding:22px 30px;background:#fdf8f2;}
+.tmpl-26 .rp-section-title{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;letter-spacing:2px;color:#2c1810;border-bottom-color:#d4a96a;}
+.tmpl-26 .rp-skill-pill{background:#f0e6d3;border-color:#d4a96a;color:#2c1810;}
+
+/* ── T27: Swiss/Geneva ── */
+.tmpl-27{font-family:'DM Sans',sans-serif!important;}
+.tmpl-27 #rp-header{background:#f8f9fa;padding:24px 28px;border-top:5px solid #0f172a;}
+.tmpl-27 #rp-name{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:2px;letter-spacing:-1px;}
+.tmpl-27 #rp-role{font-size:12px;color:#64748b;font-weight:500;margin-bottom:8px;}
+.tmpl-27 #rp-contact-row{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:#94a3b8;}
+.tmpl-27 #rp-body{padding:18px 28px;}
+.tmpl-27 .rp-section-title{font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#0f172a;border-bottom:1px solid #0f172a;padding-bottom:3px;margin-bottom:8px;}
+
+/* ── T28: Coastal Blue ── */
+.tmpl-28 #rp-header{background:linear-gradient(135deg,#1e3a5f,#4a90d9);padding:26px 30px;color:white;}
+.tmpl-28 #rp-name{font-family:'Raleway',sans-serif;font-size:25px;font-weight:700;margin-bottom:3px;}
+.tmpl-28 #rp-role{font-size:12px;opacity:0.8;font-weight:600;margin-bottom:10px;}
+.tmpl-28 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-28 #rp-body{padding:22px 30px;}
+.tmpl-28 .rp-section-title{color:#1e3a5f;border-bottom-color:#4a90d9;}
+.tmpl-28 .rp-skill-pill{background:rgba(74,144,217,0.08);border-color:rgba(74,144,217,0.25);color:#1e3a5f;}
+
+/* ── T29: Ember Orange ── */
+.tmpl-29 #rp-header{background:linear-gradient(135deg,#1a0a00,#c2410c);padding:26px 30px;color:white;}
+.tmpl-29 #rp-name{font-family:'Raleway',sans-serif;font-size:26px;font-weight:800;margin-bottom:3px;}
+.tmpl-29 #rp-role{font-size:12px;font-weight:600;opacity:0.8;margin-bottom:10px;}
+.tmpl-29 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.7;}
+.tmpl-29 #rp-body{padding:22px 30px;}
+.tmpl-29 .rp-section-title{color:#c2410c;border-bottom-color:#c2410c;}
+.tmpl-29 .rp-skill-pill{background:rgba(194,65,12,0.08);border-color:rgba(194,65,12,0.25);color:#c2410c;}
+
+/* ── T30: Deep Teal ── */
+.tmpl-30 #rp-header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);padding:26px 30px;color:white;}
+.tmpl-30 #rp-name{font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:700;margin-bottom:3px;}
+.tmpl-30 #rp-role{font-size:12px;font-weight:600;opacity:0.75;margin-bottom:10px;}
+.tmpl-30 #rp-contact-row{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;opacity:0.65;}
+.tmpl-30 #rp-body{padding:22px 30px;}
+.tmpl-30 .rp-section-title{color:#2c5364;border-bottom-color:#2c5364;}
+.tmpl-30 .rp-skill-pill{background:rgba(44,83,100,0.08);border-color:rgba(44,83,100,0.25);color:#2c5364;}
+
+/* ═══ ACCENT COLOR OVERRIDES ═══ */
 #resume-paper.ac-purple .rp-section-title{color:#7b4dff!important;border-bottom-color:#7b4dff!important;}
 #resume-paper.ac-cyan   .rp-section-title{color:#0891b2!important;border-bottom-color:#0891b2!important;}
 #resume-paper.ac-green  .rp-section-title{color:#15803d!important;border-bottom-color:#15803d!important;}
 #resume-paper.ac-red    .rp-section-title{color:#be123c!important;border-bottom-color:#be123c!important;}
 #resume-paper.ac-gold   .rp-section-title{color:#b45309!important;border-bottom-color:#b45309!important;}
+#resume-paper.ac-navy   .rp-section-title{color:#1d4ed8!important;border-bottom-color:#1d4ed8!important;}
+#resume-paper.ac-rose   .rp-section-title{color:#e11d48!important;border-bottom-color:#e11d48!important;}
+/* dark template header overrides */
+#resume-paper.tmpl-1.ac-purple #rp-header,#resume-paper.tmpl-3.ac-purple #rp-header,
+#resume-paper.tmpl-19.ac-purple #rp-header{background:linear-gradient(135deg,#3b0764,#5b21b6)!important;}
+#resume-paper.tmpl-1.ac-cyan   #rp-header,#resume-paper.tmpl-3.ac-cyan   #rp-header{background:linear-gradient(135deg,#0c4a6e,#0891b2)!important;}
+#resume-paper.tmpl-1.ac-green  #rp-header,#resume-paper.tmpl-3.ac-green  #rp-header{background:linear-gradient(135deg,#14532d,#15803d)!important;}
+#resume-paper.tmpl-1.ac-red    #rp-header,#resume-paper.tmpl-3.ac-red    #rp-header{background:linear-gradient(135deg,#4c0519,#be123c)!important;}
+#resume-paper.tmpl-1.ac-gold   #rp-header,#resume-paper.tmpl-3.ac-gold   #rp-header{background:linear-gradient(135deg,#451a03,#b45309)!important;}
+#resume-paper.tmpl-8.ac-purple #rp-header{background:#7b4dff!important;}
+#resume-paper.tmpl-8.ac-cyan   #rp-header{background:#0891b2!important;}
+#resume-paper.tmpl-8.ac-green  #rp-header{background:#15803d!important;}
+#resume-paper.tmpl-8.ac-red    #rp-header{background:#be123c!important;}
+#resume-paper.tmpl-8.ac-gold   #rp-header{background:#b45309!important;}
 
-.tmpl-1.ac-purple #rp-header,.tmpl-3.ac-purple #rp-header{background:linear-gradient(135deg,#3b0764,#5b21b6)!important;}
-.tmpl-1.ac-cyan   #rp-header,.tmpl-3.ac-cyan   #rp-header{background:linear-gradient(135deg,#0c4a6e,#0891b2)!important;}
-.tmpl-1.ac-green  #rp-header,.tmpl-3.ac-green  #rp-header{background:linear-gradient(135deg,#14532d,#15803d)!important;}
-.tmpl-1.ac-red    #rp-header,.tmpl-3.ac-red    #rp-header{background:linear-gradient(135deg,#4c0519,#be123c)!important;}
-.tmpl-1.ac-gold   #rp-header,.tmpl-3.ac-gold   #rp-header{background:linear-gradient(135deg,#451a03,#b45309)!important;}
-.tmpl-4.ac-purple #rp-header{border-bottom-color:#7b4dff!important;}
-.tmpl-4.ac-cyan   #rp-header{border-bottom-color:#0891b2!important;}
-.tmpl-4.ac-green  #rp-header{border-bottom-color:#15803d!important;}
-.tmpl-4.ac-red    #rp-header{border-bottom-color:#be123c!important;}
-.tmpl-4.ac-gold   #rp-header{border-bottom-color:#b45309!important;}
-.tmpl-8.ac-purple #rp-header{background:#7b4dff!important;}
-.tmpl-8.ac-cyan   #rp-header{background:#0891b2!important;}
-.tmpl-8.ac-green  #rp-header{background:#15803d!important;}
-.tmpl-8.ac-red    #rp-header{background:#be123c!important;}
-.tmpl-8.ac-gold   #rp-header{background:#b45309!important;}
+/* JSON */
+#raw-view{display:none;background:#111827;color:#a5f3fc;padding:20px;border-radius:8px;font-size:11px;width:100%;max-width:700px;overflow:auto;font-family:monospace;line-height:1.6;}
 
-.rp-item{margin-bottom:12px;}
-.rp-item:last-child{margin-bottom:0;}
-.rp-item-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;}
-.rp-item-title{font-size:13px;font-weight:700;color:#0f172a;}
-.rp-item-date{font-size:11px;color:#64748b;font-weight:600;white-space:nowrap;margin-left:8px;}
-.rp-item-sub{font-size:12px;color:#475569;font-weight:600;margin-bottom:4px;}
-.rp-item-desc{font-size:12px;color:#475569;line-height:1.65;}
-.rp-skills-wrap{display:flex;flex-wrap:wrap;gap:6px;}
-.rp-skill-pill{padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;}
-.tmpl-1 .rp-skill-pill,.tmpl-3 .rp-skill-pill{background:rgba(49,46,129,0.08);border-color:rgba(49,46,129,0.15);color:#312e81;}
-#resume-paper.ac-purple .rp-skill-pill{background:rgba(123,77,255,0.08)!important;border-color:rgba(123,77,255,0.2)!important;color:#7b4dff!important;}
-#resume-paper.ac-cyan   .rp-skill-pill{background:rgba(8,145,178,0.08)!important;border-color:rgba(8,145,178,0.2)!important;color:#0891b2!important;}
-.rp-summary{font-size:12px;color:#475569;line-height:1.75;}
-.rp-placeholder{color:#cbd5e1;font-style:italic;font-size:12px;padding:4px 0;}
-
-/* sidebar section styles for t6, t8 */
-.tmpl-6 #rp-skills-sidebar,.tmpl-8 #rp-skills-sidebar{padding-top:0;}
-#rp-sidebar{display:none;}
-.tmpl-9 #rp-sidebar{display:block;}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:#1e293b;color:white;padding:11px 22px;border-radius:50px;
-  font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:9999;white-space:nowrap;
-  border:1px solid rgba(255,255,255,0.08);}
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:white;padding:11px 22px;border-radius:50px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:9999;white-space:nowrap;border:1px solid rgba(255,255,255,0.08);}
 #toast.show{transform:translateX(-50%) translateY(0);}
 
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  #builder-shell{grid-template-columns:1fr;}
-  #form-panel{max-height:none;position:static;}
-  #preview-panel{display:none;}
-  #preview-panel.show-mobile{display:flex;max-height:none;position:static;}
-  #tb-preview-toggle{display:flex!important;}
-  #tb-title{display:none;}
-}
+/* RESPONSIVE */
+@media(max-width:1000px){#builder-shell{grid-template-columns:1fr;}#form-panel{max-height:none;position:static;}#preview-panel{display:none;}#preview-panel.show-mobile{display:flex;max-height:none;position:static;}#tb-preview-toggle{display:flex!important;}#tb-title{display:none;}}
 #tb-preview-toggle{display:none;}
-@media(max-width:600px){
-  .frow{grid-template-columns:1fr;}
-  #template-grid{grid-template-columns:repeat(5,1fr);}
-  #topbar{padding:0 12px;gap:8px;}
-}
+@media(max-width:600px){.frow{grid-template-columns:1fr;}#topbar{padding:0 12px;gap:8px;}#template-grid{grid-template-columns:repeat(5,1fr);}}
 </style>
 </head>
 <body>
@@ -417,251 +664,410 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 
 <div id="builder-shell">
 
-  <!-- FORM PANEL -->
-  <div id="form-panel">
-    <div id="step-tabs">
-      <div class="step-tab active" id="tab-1" onclick="goToStep(1)"><div class="tab-num">1</div>Info</div>
-      <div class="step-tab" id="tab-2" onclick="goToStep(2)"><div class="tab-num">2</div>Skills</div>
-      <div class="step-tab" id="tab-3" onclick="goToStep(3)"><div class="tab-num">3</div>Exp</div>
-      <div class="step-tab" id="tab-4" onclick="goToStep(4)"><div class="tab-num">4</div>Projects</div>
-      <div class="step-tab" id="tab-5" onclick="goToStep(5)"><div class="tab-num">5</div>Edu</div>
-      <div class="step-tab" id="tab-6" onclick="goToStep(6)"><div class="tab-num">6</div>Style</div>
+<!-- ══════════════ FORM PANEL ══════════════ -->
+<div id="form-panel">
+  <div id="step-tabs">
+    <div class="step-tab active" id="tab-1" onclick="goToStep(1)"><div class="tab-num">1</div>Info</div>
+    <div class="step-tab" id="tab-2" onclick="goToStep(2)"><div class="tab-num">2</div>Skills</div>
+    <div class="step-tab" id="tab-3" onclick="goToStep(3)"><div class="tab-num">3</div>Exp</div>
+    <div class="step-tab" id="tab-4" onclick="goToStep(4)"><div class="tab-num">4</div>Projects</div>
+    <div class="step-tab" id="tab-5" onclick="goToStep(5)"><div class="tab-num">5</div>Edu</div>
+    <div class="step-tab" id="tab-6" onclick="goToStep(6)"><div class="tab-num">6</div>Style</div>
+  </div>
+
+  <div id="form-area">
+
+    <!-- STEP 1 -->
+    <div class="form-step active" id="step-1">
+      <div class="step-heading"><h2>Personal <em>Info</em></h2><p>Your name, contact details and a short professional summary.</p></div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">First Name</label><input class="finput" id="f-firstname" placeholder="Arun" oninput="liveUpdate()"></div>
+        <div class="fgroup"><label class="flabel">Last Name</label><input class="finput" id="f-lastname" placeholder="Ravi" oninput="liveUpdate()"></div>
+      </div>
+      <div class="frow single"><div class="fgroup"><label class="flabel">Job Title / Role</label><input class="finput" id="f-role" placeholder="e.g. Frontend Developer" oninput="liveUpdate()"></div></div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Email</label><input class="finput" type="email" id="f-email" placeholder="you@example.com" oninput="liveUpdate()"></div>
+        <div class="fgroup"><label class="flabel">Phone</label><input class="finput" type="tel" id="f-phone" placeholder="+91 98765 43210" oninput="liveUpdate()"></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Location</label><input class="finput" id="f-location" placeholder="Chennai, India" oninput="liveUpdate()"></div>
+        <div class="fgroup"><label class="flabel">LinkedIn / Website</label><input class="finput" id="f-linkedin" placeholder="linkedin.com/in/yourname" oninput="liveUpdate()"></div>
+      </div>
+      <div class="frow single"><div class="fgroup"><label class="flabel">GitHub</label><input class="finput" id="f-github" placeholder="github.com/yourname" oninput="liveUpdate()"></div></div>
+      <div class="frow single"><div class="fgroup"><label class="flabel">Professional Summary</label>
+        <div class="ai-row">
+          <textarea class="ftextarea" id="f-summary" placeholder="Write a short 2–3 line summary about yourself..." oninput="liveUpdate()" style="min-height:90px;"></textarea>
+          <button class="ai-enhance-btn" onclick="aiEnhance('f-summary','summary')"><span>✨</span>AI</button>
+        </div>
+      </div></div>
     </div>
 
-    <div id="form-area">
-
-      <!-- STEP 1 -->
-      <div class="form-step active" id="step-1">
-        <div class="step-heading"><h2>Personal <em>Info</em></h2><p>Your basic details — name, contact, and a short summary.</p></div>
-        <div class="frow">
-          <div class="fgroup"><label class="flabel">First Name</label><input class="finput" id="f-firstname" placeholder="Arun" oninput="liveUpdate()"></div>
-          <div class="fgroup"><label class="flabel">Last Name</label><input class="finput" id="f-lastname" placeholder="Ravi" oninput="liveUpdate()"></div>
-        </div>
-        <div class="frow single"><div class="fgroup"><label class="flabel">Job Title / Role</label><input class="finput" id="f-role" placeholder="e.g. Frontend Developer" oninput="liveUpdate()"></div></div>
-        <div class="frow">
-          <div class="fgroup"><label class="flabel">Email</label><input class="finput" type="email" id="f-email" placeholder="you@example.com" oninput="liveUpdate()"></div>
-          <div class="fgroup"><label class="flabel">Phone</label><input class="finput" type="tel" id="f-phone" placeholder="+91 98765 43210" oninput="liveUpdate()"></div>
-        </div>
-        <div class="frow">
-          <div class="fgroup"><label class="flabel">Location</label><input class="finput" id="f-location" placeholder="Chennai, India" oninput="liveUpdate()"></div>
-          <div class="fgroup"><label class="flabel">LinkedIn / Website</label><input class="finput" id="f-linkedin" placeholder="linkedin.com/in/yourname" oninput="liveUpdate()"></div>
-        </div>
-        <div class="frow single"><div class="fgroup"><label class="flabel">GitHub</label><input class="finput" id="f-github" placeholder="github.com/yourname" oninput="liveUpdate()"></div></div>
-        <div class="frow single"><div class="fgroup"><label class="flabel">Professional Summary</label>
-          <div class="ai-row">
-            <textarea class="ftextarea" id="f-summary" placeholder="Write a short 2–3 line summary..." oninput="liveUpdate()" style="min-height:90px;"></textarea>
-            <button class="ai-enhance-btn" onclick="aiEnhance('f-summary','summary')" title="AI Enhance"><span>✨</span>AI</button>
-          </div>
-        </div></div>
+    <!-- STEP 2 -->
+    <div class="form-step" id="step-2">
+      <div class="step-heading"><h2>Your <em>Skills</em></h2><p>Click a suggestion or type and press Enter or Add.</p></div>
+      <div id="skills-tags"></div>
+      <div id="skills-input-row">
+        <input class="finput" id="skill-input" placeholder="Type a skill…" onkeydown="if(event.key==='Enter'){addSkill();}">
+        <button id="add-skill-btn" onclick="addSkill()">+ Add</button>
       </div>
-
-      <!-- STEP 2 -->
-      <div class="form-step" id="step-2">
-        <div class="step-heading"><h2>Your <em>Skills</em></h2><p>Add your technical and soft skills.</p></div>
-        <div id="skills-tags"></div>
-        <div id="skills-input-row">
-          <input class="finput" id="skill-input" placeholder="Type a skill and press Enter" onkeydown="if(event.key==='Enter'){addSkill();}">
-          <button id="add-skill-btn" onclick="addSkill()">+ Add</button>
-        </div>
-        <div style="margin-top:14px;"><div class="flabel" style="margin-bottom:8px;">Suggestions</div>
-          <div class="skill-suggestions" id="skill-suggestions"></div>
-        </div>
+      <div style="margin-top:14px;"><div class="flabel" style="margin-bottom:8px;">Suggestions</div>
+        <div class="skill-suggestions" id="skill-suggestions"></div>
       </div>
+    </div>
 
-      <!-- STEP 3 -->
-      <div class="form-step" id="step-3">
-        <div class="step-heading"><h2>Work <em>Experience</em></h2><p>Add internships, jobs or freelance work.</p></div>
-        <div class="repeat-list" id="exp-list"></div>
-        <button class="add-more-btn" onclick="addExperience()">＋ Add Experience</button>
-      </div>
+    <!-- STEP 3 -->
+    <div class="form-step" id="step-3">
+      <div class="step-heading"><h2>Work <em>Experience</em></h2><p>Add internships, jobs or freelance. Use AI to polish descriptions.</p></div>
+      <div class="repeat-list" id="exp-list"></div>
+      <button class="add-more-btn" onclick="addExperience()">＋ Add Experience</button>
+    </div>
 
-      <!-- STEP 4 -->
-      <div class="form-step" id="step-4">
-        <div class="step-heading"><h2>Your <em>Projects</em></h2><p>Showcase what you've built.</p></div>
-        <div class="repeat-list" id="proj-list"></div>
-        <button class="add-more-btn" onclick="addProject()">＋ Add Project</button>
-      </div>
+    <!-- STEP 4 -->
+    <div class="form-step" id="step-4">
+      <div class="step-heading"><h2>Your <em>Projects</em></h2><p>Showcase what you've built. Include live or GitHub links.</p></div>
+      <div class="repeat-list" id="proj-list"></div>
+      <button class="add-more-btn" onclick="addProject()">＋ Add Project</button>
+    </div>
 
-      <!-- STEP 5 -->
-      <div class="form-step" id="step-5">
-        <div class="step-heading"><h2>Your <em>Education</em></h2><p>Degrees, courses, and certifications.</p></div>
-        <div class="repeat-list" id="edu-list"></div>
-        <button class="add-more-btn" onclick="addEducation()">＋ Add Education</button>
-      </div>
+    <!-- STEP 5 -->
+    <div class="form-step" id="step-5">
+      <div class="step-heading"><h2>Your <em>Education</em></h2><p>Degrees, courses and certifications.</p></div>
+      <div class="repeat-list" id="edu-list"></div>
+      <button class="add-more-btn" onclick="addEducation()">＋ Add Education</button>
+    </div>
 
-      <!-- STEP 6: STYLE + ALIGNMENT -->
-      <div class="form-step" id="step-6">
-        <div class="step-heading"><h2>Choose a <em>Style</em></h2><p>Pick from 10 templates, accent color, and fine-tune alignment manually.</p></div>
+    <!-- STEP 6: STYLE -->
+    <div class="form-step" id="step-6">
+      <div class="step-heading"><h2>Design &amp; <em>Style</em></h2><p>30 templates · 7 colors · photo upload · full manual controls.</p></div>
 
-        <div class="flabel" style="margin-bottom:8px;">Template — Row 1</div>
+      <!-- 30 TEMPLATES -->
+      <div class="style-block">
+        <div class="style-label">30 Templates</div>
         <div id="template-grid">
-          <div class="tmpl-card t1 selected" onclick="selectTemplate(1,this)">
-            <div class="tmpl-thumb">📄</div><div class="tmpl-name">Classic</div><div class="tmpl-check">✓</div>
+          <!-- Row 1: T1–T6 -->
+          <div class="tmpl-card selected" id="tc-1" onclick="selectTemplate(1,this)">
+            <div class="tmpl-thumb tt1"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.8);"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div><div class="tp-b s" style="background:rgba(255,255,255,0.15);"></div></div></div>
+            <div class="tmpl-name">Classic</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t2" onclick="selectTemplate(2,this)">
-            <div class="tmpl-thumb">📋</div><div class="tmpl-name">Minimal</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-2" onclick="selectTemplate(2,this)">
+            <div class="tmpl-thumb tt2"><div class="thumb-preview"><div class="tp-n" style="background:#0f172a;"></div><div class="tp-r" style="background:#94a3b8;"></div><div class="tp-l" style="background:#0f172a;height:2px;"></div><div class="tp-b" style="background:#cbd5e1;"></div><div class="tp-b s" style="background:#e2e8f0;"></div></div></div>
+            <div class="tmpl-name">Minimal</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t3" onclick="selectTemplate(3,this)">
-            <div class="tmpl-thumb">🎨</div><div class="tmpl-name">Bold</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-3" onclick="selectTemplate(3,this)">
+            <div class="tmpl-thumb tt3"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Bold</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t4" onclick="selectTemplate(4,this)">
-            <div class="tmpl-thumb">⬛</div><div class="tmpl-name">Brutalist</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-4" onclick="selectTemplate(4,this)">
+            <div class="tmpl-thumb tt4"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);height:9px;font-family:'Bebas Neue',sans-serif;"></div><div class="tp-r" style="background:rgba(255,255,255,0.3);"></div><div class="tp-l" style="background:white;height:2px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Brutalist</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t5" onclick="selectTemplate(5,this)">
-            <div class="tmpl-thumb">📜</div><div class="tmpl-name">Vintage</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-5" onclick="selectTemplate(5,this)">
+            <div class="tmpl-thumb tt5"><div class="thumb-preview"><div class="tp-n" style="background:#3d2b1f;"></div><div class="tp-r" style="background:#7a5c44;"></div><div class="tp-l" style="background:#c9a96e;"></div><div class="tp-b" style="background:#c9a96e;opacity:0.4;"></div></div></div>
+            <div class="tmpl-name">Vintage</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t6" onclick="selectTemplate(6,this)">
-            <div class="tmpl-thumb">🖥</div><div class="tmpl-name">Tech</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-6" onclick="selectTemplate(6,this)">
+            <div class="tmpl-thumb tt6"><div class="tp-two" style="height:100%;"><div class="tp-left" style="background:#0a192f;"><div style="height:4px;border-radius:1px;background:rgba(255,255,255,0.7);margin-bottom:3px;"></div><div style="height:3px;border-radius:1px;background:rgba(255,255,255,0.3);"></div><div style="height:2px;border-radius:1px;background:rgba(255,255,255,0.2);"></div></div><div class="tp-right" style="background:#fff;"><div style="height:4px;border-radius:1px;background:#0a192f;margin-bottom:3px;"></div><div style="height:2px;background:#0a192f;margin-bottom:4px;"></div><div style="height:2px;border-radius:1px;background:#94a3b8;"></div><div style="height:2px;border-radius:1px;background:#cbd5e1;width:65%;"></div></div></div></div>
+            <div class="tmpl-name">Tech</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t7" onclick="selectTemplate(7,this)">
-            <div class="tmpl-thumb">🌃</div><div class="tmpl-name">Neon Noir</div><div class="tmpl-check">✓</div>
+          <!-- Row 2: T7–T12 -->
+          <div class="tmpl-card" id="tc-7" onclick="selectTemplate(7,this)">
+            <div class="tmpl-thumb tt7"><div class="thumb-preview"><div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#e94560;"></div><div class="tp-n" style="background:rgba(255,255,255,0.85);padding-left:6px;"></div><div class="tp-r" style="background:#e94560;padding-left:6px;"></div><div class="tp-l" style="padding-left:6px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);padding-left:6px;"></div></div></div>
+            <div class="tmpl-name">Neon Noir</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t8" onclick="selectTemplate(8,this)">
-            <div class="tmpl-thumb">🏢</div><div class="tmpl-name">Corporate</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-8" onclick="selectTemplate(8,this)">
+            <div class="tmpl-thumb tt8"><div class="tp-two" style="height:100%;"><div class="tp-left" style="background:#2563eb;"><div style="height:4px;border-radius:1px;background:rgba(255,255,255,0.8);margin-bottom:3px;"></div><div style="height:3px;border-radius:1px;background:rgba(255,255,255,0.4);"></div></div><div class="tp-right" style="background:#fff;"><div style="height:4px;border-radius:1px;background:#2563eb;margin-bottom:3px;"></div><div style="height:2px;background:#2563eb;margin-bottom:4px;"></div><div style="height:2px;border-radius:1px;background:#94a3b8;"></div></div></div></div>
+            <div class="tmpl-name">Corporate</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t9" onclick="selectTemplate(9,this)">
-            <div class="tmpl-thumb">🏛</div><div class="tmpl-name">Executive</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-9" onclick="selectTemplate(9,this)">
+            <div class="tmpl-thumb tt9"><div class="thumb-preview"><div class="tp-n" style="background:#2c1810;"></div><div class="tp-r" style="background:#8b5e3c;"></div><div class="tp-l" style="background:#d4a96a;height:1px;"></div><div class="tp-b" style="background:#8b5e3c;opacity:0.4;"></div></div></div>
+            <div class="tmpl-name">Executive</div><div class="tmpl-check">✓</div>
           </div>
-          <div class="tmpl-card t10" onclick="selectTemplate(10,this)">
-            <div class="tmpl-thumb">⚡</div><div class="tmpl-name">Cyberpunk</div><div class="tmpl-check">✓</div>
+          <div class="tmpl-card" id="tc-10" onclick="selectTemplate(10,this)">
+            <div class="tmpl-thumb tt10"><div class="thumb-preview"><div class="tp-n" style="background:#00ff88;height:8px;"></div><div class="tp-r" style="background:rgba(0,255,136,0.5);"></div><div class="tp-l" style="background:rgba(0,255,136,0.3);"></div><div class="tp-b" style="background:rgba(0,255,136,0.2);"></div></div></div>
+            <div class="tmpl-name">Cyberpunk</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-11" onclick="selectTemplate(11,this)">
+            <div class="tmpl-thumb tt11"><div class="thumb-preview"><div class="tp-n" style="background:#0f172a;"></div><div class="tp-r" style="background:#475569;"></div><div class="tp-l" style="background:#1e293b;height:1.5px;"></div><div class="tp-b" style="background:#475569;opacity:0.5;"></div><div class="tp-b s" style="background:#94a3b8;opacity:0.4;"></div></div></div>
+            <div class="tmpl-name">ATS Clean</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-ats">ATS</span>
+          </div>
+          <div class="tmpl-card" id="tc-12" onclick="selectTemplate(12,this)">
+            <div class="tmpl-thumb tt12"><div class="thumb-preview"><div class="tp-n" style="background:#0f172a;height:7px;"></div><div class="tp-r" style="background:#64748b;"></div><div style="height:1px;background:#94a3b8;margin:1px 0;"></div><div style="height:1px;background:#94a3b8;margin:0 0 2px;"></div><div class="tp-b" style="background:#94a3b8;opacity:0.5;"></div><div class="tp-b s" style="background:#cbd5e1;opacity:0.4;"></div></div></div>
+            <div class="tmpl-name">ATS Pro</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-ats">ATS</span>
+          </div>
+          <!-- Row 3: T13–T18 -->
+          <div class="tmpl-card" id="tc-13" onclick="selectTemplate(13,this)">
+            <div class="tmpl-thumb tt13"><div class="thumb-preview"><div class="tp-n" style="background:#0f172a;letter-spacing:1px;height:6px;"></div><div class="tp-r" style="background:#64748b;"></div><div class="tp-l" style="background:#e2e8f0;"></div><div style="display:flex;gap:3px;align-items:center;"><div style="width:3px;height:3px;border-radius:1px;background:#334155;flex-shrink:0;"></div><div class="tp-b" style="background:#94a3b8;flex:1;"></div></div><div style="display:flex;gap:3px;align-items:center;"><div style="width:3px;height:3px;border-radius:1px;background:#334155;flex-shrink:0;"></div><div class="tp-b s" style="background:#cbd5e1;flex:1;"></div></div></div></div>
+            <div class="tmpl-name">ATS Minimal</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-ats">ATS</span>
+          </div>
+          <div class="tmpl-card" id="tc-14" onclick="selectTemplate(14,this)">
+            <div class="tmpl-thumb tt14"><div class="thumb-preview"><div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.3);flex-shrink:0;"></div><div style="flex:1;"><div class="tp-n" style="background:rgba(255,255,255,0.8);width:80%;margin-bottom:2px;"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);width:60%;"></div></div></div><div class="tp-l" style="margin-top:3px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Photo Exec</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-photo">📷</span>
+          </div>
+          <div class="tmpl-card" id="tc-15" onclick="selectTemplate(15,this)">
+            <div class="tmpl-thumb tt15"><div class="tp-two" style="height:100%;"><div class="tp-left" style="background:#0f172a;align-items:center;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.25);margin-bottom:3px;"></div><div style="height:3px;border-radius:1px;background:rgba(255,255,255,0.5);width:70%;margin-bottom:2px;"></div><div style="height:2px;border-radius:1px;background:rgba(255,255,255,0.25);width:55%;"></div></div><div class="tp-right" style="background:#f8fafc;"><div style="height:4px;border-radius:1px;background:#0f172a;margin-bottom:3px;"></div><div style="height:1px;background:#0f172a;margin-bottom:3px;"></div><div style="height:2px;border-radius:1px;background:#94a3b8;"></div></div></div></div>
+            <div class="tmpl-name">Photo Side</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-photo">📷</span>
+          </div>
+          <div class="tmpl-card" id="tc-16" onclick="selectTemplate(16,this)">
+            <div class="tmpl-thumb tt16"><div class="thumb-preview"><div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.3);flex-shrink:0;"></div><div><div class="tp-n" style="background:rgba(255,255,255,0.85);margin-bottom:2px;"></div><div class="tp-r" style="background:rgba(255,255,255,0.5);"></div></div></div><div class="tp-l" style="margin-top:3px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Photo Modern</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-photo">📷</span>
+          </div>
+          <div class="tmpl-card" id="tc-17" onclick="selectTemplate(17,this)">
+            <div class="tmpl-thumb tt17"><div class="thumb-preview"><div style="display:flex;align-items:flex-start;gap:5px;"><div style="width:14px;height:16px;border-radius:3px;background:rgba(255,255,255,0.25);flex-shrink:0;"></div><div><div class="tp-n" style="background:rgba(255,255,255,0.8);margin-bottom:2px;"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);"></div></div></div><div class="tp-l" style="margin-top:3px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.18);"></div></div></div>
+            <div class="tmpl-name">Photo Creative</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-photo">📷</span>
+          </div>
+          <div class="tmpl-card" id="tc-18" onclick="selectTemplate(18,this)">
+            <div class="tmpl-thumb tt18"><div class="tp-two" style="height:100%;"><div class="tp-left" style="background:#1e293b;border-right:2px solid #7b4dff;align-items:center;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(123,77,255,0.4);margin-bottom:3px;border:1px solid rgba(123,77,255,0.5);"></div><div style="height:3px;border-radius:1px;background:rgba(255,255,255,0.45);width:70%;margin-bottom:2px;"></div></div><div class="tp-right" style="background:#fff;"><div style="height:4px;border-radius:1px;background:#7b4dff;margin-bottom:3px;"></div><div style="height:1px;background:#7b4dff;margin-bottom:3px;"></div><div style="height:2px;border-radius:1px;background:#94a3b8;"></div></div></div></div>
+            <div class="tmpl-name">Photo ID</div><div class="tmpl-check">✓</div>
+            <span class="tmpl-badge badge-photo">📷</span>
+          </div>
+          <!-- Row 4: T19–T24 -->
+          <div class="tmpl-card" id="tc-19" onclick="selectTemplate(19,this)">
+            <div class="tmpl-thumb tt19"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Gradient</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-20" onclick="selectTemplate(20,this)">
+            <div class="tmpl-thumb tt20"><div class="thumb-preview"><div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#e94560;"></div><div class="tp-n" style="background:#fff;padding-left:6px;"></div><div class="tp-r" style="background:#e94560;padding-left:6px;"></div><div class="tp-l" style="padding-left:6px;"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);padding-left:6px;"></div></div></div>
+            <div class="tmpl-name">Neon Pink</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-21" onclick="selectTemplate(21,this)">
+            <div class="tmpl-thumb tt21"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.45);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Ocean</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-22" onclick="selectTemplate(22,this)">
+            <div class="tmpl-thumb tt22"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);font-style:italic;"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Coffee</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-23" onclick="selectTemplate(23,this)">
+            <div class="tmpl-thumb tt23"><div class="thumb-preview" style="align-items:center;"><div class="tp-n" style="background:#d4af37;width:70%;margin:0 auto;"></div><div class="tp-r" style="background:rgba(212,175,55,0.5);width:50%;margin:0 auto;"></div><div class="tp-l" style="background:rgba(212,175,55,0.3);"></div><div class="tp-b" style="background:rgba(212,175,55,0.2);"></div></div></div>
+            <div class="tmpl-name">Royal Gold</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-24" onclick="selectTemplate(24,this)">
+            <div class="tmpl-thumb tt24"><div class="thumb-preview" style="padding-left:8px;"><div class="tp-n" style="background:#0f172a;"></div><div class="tp-r" style="background:#7b4dff;"></div><div class="tp-l" style="background:#e2e8f0;"></div><div style="display:flex;gap:3px;align-items:center;"><div style="width:2px;height:6px;background:#e2e8f0;flex-shrink:0;"></div><div class="tp-b" style="background:#94a3b8;flex:1;"></div></div></div></div>
+            <div class="tmpl-name">Accent Bar</div><div class="tmpl-check">✓</div>
+          </div>
+          <!-- Row 5: T25–T30 -->
+          <div class="tmpl-card" id="tc-25" onclick="selectTemplate(25,this)">
+            <div class="tmpl-thumb tt25"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.45);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Forest</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-26" onclick="selectTemplate(26,this)">
+            <div class="tmpl-thumb tt26"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.4);font-style:italic;"></div><div class="tp-l" style="background:rgba(212,175,55,0.4);"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Serif</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-27" onclick="selectTemplate(27,this)">
+            <div class="tmpl-thumb tt27"><div class="thumb-preview"><div class="tp-n" style="background:#0f172a;height:7px;"></div><div class="tp-r" style="background:#64748b;"></div><div class="tp-l" style="background:#0f172a;height:1.5px;"></div><div class="tp-b" style="background:#94a3b8;"></div><div class="tp-b s" style="background:#cbd5e1;"></div></div></div>
+            <div class="tmpl-name">Swiss</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-28" onclick="selectTemplate(28,this)">
+            <div class="tmpl-thumb tt28"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.45);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Coastal</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-29" onclick="selectTemplate(29,this)">
+            <div class="tmpl-thumb tt29"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.45);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Ember</div><div class="tmpl-check">✓</div>
+          </div>
+          <div class="tmpl-card" id="tc-30" onclick="selectTemplate(30,this)">
+            <div class="tmpl-thumb tt30"><div class="thumb-preview"><div class="tp-n" style="background:rgba(255,255,255,0.85);"></div><div class="tp-r" style="background:rgba(255,255,255,0.45);"></div><div class="tp-l"></div><div class="tp-b" style="background:rgba(255,255,255,0.2);"></div></div></div>
+            <div class="tmpl-name">Deep Teal</div><div class="tmpl-check">✓</div>
           </div>
         </div>
 
-        <div class="flabel" style="margin-bottom:10px;">Accent Color</div>
+        <!-- ATS note -->
+        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
+            <span style="background:#22c55e;color:white;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:800;">ATS</span>
+            ATS-Friendly templates (T11, T12, T13) — optimized for applicant tracking systems
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
+            <span style="background:#f59e0b;color:white;padding:1px 6px;border-radius:3px;font-size:8px;font-weight:800;">📷</span>
+            Photo templates (T14–T18) — upload your photo below
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div id="photo-upload-section">
+        <div class="photo-upload-label">📷 Profile Photo</div>
+        <div class="photo-upload-area">
+          <div id="photo-preview-wrap" onclick="document.getElementById('photo-file-input').click()">
+            <span id="photo-placeholder-icon">👤</span>
+          </div>
+          <div id="photo-upload-info">
+            <h4>Upload your photo</h4>
+            <p>JPG, PNG or WEBP · Max 5MB<br>Square crop recommended</p>
+            <button id="photo-upload-btn" onclick="document.getElementById('photo-file-input').click()">📂 Choose Photo</button>
+            <button id="photo-remove-btn" onclick="removePhoto()">✕ Remove</button>
+          </div>
+        </div>
+        <input type="file" id="photo-file-input" accept="image/*" onchange="handlePhotoUpload(event)">
+      </div>
+
+      <!-- ACCENT COLOR -->
+      <div class="style-block">
+        <div class="style-label">Accent Color</div>
         <div id="color-picker">
           <div class="color-dot selected" style="background:#7b4dff;" onclick="selectColor('purple',this)" title="Purple"></div>
           <div class="color-dot" style="background:#0891b2;" onclick="selectColor('cyan',this)" title="Cyan"></div>
           <div class="color-dot" style="background:#15803d;" onclick="selectColor('green',this)" title="Green"></div>
           <div class="color-dot" style="background:#be123c;" onclick="selectColor('red',this)" title="Red"></div>
           <div class="color-dot" style="background:#b45309;" onclick="selectColor('gold',this)" title="Gold"></div>
+          <div class="color-dot" style="background:#1d4ed8;" onclick="selectColor('navy',this)" title="Navy"></div>
+          <div class="color-dot" style="background:#e11d48;" onclick="selectColor('rose',this)" title="Rose"></div>
+        </div>
+      </div>
+
+      <!-- MANUAL ALIGNMENT CONTROLS -->
+      <div class="style-block">
+        <div class="style-label">Alignment Controls</div>
+        <div class="align-block">
+          <div class="align-block-title">📐 Text Alignment</div>
+          <div class="align-row">
+            <span class="align-row-label">Name</span>
+            <div class="btn-group" id="ag-name">
+              <button class="ab on" onclick="setAlignTarget('name','left',this,'ag-name')">◀ Left</button>
+              <button class="ab" onclick="setAlignTarget('name','center',this,'ag-name')">Center</button>
+              <button class="ab" onclick="setAlignTarget('name','right',this,'ag-name')">Right ▶</button>
+            </div>
+          </div>
+          <div class="align-row">
+            <span class="align-row-label">Job Title</span>
+            <div class="btn-group" id="ag-role">
+              <button class="ab on" onclick="setAlignTarget('role','left',this,'ag-role')">◀ Left</button>
+              <button class="ab" onclick="setAlignTarget('role','center',this,'ag-role')">Center</button>
+              <button class="ab" onclick="setAlignTarget('role','right',this,'ag-role')">Right ▶</button>
+            </div>
+          </div>
+          <div class="align-row">
+            <span class="align-row-label">Contact Row</span>
+            <div class="btn-group" id="ag-contact">
+              <button class="ab on" onclick="setAlignTarget('contact','flex-start',this,'ag-contact')">◀ Left</button>
+              <button class="ab" onclick="setAlignTarget('contact','center',this,'ag-contact')">Center</button>
+              <button class="ab" onclick="setAlignTarget('contact','flex-end',this,'ag-contact')">Right ▶</button>
+            </div>
+          </div>
+          <div class="align-row">
+            <span class="align-row-label">Section Titles</span>
+            <div class="btn-group" id="ag-sec">
+              <button class="ab on" onclick="setAlignTarget('section','left',this,'ag-sec')">◀ Left</button>
+              <button class="ab" onclick="setAlignTarget('section','center',this,'ag-sec')">Center</button>
+              <button class="ab" onclick="setAlignTarget('section','right',this,'ag-sec')">Right ▶</button>
+            </div>
+          </div>
+          <div class="align-row">
+            <span class="align-row-label">Body Text</span>
+            <div class="btn-group" id="ag-body">
+              <button class="ab on" onclick="setAlignTarget('body','left',this,'ag-body')">◀ Left</button>
+              <button class="ab" onclick="setAlignTarget('body','justify',this,'ag-body')">Justify</button>
+              <button class="ab" onclick="setAlignTarget('body','right',this,'ag-body')">Right ▶</button>
+            </div>
+          </div>
+          <div class="align-row" style="margin-bottom:0;">
+            <span class="align-row-label">Skills Style</span>
+            <div class="btn-group" id="ag-skills">
+              <button class="ab on" onclick="setSkillsLayout('pills',this,'ag-skills')">Pills</button>
+              <button class="ab" onclick="setSkillsLayout('list',this,'ag-skills')">List</button>
+              <button class="ab" onclick="setSkillsLayout('inline',this,'ag-skills')">Inline</button>
+              <button class="ab" onclick="setSkillsLayout('grid',this,'ag-skills')">Grid</button>
+            </div>
+          </div>
         </div>
 
-        <!-- MANUAL ALIGNMENT CONTROLS -->
-        <div class="align-section">
-          <div class="align-section-title">⚙️ Manual Alignment Controls</div>
-
-          <div class="align-row">
-            <span class="align-label">Name Align</span>
-            <div class="align-btns">
-              <button class="align-btn active" onclick="setAlign('name','left',this)">◀ Left</button>
-              <button class="align-btn" onclick="setAlign('name','center',this)">Center</button>
-              <button class="align-btn" onclick="setAlign('name','right',this)">Right ▶</button>
-            </div>
+        <div class="align-block">
+          <div class="align-block-title">📏 Spacing &amp; Size</div>
+          <div class="slider-row">
+            <label>Name Size</label>
+            <input type="range" min="16" max="40" value="24" oninput="applySlider('namesize',this.value);document.getElementById('sv-ns').textContent=this.value+'px'">
+            <span class="slider-val" id="sv-ns">24px</span>
           </div>
-
-          <div class="align-row">
-            <span class="align-label">Contact Row</span>
-            <div class="align-btns">
-              <button class="align-btn active" onclick="setAlign('contact','flex-start',this)">◀ Left</button>
-              <button class="align-btn" onclick="setAlign('contact','center',this)">Center</button>
-              <button class="align-btn" onclick="setAlign('contact','flex-end',this)">Right ▶</button>
-            </div>
+          <div class="slider-row">
+            <label>Body Font</label>
+            <input type="range" min="9" max="15" value="12" oninput="applySlider('fontsize',this.value);document.getElementById('sv-fs').textContent=this.value+'px'">
+            <span class="slider-val" id="sv-fs">12px</span>
           </div>
-
-          <div class="align-row">
-            <span class="align-label">Section Titles</span>
-            <div class="align-btns">
-              <button class="align-btn active" onclick="setAlign('sectiontitle','left',this)">◀ Left</button>
-              <button class="align-btn" onclick="setAlign('sectiontitle','center',this)">Center</button>
-              <button class="align-btn" onclick="setAlign('sectiontitle','right',this)">Right ▶</button>
-            </div>
-          </div>
-
-          <div class="align-row">
-            <span class="align-label">Body Text</span>
-            <div class="align-btns">
-              <button class="align-btn active" onclick="setAlign('body','left',this)">◀ Left</button>
-              <button class="align-btn" onclick="setAlign('body','justify',this)">Justify</button>
-              <button class="align-btn" onclick="setAlign('body','right',this)">Right ▶</button>
-            </div>
-          </div>
-
-          <div class="align-row">
-            <span class="align-label">Skills Layout</span>
-            <div class="align-btns">
-              <button class="align-btn active" onclick="setSkillsLayout('wrap',this)">Wrap</button>
-              <button class="align-btn" onclick="setSkillsLayout('column',this)">List</button>
-              <button class="align-btn" onclick="setSkillsLayout('inline',this)">Inline</button>
-            </div>
-          </div>
-
-          <div class="range-row">
-            <label>Page Padding</label>
-            <input type="range" min="12" max="48" value="32" oninput="setPadding(this.value);document.getElementById('pad-val').textContent=this.value+'px'">
-            <span class="range-val" id="pad-val">32px</span>
-          </div>
-
-          <div class="range-row">
-            <label>Font Size</label>
-            <input type="range" min="9" max="15" value="12" oninput="setFontSize(this.value);document.getElementById('fs-val').textContent=this.value+'px'">
-            <span class="range-val" id="fs-val">12px</span>
-          </div>
-
-          <div class="range-row">
+          <div class="slider-row">
             <label>Line Height</label>
-            <input type="range" min="12" max="22" value="17" oninput="setLineHeight(this.value/10);document.getElementById('lh-val').textContent=(this.value/10).toFixed(1)">
-            <span class="range-val" id="lh-val">1.7</span>
+            <input type="range" min="12" max="22" value="17" oninput="applySlider('lineheight',this.value/10);document.getElementById('sv-lh').textContent=(this.value/10).toFixed(1)">
+            <span class="slider-val" id="sv-lh">1.7</span>
           </div>
-
-          <div class="range-row">
+          <div class="slider-row">
+            <label>Page Margin</label>
+            <input type="range" min="10" max="52" value="30" oninput="applySlider('padding',this.value);document.getElementById('sv-pd').textContent=this.value+'px'">
+            <span class="slider-val" id="sv-pd">30px</span>
+          </div>
+          <div class="slider-row" style="margin-bottom:0;">
             <label>Section Gap</label>
-            <input type="range" min="8" max="36" value="20" oninput="setSectionGap(this.value);document.getElementById('sg-val').textContent=this.value+'px'">
-            <span class="range-val" id="sg-val">20px</span>
+            <input type="range" min="8" max="36" value="18" oninput="applySlider('secgap',this.value);document.getElementById('sv-sg').textContent=this.value+'px'">
+            <span class="slider-val" id="sv-sg">18px</span>
           </div>
+        </div>
 
-          <div style="margin-top:12px;">
-            <div class="flabel" style="margin-bottom:8px;">Section Order & Visibility</div>
-            <div class="section-order" id="section-order">
-              <div class="order-item" draggable="true" data-section="summary" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropSection(event)">
-                <span class="order-handle">⠿</span><span class="order-label">Summary</span>
-                <button class="order-toggle on" onclick="toggleSection('rp-sec-summary',this)"></button>
-              </div>
-              <div class="order-item" draggable="true" data-section="skills" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropSection(event)">
-                <span class="order-handle">⠿</span><span class="order-label">Skills</span>
-                <button class="order-toggle on" onclick="toggleSection('rp-sec-skills',this)"></button>
-              </div>
-              <div class="order-item" draggable="true" data-section="exp" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropSection(event)">
-                <span class="order-handle">⠿</span><span class="order-label">Experience</span>
-                <button class="order-toggle on" onclick="toggleSection('rp-sec-exp',this)"></button>
-              </div>
-              <div class="order-item" draggable="true" data-section="proj" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropSection(event)">
-                <span class="order-handle">⠿</span><span class="order-label">Projects</span>
-                <button class="order-toggle on" onclick="toggleSection('rp-sec-proj',this)"></button>
-              </div>
-              <div class="order-item" draggable="true" data-section="edu" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropSection(event)">
-                <span class="order-handle">⠿</span><span class="order-label">Education</span>
-                <button class="order-toggle on" onclick="toggleSection('rp-sec-edu',this)"></button>
-              </div>
+        <div class="align-block">
+          <div class="align-block-title">📋 Sections — Order &amp; Visibility</div>
+          <div class="order-list" id="section-order">
+            <div class="order-item" draggable="true" data-sec="summary" ondragstart="dS(event)" ondragover="dO(event)" ondrop="dD(event)">
+              <span class="order-handle">⠿</span><span class="order-name">📝 Summary</span>
+              <div class="order-arrows"><button class="arr" onclick="moveOrder('summary',-1)">▲</button><button class="arr" onclick="moveOrder('summary',1)">▼</button></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="toggleSec('rp-sec-summary',this)"><div class="tog-track"></div></label>
+            </div>
+            <div class="order-item" draggable="true" data-sec="skills" ondragstart="dS(event)" ondragover="dO(event)" ondrop="dD(event)">
+              <span class="order-handle">⠿</span><span class="order-name">🔧 Skills</span>
+              <div class="order-arrows"><button class="arr" onclick="moveOrder('skills',-1)">▲</button><button class="arr" onclick="moveOrder('skills',1)">▼</button></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="toggleSec('rp-sec-skills',this)"><div class="tog-track"></div></label>
+            </div>
+            <div class="order-item" draggable="true" data-sec="exp" ondragstart="dS(event)" ondragover="dO(event)" ondrop="dD(event)">
+              <span class="order-handle">⠿</span><span class="order-name">💼 Experience</span>
+              <div class="order-arrows"><button class="arr" onclick="moveOrder('exp',-1)">▲</button><button class="arr" onclick="moveOrder('exp',1)">▼</button></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="toggleSec('rp-sec-exp',this)"><div class="tog-track"></div></label>
+            </div>
+            <div class="order-item" draggable="true" data-sec="proj" ondragstart="dS(event)" ondragover="dO(event)" ondrop="dD(event)">
+              <span class="order-handle">⠿</span><span class="order-name">🚀 Projects</span>
+              <div class="order-arrows"><button class="arr" onclick="moveOrder('proj',-1)">▲</button><button class="arr" onclick="moveOrder('proj',1)">▼</button></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="toggleSec('rp-sec-proj',this)"><div class="tog-track"></div></label>
+            </div>
+            <div class="order-item" draggable="true" data-sec="edu" ondragstart="dS(event)" ondragover="dO(event)" ondrop="dD(event)">
+              <span class="order-handle">⠿</span><span class="order-name">🎓 Education</span>
+              <div class="order-arrows"><button class="arr" onclick="moveOrder('edu',-1)">▲</button><button class="arr" onclick="moveOrder('edu',1)">▼</button></div>
+              <label class="tog-switch"><input type="checkbox" checked onchange="toggleSec('rp-sec-edu',this)"><div class="tog-track"></div></label>
             </div>
           </div>
         </div>
-
-        <div style="margin-top:16px;padding:16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;">
-          <div style="font-size:13px;font-weight:800;color:#4ade80;margin-bottom:6px;">✅ Resume Ready!</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Your resume looks great. Save it or download as PDF.</div>
-        </div>
       </div>
 
-    </div><!-- /form-area -->
-
-    <div id="form-nav">
-      <button id="btn-prev" onclick="prevStep()">← Back</button>
-      <button id="btn-next" onclick="nextStep()">Continue →</button>
-    </div>
-  </div><!-- /form-panel -->
-
-  <!-- PREVIEW PANEL -->
-  <div id="preview-panel">
-    <div id="preview-toolbar">
-      <span>📄 Live Preview</span>
-      <div id="preview-toolbar-right">
-        <button class="preview-ctrl-btn active" id="btn-view-preview" onclick="setPreviewMode('preview',this)">Preview</button>
-        <button class="preview-ctrl-btn" id="btn-view-raw" onclick="setPreviewMode('raw',this)">JSON</button>
+      <div style="padding:14px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;">
+        <div style="font-size:13px;font-weight:800;color:#4ade80;margin-bottom:5px;">✅ Resume Ready!</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">Save your resume or download as PDF. Connect your backend to enable PDF export and portfolio publishing.</div>
       </div>
     </div>
-    <div id="preview-scroll">
-      <div id="resume-paper" class="tmpl-1 ac-purple">
-        <div id="rp-header">
+
+  </div><!-- /form-area -->
+
+  <div id="form-nav">
+    <button id="btn-prev" onclick="prevStep()">← Back</button>
+    <button id="btn-next" onclick="nextStep()">Continue →</button>
+  </div>
+</div><!-- /form-panel -->
+
+<!-- ══════════════ PREVIEW PANEL ══════════════ -->
+<div id="preview-panel">
+  <div id="preview-toolbar">
+    <span>📄 Live Preview</span>
+    <div style="display:flex;gap:8px;">
+      <button class="pctrl-btn active" onclick="setPMode('preview',this)">Preview</button>
+      <button class="pctrl-btn" onclick="setPMode('raw',this)">JSON</button>
+    </div>
+  </div>
+  <div id="preview-scroll">
+    <div id="resume-paper" class="tmpl-1 ac-purple">
+      <div id="rp-header">
+        <div id="rp-photo-wrap" style="display:none;"></div>
+        <div id="rp-name-block">
           <div id="rp-name">Your Name</div>
           <div id="rp-role">Your Job Title</div>
           <div id="rp-contact-row">
@@ -671,270 +1077,240 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
             <span id="rp-linkedin" style="display:none;">🔗 linkedin</span>
           </div>
         </div>
-        <div id="rp-body">
-          <div class="rp-section" id="rp-sec-summary">
-            <div class="rp-section-title">Summary</div>
-            <div class="rp-summary rp-placeholder" id="rp-summary-text">Your professional summary will appear here...</div>
-          </div>
-          <div class="rp-section" id="rp-sec-skills">
-            <div class="rp-section-title">Skills</div>
-            <div class="rp-skills-wrap" id="rp-skills-wrap"><span class="rp-placeholder">Skills will appear here...</span></div>
-          </div>
-          <div class="rp-section" id="rp-sec-exp" style="display:none;">
-            <div class="rp-section-title">Experience</div>
-            <div id="rp-exp-list"></div>
-          </div>
-          <div class="rp-section" id="rp-sec-proj" style="display:none;">
-            <div class="rp-section-title">Projects</div>
-            <div id="rp-proj-list"></div>
-          </div>
-          <div class="rp-section" id="rp-sec-edu" style="display:none;">
-            <div class="rp-section-title">Education</div>
-            <div id="rp-edu-list"></div>
-          </div>
-        </div>
-        <div id="rp-sidebar"></div>
       </div>
-      <pre id="raw-view" style="display:none;background:#111827;color:#a5f3fc;padding:20px;border-radius:8px;font-size:11px;width:100%;max-width:700px;overflow:auto;font-family:monospace;line-height:1.6;"></pre>
+      <div id="rp-body">
+        <div class="rp-section" id="rp-sec-summary">
+          <div class="rp-section-title">Summary</div>
+          <div class="rp-summary rp-placeholder" id="rp-summary-text">Your professional summary will appear here...</div>
+        </div>
+        <div class="rp-section" id="rp-sec-skills">
+          <div class="rp-section-title">Skills</div>
+          <div class="rp-skills-wrap" id="rp-skills-wrap"><span class="rp-placeholder">Skills will appear here...</span></div>
+        </div>
+        <div class="rp-section" id="rp-sec-exp" style="display:none;">
+          <div class="rp-section-title">Experience</div>
+          <div id="rp-exp-list"></div>
+        </div>
+        <div class="rp-section" id="rp-sec-proj" style="display:none;">
+          <div class="rp-section-title">Projects</div>
+          <div id="rp-proj-list"></div>
+        </div>
+        <div class="rp-section" id="rp-sec-edu" style="display:none;">
+          <div class="rp-section-title">Education</div>
+          <div id="rp-edu-list"></div>
+        </div>
+      </div>
     </div>
+    <pre id="raw-view"></pre>
   </div>
+</div>
 
 </div><!-- /builder-shell -->
 <div id="toast"></div>
 
 <script>
 /* ══ STATE ══ */
-var resumeData = {
-  firstname:'',lastname:'',role:'',email:'',phone:'',location:'',linkedin:'',github:'',summary:'',
-  skills:[],experience:[],projects:[],education:[],
-  template:1, color:'purple'
-};
-var currentStep=1, totalSteps=6;
+var resumeData={firstname:'',lastname:'',role:'',email:'',phone:'',location:'',linkedin:'',github:'',summary:'',skills:[],experience:[],projects:[],education:[],template:1,color:'purple'};
+var currentStep=1,totalSteps=6;
+var photoDataUrl='';
+var sectionOrderArr=['summary','skills','exp','proj','edu'];
+var skillsLayout='pills';
+var alignState={};
+var dragSrc=null;
 
-/* ══ STEP NAV ══ */
-function goToStep(n){
-  document.getElementById('step-'+currentStep).classList.remove('active');
-  document.getElementById('tab-'+currentStep).classList.remove('active');
-  currentStep=n;
-  document.getElementById('step-'+currentStep).classList.add('active');
-  document.getElementById('tab-'+currentStep).classList.add('active');
-  document.getElementById('btn-prev').style.display=currentStep>1?'block':'none';
-  document.getElementById('btn-next').textContent=currentStep===totalSteps?'💾 Save Resume':'Continue →';
-  document.getElementById('form-area').scrollTop=0;
-  liveUpdate();
-}
+/* ══ STEPS ══ */
+function goToStep(n){document.getElementById('step-'+currentStep).classList.remove('active');document.getElementById('tab-'+currentStep).classList.remove('active');currentStep=n;document.getElementById('step-'+currentStep).classList.add('active');document.getElementById('tab-'+currentStep).classList.add('active');document.getElementById('btn-prev').style.display=currentStep>1?'block':'none';document.getElementById('btn-next').textContent=currentStep===totalSteps?'💾 Save Resume':'Continue →';document.getElementById('form-area').scrollTop=0;liveUpdate();}
 function nextStep(){if(currentStep===totalSteps){handleSave();return;}document.getElementById('tab-'+currentStep).classList.add('done');goToStep(currentStep+1);}
 function prevStep(){if(currentStep>1)goToStep(currentStep-1);}
 
 /* ══ SKILLS ══ */
-var skillSuggestions=['HTML','CSS','JavaScript','React','Node.js','Python','Java','Git','MySQL','MongoDB','Figma','TypeScript','Vue.js','REST API','Problem Solving','Team Work','Communication','Leadership'];
-(function(){var w=document.getElementById('skill-suggestions');skillSuggestions.forEach(function(s){var el=document.createElement('div');el.className='skill-suggestion';el.textContent=s;el.onclick=function(){addSkillValue(s);};w.appendChild(el);});})();
+var sug=['HTML','CSS','JavaScript','React','Node.js','Python','Java','Git','MySQL','MongoDB','Figma','TypeScript','Vue.js','REST API','Problem Solving','Team Work','Communication','Leadership','AWS','Docker','Agile'];
+(function(){var w=document.getElementById('skill-suggestions');sug.forEach(function(s){var el=document.createElement('div');el.className='skill-suggestion';el.textContent=s;el.onclick=function(){addSkillValue(s);};w.appendChild(el);});})();
 function addSkill(){var i=document.getElementById('skill-input');addSkillValue(i.value.trim());i.value='';}
 function addSkillValue(val){if(!val)return;if(resumeData.skills.includes(val)){showToast('Already added!');return;}resumeData.skills.push(val);renderSkillTags();liveUpdate();}
-function removeSkill(idx){resumeData.skills.splice(idx,1);renderSkillTags();liveUpdate();}
+function removeSkill(i){resumeData.skills.splice(i,1);renderSkillTags();liveUpdate();}
 function renderSkillTags(){var w=document.getElementById('skills-tags');w.innerHTML='';resumeData.skills.forEach(function(s,i){var t=document.createElement('div');t.className='skill-tag';t.innerHTML=s+'<button onclick="removeSkill('+i+')">×</button>';w.appendChild(t);});}
 
 /* ══ EXPERIENCE ══ */
-var expCounter=0;
-function addExperience(){expCounter++;var id='exp-'+expCounter;resumeData.experience.push({id:id,company:'',role:'',start:'',end:'',desc:''});renderExperienceCards();}
-function removeExperience(id){resumeData.experience=resumeData.experience.filter(function(e){return e.id!==id;});renderExperienceCards();liveUpdate();}
-function renderExperienceCards(){var list=document.getElementById('exp-list');list.innerHTML='';resumeData.experience.forEach(function(exp){var card=document.createElement('div');card.className='repeat-card open';card.id='card-'+exp.id;card.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+exp.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-exp">💼</div><div><div class="rch-title">'+(exp.company||'New Experience')+'</div><div class="rch-sub">'+(exp.role||'Role')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeExperience(\''+exp.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow"><div class="fgroup"><label class="flabel">Company</label><input class="finput" value="'+exp.company+'" placeholder="e.g. TCS" oninput="updateExp(\''+exp.id+'\',\'company\',this.value)"></div><div class="fgroup"><label class="flabel">Role</label><input class="finput" value="'+exp.role+'" placeholder="e.g. Intern" oninput="updateExp(\''+exp.id+'\',\'role\',this.value)"></div></div><div class="frow"><div class="fgroup"><label class="flabel">Start</label><input class="finput" value="'+exp.start+'" placeholder="Jun 2024" oninput="updateExp(\''+exp.id+'\',\'start\',this.value)"></div><div class="fgroup"><label class="flabel">End</label><input class="finput" value="'+exp.end+'" placeholder="Present" oninput="updateExp(\''+exp.id+'\',\'end\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">Description</label><div class="ai-row"><textarea class="ftextarea" oninput="updateExp(\''+exp.id+'\',\'desc\',this.value)">'+exp.desc+'</textarea><button class="ai-enhance-btn" onclick="aiEnhanceExp(\''+exp.id+'\')"><span>✨</span>AI</button></div></div></div></div>';list.appendChild(card);});}
-function updateExp(id,field,val){var item=resumeData.experience.find(function(e){return e.id===id;});if(item){item[field]=val;}var card=document.getElementById('card-'+id);if(card){var t=card.querySelector('.rch-title');var s=card.querySelector('.rch-sub');if(t)t.textContent=item.company||'New Experience';if(s)s.textContent=item.role||'Role';}liveUpdate();}
+var expCtr=0;
+function addExperience(){expCtr++;var id='exp-'+expCtr;resumeData.experience.push({id:id,company:'',role:'',start:'',end:'',desc:''});renderExpCards();}
+function removeExperience(id){resumeData.experience=resumeData.experience.filter(function(e){return e.id!==id;});renderExpCards();liveUpdate();}
+function renderExpCards(){var list=document.getElementById('exp-list');list.innerHTML='';resumeData.experience.forEach(function(exp){var c=document.createElement('div');c.className='repeat-card open';c.id='card-'+exp.id;c.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+exp.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-exp">💼</div><div><div class="rch-title">'+(exp.company||'New Experience')+'</div><div class="rch-sub">'+(exp.role||'Role')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeExperience(\''+exp.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow"><div class="fgroup"><label class="flabel">Company</label><input class="finput" value="'+exp.company+'" placeholder="e.g. TCS" oninput="updateExp(\''+exp.id+'\',\'company\',this.value)"></div><div class="fgroup"><label class="flabel">Role</label><input class="finput" value="'+exp.role+'" placeholder="e.g. Intern" oninput="updateExp(\''+exp.id+'\',\'role\',this.value)"></div></div><div class="frow"><div class="fgroup"><label class="flabel">Start</label><input class="finput" value="'+exp.start+'" placeholder="Jun 2024" oninput="updateExp(\''+exp.id+'\',\'start\',this.value)"></div><div class="fgroup"><label class="flabel">End</label><input class="finput" value="'+exp.end+'" placeholder="Present" oninput="updateExp(\''+exp.id+'\',\'end\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">Description</label><div class="ai-row"><textarea class="ftextarea" oninput="updateExp(\''+exp.id+'\',\'desc\',this.value)">'+exp.desc+'</textarea><button class="ai-enhance-btn" onclick="aiEnhanceCard(\''+exp.id+'\',\'exp\')"><span>✨</span>AI</button></div></div></div></div>';list.appendChild(c);});}
+function updateExp(id,f,v){var item=resumeData.experience.find(function(e){return e.id===id;});if(item)item[f]=v;var c=document.getElementById('card-'+id);if(c){c.querySelector('.rch-title').textContent=item.company||'New Experience';c.querySelector('.rch-sub').textContent=item.role||'Role';}liveUpdate();}
 
 /* ══ PROJECTS ══ */
-var projCounter=0;
-function addProject(){projCounter++;var id='proj-'+projCounter;resumeData.projects.push({id:id,name:'',tech:'',link:'',desc:''});renderProjectCards();}
-function removeProject(id){resumeData.projects=resumeData.projects.filter(function(p){return p.id!==id;});renderProjectCards();liveUpdate();}
-function renderProjectCards(){var list=document.getElementById('proj-list');list.innerHTML='';resumeData.projects.forEach(function(proj){var card=document.createElement('div');card.className='repeat-card open';card.id='card-'+proj.id;card.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+proj.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-proj">🚀</div><div><div class="rch-title">'+(proj.name||'New Project')+'</div><div class="rch-sub">'+(proj.tech||'Tech stack')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeProject(\''+proj.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow"><div class="fgroup"><label class="flabel">Project Name</label><input class="finput" value="'+proj.name+'" placeholder="e.g. Prolio AI" oninput="updateProj(\''+proj.id+'\',\'name\',this.value)"></div><div class="fgroup"><label class="flabel">Tech Stack</label><input class="finput" value="'+proj.tech+'" placeholder="React, Node.js" oninput="updateProj(\''+proj.id+'\',\'tech\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">Live Link / GitHub</label><input class="finput" value="'+proj.link+'" placeholder="https://github.com/..." oninput="updateProj(\''+proj.id+'\',\'link\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">Description</label><div class="ai-row"><textarea class="ftextarea" oninput="updateProj(\''+proj.id+'\',\'desc\',this.value)">'+proj.desc+'</textarea><button class="ai-enhance-btn" onclick="aiEnhanceProj(\''+proj.id+'\')"><span>✨</span>AI</button></div></div></div></div>';list.appendChild(card);});}
-function updateProj(id,field,val){var item=resumeData.projects.find(function(p){return p.id===id;});if(item){item[field]=val;}var card=document.getElementById('card-'+id);if(card){var t=card.querySelector('.rch-title');var s=card.querySelector('.rch-sub');if(t)t.textContent=item.name||'New Project';if(s)s.textContent=item.tech||'Tech stack';}liveUpdate();}
+var projCtr=0;
+function addProject(){projCtr++;var id='proj-'+projCtr;resumeData.projects.push({id:id,name:'',tech:'',link:'',desc:''});renderProjCards();}
+function removeProject(id){resumeData.projects=resumeData.projects.filter(function(p){return p.id!==id;});renderProjCards();liveUpdate();}
+function renderProjCards(){var list=document.getElementById('proj-list');list.innerHTML='';resumeData.projects.forEach(function(proj){var c=document.createElement('div');c.className='repeat-card open';c.id='card-'+proj.id;c.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+proj.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-proj">🚀</div><div><div class="rch-title">'+(proj.name||'New Project')+'</div><div class="rch-sub">'+(proj.tech||'Tech stack')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeProject(\''+proj.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow"><div class="fgroup"><label class="flabel">Project Name</label><input class="finput" value="'+proj.name+'" placeholder="e.g. Prolio AI" oninput="updateProj(\''+proj.id+'\',\'name\',this.value)"></div><div class="fgroup"><label class="flabel">Tech Stack</label><input class="finput" value="'+proj.tech+'" placeholder="React, Node.js" oninput="updateProj(\''+proj.id+'\',\'tech\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">GitHub / Live Link</label><input class="finput" value="'+proj.link+'" placeholder="https://github.com/..." oninput="updateProj(\''+proj.id+'\',\'link\',this.value)"></div></div><div class="frow single"><div class="fgroup"><label class="flabel">Description</label><div class="ai-row"><textarea class="ftextarea" oninput="updateProj(\''+proj.id+'\',\'desc\',this.value)">'+proj.desc+'</textarea><button class="ai-enhance-btn" onclick="aiEnhanceCard(\''+proj.id+'\',\'proj\')"><span>✨</span>AI</button></div></div></div></div>';list.appendChild(c);});}
+function updateProj(id,f,v){var item=resumeData.projects.find(function(p){return p.id===id;});if(item)item[f]=v;var c=document.getElementById('card-'+id);if(c){c.querySelector('.rch-title').textContent=item.name||'New Project';c.querySelector('.rch-sub').textContent=item.tech||'Tech stack';}liveUpdate();}
 
 /* ══ EDUCATION ══ */
-var eduCounter=0;
-function addEducation(){eduCounter++;var id='edu-'+eduCounter;resumeData.education.push({id:id,institution:'',degree:'',field:'',start:'',end:'',grade:''});renderEducationCards();}
-function removeEducation(id){resumeData.education=resumeData.education.filter(function(e){return e.id!==id;});renderEducationCards();liveUpdate();}
-function renderEducationCards(){var list=document.getElementById('edu-list');list.innerHTML='';resumeData.education.forEach(function(edu){var card=document.createElement('div');card.className='repeat-card open';card.id='card-'+edu.id;card.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+edu.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-edu">🎓</div><div><div class="rch-title">'+(edu.institution||'Institution')+'</div><div class="rch-sub">'+(edu.degree||'Degree')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeEducation(\''+edu.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow single"><div class="fgroup"><label class="flabel">Institution</label><input class="finput" value="'+edu.institution+'" placeholder="e.g. GRTIET" oninput="updateEdu(\''+edu.id+'\',\'institution\',this.value)"></div></div><div class="frow"><div class="fgroup"><label class="flabel">Degree</label><input class="finput" value="'+edu.degree+'" placeholder="B.E / B.Tech" oninput="updateEdu(\''+edu.id+'\',\'degree\',this.value)"></div><div class="fgroup"><label class="flabel">Field</label><input class="finput" value="'+edu.field+'" placeholder="Information Technology" oninput="updateEdu(\''+edu.id+'\',\'field\',this.value)"></div></div><div class="frow triple"><div class="fgroup"><label class="flabel">Start</label><input class="finput" value="'+edu.start+'" placeholder="2022" oninput="updateEdu(\''+edu.id+'\',\'start\',this.value)"></div><div class="fgroup"><label class="flabel">End</label><input class="finput" value="'+edu.end+'" placeholder="2026" oninput="updateEdu(\''+edu.id+'\',\'end\',this.value)"></div><div class="fgroup"><label class="flabel">Grade</label><input class="finput" value="'+edu.grade+'" placeholder="8.5 CGPA" oninput="updateEdu(\''+edu.id+'\',\'grade\',this.value)"></div></div></div>';list.appendChild(card);});}
-function updateEdu(id,field,val){var item=resumeData.education.find(function(e){return e.id===id;});if(item){item[field]=val;}var card=document.getElementById('card-'+id);if(card){var t=card.querySelector('.rch-title');var s=card.querySelector('.rch-sub');if(t)t.textContent=item.institution||'Institution';if(s)s.textContent=item.degree||'Degree';}liveUpdate();}
-
+var eduCtr=0;
+function addEducation(){eduCtr++;var id='edu-'+eduCtr;resumeData.education.push({id:id,institution:'',degree:'',field:'',start:'',end:'',grade:''});renderEduCards();}
+function removeEducation(id){resumeData.education=resumeData.education.filter(function(e){return e.id!==id;});renderEduCards();liveUpdate();}
+function renderEduCards(){var list=document.getElementById('edu-list');list.innerHTML='';resumeData.education.forEach(function(edu){var c=document.createElement('div');c.className='repeat-card open';c.id='card-'+edu.id;c.innerHTML='<div class="repeat-card-head" onclick="toggleCard(\'card-'+edu.id+'\')">'+'<div class="rch-left"><div class="rch-icon i-edu">🎓</div><div><div class="rch-title">'+(edu.institution||'Institution')+'</div><div class="rch-sub">'+(edu.degree||'Degree')+'</div></div></div>'+'<div class="rch-right"><button class="rch-del" onclick="event.stopPropagation();removeEducation(\''+edu.id+'\')">Remove</button><span class="rch-chevron">›</span></div></div>'+'<div class="repeat-card-body"><div class="frow single"><div class="fgroup"><label class="flabel">Institution</label><input class="finput" value="'+edu.institution+'" placeholder="e.g. GRTIET" oninput="updateEdu(\''+edu.id+'\',\'institution\',this.value)"></div></div><div class="frow"><div class="fgroup"><label class="flabel">Degree</label><input class="finput" value="'+edu.degree+'" placeholder="B.E / B.Tech" oninput="updateEdu(\''+edu.id+'\',\'degree\',this.value)"></div><div class="fgroup"><label class="flabel">Field</label><input class="finput" value="'+edu.field+'" placeholder="Information Technology" oninput="updateEdu(\''+edu.id+'\',\'field\',this.value)"></div></div><div class="frow triple"><div class="fgroup"><label class="flabel">Start</label><input class="finput" value="'+edu.start+'" placeholder="2022" oninput="updateEdu(\''+edu.id+'\',\'start\',this.value)"></div><div class="fgroup"><label class="flabel">End</label><input class="finput" value="'+edu.end+'" placeholder="2026" oninput="updateEdu(\''+edu.id+'\',\'end\',this.value)"></div><div class="fgroup"><label class="flabel">Grade</label><input class="finput" value="'+edu.grade+'" placeholder="8.5 CGPA" oninput="updateEdu(\''+edu.id+'\',\'grade\',this.value)"></div></div></div>';list.appendChild(c);});}
+function updateEdu(id,f,v){var item=resumeData.education.find(function(e){return e.id===id;});if(item)item[f]=v;var c=document.getElementById('card-'+id);if(c){c.querySelector('.rch-title').textContent=item.institution||'Institution';c.querySelector('.rch-sub').textContent=item.degree||'Degree';}liveUpdate();}
 function toggleCard(id){document.getElementById(id).classList.toggle('open');}
 
-/* ══ TEMPLATE & COLOR ══ */
+/* ══ TEMPLATE ══ */
+var photoTemplates=[14,15,16,17,18];
 function selectTemplate(n,el){
   resumeData.template=n;
   document.querySelectorAll('.tmpl-card').forEach(function(c){c.classList.remove('selected');});
   el.classList.add('selected');
   var paper=document.getElementById('resume-paper');
   paper.className=paper.className.replace(/tmpl-\d+/,'tmpl-'+n);
-  // Handle sidebar templates
-  var sidebar=document.getElementById('rp-sidebar');
-  if(n===9){sidebar.style.display='block';}else{sidebar.style.display='none';}
+  // Photo upload visibility
+  var ps=document.getElementById('photo-upload-section');
+  ps.classList.toggle('show',photoTemplates.includes(n));
+  updatePhotoInResume();
+  reapplyAlignments();
   liveUpdate();
-  showToast('Template changed to '+el.querySelector('.tmpl-name').textContent);
-}
-function selectColor(color,el){
-  resumeData.color=color;
-  document.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('selected');});
-  el.classList.add('selected');
-  var paper=document.getElementById('resume-paper');
-  paper.className=paper.className.replace(/ac-\w+/,'ac-'+color);
-  liveUpdate();
+  showToast('Template: '+el.querySelector('.tmpl-name').textContent);
 }
 
-/* ══ ALIGNMENT CONTROLS ══ */
-function setAlign(target,val,btn){
-  var paper=document.getElementById('resume-paper');
-  if(target==='name'){
-    var el=document.getElementById('rp-name');
-    if(el)el.style.textAlign=val;
-  } else if(target==='contact'){
-    var el=document.getElementById('rp-contact-row');
-    if(el)el.style.justifyContent=val;
-  } else if(target==='sectiontitle'){
-    paper.querySelectorAll('.rp-section-title').forEach(function(e){e.style.textAlign=val;});
-    paper.dataset.sectionAlign=val;
-  } else if(target==='body'){
-    paper.querySelectorAll('.rp-item-desc,.rp-summary').forEach(function(e){e.style.textAlign=val;});
-    paper.dataset.bodyAlign=val;
+/* ══ COLOR ══ */
+function selectColor(color,el){resumeData.color=color;document.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('selected');});el.classList.add('selected');var p=document.getElementById('resume-paper');p.className=p.className.replace(/ac-\w+/,'ac-'+color);showToast('Accent: '+color);}
+
+/* ══ PHOTO UPLOAD ══ */
+function handlePhotoUpload(e){
+  var file=e.target.files[0];if(!file)return;
+  if(file.size>5*1024*1024){showToast('⚠️ Photo must be under 5MB');return;}
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    photoDataUrl=ev.target.result;
+    var wrap=document.getElementById('photo-preview-wrap');
+    wrap.innerHTML='<img src="'+photoDataUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    document.getElementById('photo-remove-btn').style.display='block';
+    document.getElementById('photo-placeholder-icon').style.display='none';
+    updatePhotoInResume();showToast('✅ Photo uploaded!');
+  };reader.readAsDataURL(file);
+}
+function removePhoto(){
+  photoDataUrl='';
+  var wrap=document.getElementById('photo-preview-wrap');
+  wrap.innerHTML='<span id="photo-placeholder-icon">👤</span>';
+  document.getElementById('photo-remove-btn').style.display='none';
+  updatePhotoInResume();showToast('Photo removed');
+}
+function updatePhotoInResume(){
+  var pw=document.getElementById('rp-photo-wrap');
+  if(!pw)return;
+  var n=resumeData.template;
+  var isPhoto=photoTemplates.includes(n);
+  if(!isPhoto){pw.style.display='none';return;}
+  pw.style.display='block';
+  if(photoDataUrl){
+    var isSquare=(n===17||n===18);
+    pw.innerHTML='<img src="'+photoDataUrl+'" class="'+(isSquare?'rp-photo-sq':'rp-photo')+'" style="border:3px solid rgba(255,255,255,0.25);">';
+  } else {
+    pw.innerHTML='<div class="rp-photo-placeholder">👤</div>';
   }
-  // Update button states
-  btn.closest('.align-btns').querySelectorAll('.align-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
 }
 
-function setSkillsLayout(layout,btn){
-  var wrap=document.getElementById('rp-skills-wrap');
-  if(!wrap)return;
-  if(layout==='wrap'){wrap.style.display='flex';wrap.style.flexDirection='row';wrap.style.flexWrap='wrap';}
-  else if(layout==='column'){wrap.style.display='flex';wrap.style.flexDirection='column';wrap.style.flexWrap='nowrap';}
-  else if(layout==='inline'){wrap.style.display='block';}
-  btn.closest('.align-btns').querySelectorAll('.align-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
+/* ══ ALIGNMENT ══ */
+function setAlignTarget(target,val,btn,groupId){
+  alignState[target]=val;
+  document.querySelectorAll('#'+groupId+' .ab').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var paper=document.getElementById('resume-paper');
+  if(target==='name'){var el=paper.querySelector('#rp-name');if(el)el.style.textAlign=val;}
+  else if(target==='role'){var el=paper.querySelector('#rp-role');if(el)el.style.textAlign=val;}
+  else if(target==='contact'){var el=paper.querySelector('#rp-contact-row');if(el)el.style.justifyContent=val;}
+  else if(target==='section'){paper.querySelectorAll('.rp-section-title').forEach(function(e){e.style.textAlign=val;});}
+  else if(target==='body'){paper.querySelectorAll('.rp-item-desc,.rp-summary').forEach(function(e){e.style.textAlign=val;});}
 }
-
-function setPadding(val){
-  var body=document.getElementById('rp-body');
-  var header=document.getElementById('rp-header');
-  if(body)body.style.padding=val+'px '+val+'px';
-  if(header)header.style.padding=val+'px '+val+'px';
-}
-function setFontSize(val){document.getElementById('rp-body').style.fontSize=val+'px';}
-function setLineHeight(val){document.getElementById('rp-body').style.lineHeight=val;}
-function setSectionGap(val){
-  document.querySelectorAll('#rp-body .rp-section').forEach(function(s){s.style.marginBottom=val+'px';});
-}
-
-/* ══ SECTION ORDERING & VISIBILITY ══ */
-var dragSrc=null;
-function dragStart(e){dragSrc=e.currentTarget;e.dataTransfer.effectAllowed='move';}
-function dragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';return false;}
-function dropSection(e){
-  e.stopPropagation();
-  if(dragSrc!==e.currentTarget){
-    var parent=dragSrc.parentNode;
-    var srcIdx=Array.from(parent.children).indexOf(dragSrc);
-    var tgtIdx=Array.from(parent.children).indexOf(e.currentTarget);
-    if(srcIdx<tgtIdx){parent.insertBefore(dragSrc,e.currentTarget.nextSibling);}
-    else{parent.insertBefore(dragSrc,e.currentTarget);}
-    // Reorder sections in resume preview
-    reorderPreviewSections();
-  }
-  return false;
-}
-function reorderPreviewSections(){
-  var order=document.getElementById('section-order');
-  var items=order.querySelectorAll('.order-item');
-  var rpBody=document.getElementById('rp-body');
-  var sectionMap={'summary':'rp-sec-summary','skills':'rp-sec-skills','exp':'rp-sec-exp','proj':'rp-sec-proj','edu':'rp-sec-edu'};
-  items.forEach(function(item){
-    var key=item.dataset.section;
-    var sec=document.getElementById(sectionMap[key]);
-    if(sec)rpBody.appendChild(sec);
+function reapplyAlignments(){
+  Object.keys(alignState).forEach(function(k){
+    var paper=document.getElementById('resume-paper');
+    if(k==='name'){var el=paper.querySelector('#rp-name');if(el)el.style.textAlign=alignState[k];}
+    else if(k==='role'){var el=paper.querySelector('#rp-role');if(el)el.style.textAlign=alignState[k];}
+    else if(k==='contact'){var el=paper.querySelector('#rp-contact-row');if(el)el.style.justifyContent=alignState[k];}
+    else if(k==='section'){paper.querySelectorAll('.rp-section-title').forEach(function(e){e.style.textAlign=alignState[k];});}
+    else if(k==='body'){paper.querySelectorAll('.rp-item-desc,.rp-summary').forEach(function(e){e.style.textAlign=alignState[k];});}
   });
 }
-function toggleSection(id,btn){
-  btn.classList.toggle('on');
-  var sec=document.getElementById(id);
-  if(sec){sec.style.opacity=btn.classList.contains('on')?'1':'0.2';sec.style.pointerEvents=btn.classList.contains('on')?'':'none';}
+function setSkillsLayout(layout,btn,groupId){
+  skillsLayout=layout;
+  document.querySelectorAll('#'+groupId+' .ab').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  renderSkillsPreview();
+}
+function applySlider(ctrl,val){
+  var paper=document.getElementById('resume-paper');
+  var num=parseFloat(val);
+  if(ctrl==='namesize'){var el=paper.querySelector('#rp-name');if(el)el.style.fontSize=num+'px';}
+  else if(ctrl==='fontsize'){var b=paper.querySelector('#rp-body');if(b)b.style.fontSize=num+'px';}
+  else if(ctrl==='lineheight'){var b=paper.querySelector('#rp-body');if(b)b.style.lineHeight=num;}
+  else if(ctrl==='padding'){var b=paper.querySelector('#rp-body');var h=paper.querySelector('#rp-header');if(b)b.style.padding=num+'px';if(h)h.style.padding=num+'px';}
+  else if(ctrl==='secgap'){paper.querySelectorAll('#rp-body .rp-section').forEach(function(s){s.style.marginBottom=num+'px';});}
 }
 
-/* ══ LIVE PREVIEW UPDATE ══ */
+/* ══ SECTION ORDER & VISIBILITY ══ */
+function dS(e){dragSrc=e.currentTarget;e.dataTransfer.effectAllowed='move';}
+function dO(e){e.preventDefault();e.dataTransfer.dropEffect='move';return false;}
+function dD(e){e.stopPropagation();if(dragSrc&&dragSrc!==e.currentTarget){var p=dragSrc.parentNode;var si=Array.from(p.children).indexOf(dragSrc);var ti=Array.from(p.children).indexOf(e.currentTarget);if(si<ti)p.insertBefore(dragSrc,e.currentTarget.nextSibling);else p.insertBefore(dragSrc,e.currentTarget);reorderSections();}return false;}
+function moveOrder(sec,dir){var arr=Array.from(document.querySelectorAll('#section-order .order-item'));var idx=arr.findIndex(function(i){return i.dataset.sec===sec;});var ni=idx+dir;if(ni<0||ni>=arr.length)return;var parent=arr[0].parentNode;if(dir>0&&arr[ni+1])parent.insertBefore(arr[idx],arr[ni+1]);else if(dir>0)parent.appendChild(arr[idx]);else parent.insertBefore(arr[idx],arr[ni]);reorderSections();}
+function reorderSections(){var items=document.querySelectorAll('#section-order .order-item');var smap={summary:'rp-sec-summary',skills:'rp-sec-skills',exp:'rp-sec-exp',proj:'rp-sec-proj',edu:'rp-sec-edu'};var body=document.getElementById('rp-body');items.forEach(function(item){var sec=document.getElementById(smap[item.dataset.sec]);if(sec)body.appendChild(sec);});showToast('Section order updated!');}
+function toggleSec(id,cb){var sec=document.getElementById(id);if(sec){sec.style.opacity=cb.checked?'1':'0.25';sec.style.pointerEvents=cb.checked?'auto':'none';}}
+
+/* ══ SKILLS PREVIEW ══ */
+function renderSkillsPreview(){
+  var sw=document.getElementById('rp-skills-wrap');if(!sw)return;
+  if(resumeData.skills.length===0){sw.innerHTML='<span class="rp-placeholder">Skills will appear here...</span>';return;}
+  if(skillsLayout==='pills'){sw.style.display='flex';sw.style.flexWrap='wrap';sw.style.gap='5px';sw.innerHTML=resumeData.skills.map(function(s){return'<span class="rp-skill-pill">'+esc(s)+'</span>';}).join('');}
+  else if(skillsLayout==='list'){sw.style.display='block';sw.innerHTML='<ul style="list-style:disc;padding-left:16px;font-size:12px;color:#475569;">'+resumeData.skills.map(function(s){return'<li>'+esc(s)+'</li>';}).join('')+'</ul>';}
+  else if(skillsLayout==='inline'){sw.style.display='block';sw.innerHTML='<p style="font-size:12px;color:#475569;line-height:1.8;">'+resumeData.skills.map(esc).join(' &nbsp;·&nbsp; ')+'</p>';}
+  else if(skillsLayout==='grid'){sw.style.display='grid';sw.style.gridTemplateColumns='repeat(3,1fr)';sw.style.gap='4px';sw.innerHTML=resumeData.skills.map(function(s){return'<span class="rp-skill-pill" style="text-align:center;">'+esc(s)+'</span>';}).join('');}
+}
+
+/* ══ LIVE UPDATE ══ */
 function liveUpdate(){
   resumeData.firstname=v('f-firstname');resumeData.lastname=v('f-lastname');
   resumeData.role=v('f-role');resumeData.email=v('f-email');resumeData.phone=v('f-phone');
   resumeData.location=v('f-location');resumeData.linkedin=v('f-linkedin');
   resumeData.github=v('f-github');resumeData.summary=v('f-summary');
-
-  var fullName=(resumeData.firstname+' '+resumeData.lastname).trim();
-  var paper=document.getElementById('resume-paper');
-
-  // Preserve alignment overrides
-  var nameEl=document.getElementById('rp-name');
-  var prevNameAlign=nameEl?nameEl.style.textAlign:'';
-
-  setText('rp-name',fullName||'Your Name');
-  setText('rp-role',resumeData.role||'Your Job Title');
+  var full=(resumeData.firstname+' '+resumeData.lastname).trim();
+  setText('rp-name',full||'Your Name');setText('rp-role',resumeData.role||'Your Job Title');
   setText('rp-email',resumeData.email?'📧 '+resumeData.email:'📧 email@example.com');
   setText('rp-phone',resumeData.phone?'📞 '+resumeData.phone:'📞 phone');
   setText('rp-location',resumeData.location?'📍 '+resumeData.location:'📍 location');
-
-  if(prevNameAlign&&nameEl)nameEl.style.textAlign=prevNameAlign;
-
-  var liEl=document.getElementById('rp-linkedin');
-  if(liEl){liEl.style.display=resumeData.linkedin?'flex':'none';liEl.textContent='🔗 '+resumeData.linkedin;}
-
+  var li=document.getElementById('rp-linkedin');if(li){li.style.display=resumeData.linkedin?'flex':'none';li.textContent='🔗 '+resumeData.linkedin;}
   var sumEl=document.getElementById('rp-summary-text');
   if(sumEl){if(resumeData.summary){sumEl.textContent=resumeData.summary;sumEl.classList.remove('rp-placeholder');}else{sumEl.textContent='Your professional summary will appear here...';sumEl.classList.add('rp-placeholder');}}
-
-  var sw=document.getElementById('rp-skills-wrap');
-  if(sw){if(resumeData.skills.length>0){sw.innerHTML=resumeData.skills.map(function(s){return'<span class="rp-skill-pill">'+esc(s)+'</span>';}).join('');}else{sw.innerHTML='<span class="rp-placeholder">Skills will appear here...</span>';}}
-
-  // Reapply section align
-  if(paper.dataset.sectionAlign){paper.querySelectorAll('.rp-section-title').forEach(function(e){e.style.textAlign=paper.dataset.sectionAlign;});}
-  if(paper.dataset.bodyAlign){paper.querySelectorAll('.rp-item-desc,.rp-summary').forEach(function(e){e.style.textAlign=paper.dataset.bodyAlign;});}
-
-  var expSec=document.getElementById('rp-sec-exp');
-  var expList=document.getElementById('rp-exp-list');
-  if(expList){if(resumeData.experience.length>0){expSec.style.display='block';expList.innerHTML=resumeData.experience.map(function(e){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(e.role||'Role')+'</div><div class="rp-item-date">'+esc((e.start&&e.end)?e.start+' – '+e.end:(e.start||''))+'</div></div><div class="rp-item-sub">'+esc(e.company||'')+'</div>'+(e.desc?'<div class="rp-item-desc">'+esc(e.desc)+'</div>':'')+'</div>';}).join('');}else{expSec.style.display='none';}}
-
-  var projSec=document.getElementById('rp-sec-proj');
-  var projList=document.getElementById('rp-proj-list');
-  if(projList){if(resumeData.projects.length>0){projSec.style.display='block';projList.innerHTML=resumeData.projects.map(function(p){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(p.name||'Project')+'</div>'+(p.link?'<div class="rp-item-date" style="color:#7b4dff;font-size:10px;">🔗 link</div>':'')+'</div>'+(p.tech?'<div class="rp-item-sub">'+esc(p.tech)+'</div>':'')+(p.desc?'<div class="rp-item-desc">'+esc(p.desc)+'</div>':'')+'</div>';}).join('');}else{projSec.style.display='none';}}
-
-  var eduSec=document.getElementById('rp-sec-edu');
-  var eduList=document.getElementById('rp-edu-list');
-  if(eduList){if(resumeData.education.length>0){eduSec.style.display='block';eduList.innerHTML=resumeData.education.map(function(e){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(e.institution||'Institution')+'</div><div class="rp-item-date">'+esc((e.start&&e.end)?e.start+' – '+e.end:(e.start||''))+'</div></div><div class="rp-item-sub">'+esc([e.degree,e.field].filter(Boolean).join(', '))+'</div>'+(e.grade?'<div class="rp-item-desc">Grade: '+esc(e.grade)+'</div>':'')+'</div>';}).join('');}else{eduSec.style.display='none';}}
-
-  var ss=document.getElementById('tb-save-status');
-  if(ss)ss.textContent='Unsaved changes';
-  var raw=document.getElementById('raw-view');
-  if(raw&&raw.style.display!=='none')raw.textContent=JSON.stringify(resumeData,null,2);
+  renderSkillsPreview();
+  var expSec=document.getElementById('rp-sec-exp');var expList=document.getElementById('rp-exp-list');
+  if(expList){if(resumeData.experience.length>0){expSec.style.display='block';expList.innerHTML=resumeData.experience.map(function(e){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(e.role||'Role')+'</div><div class="rp-item-date">'+esc((e.start&&e.end)?e.start+' – '+e.end:e.start||'')+'</div></div><div class="rp-item-sub">'+esc(e.company||'')+'</div>'+(e.desc?'<div class="rp-item-desc">'+esc(e.desc)+'</div>':'')+'</div>';}).join('');}else expSec.style.display='none';}
+  var projSec=document.getElementById('rp-sec-proj');var projList=document.getElementById('rp-proj-list');
+  if(projList){if(resumeData.projects.length>0){projSec.style.display='block';projList.innerHTML=resumeData.projects.map(function(p){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(p.name||'Project')+'</div>'+(p.link?'<div class="rp-item-date" style="color:#7b4dff;font-size:10px;">🔗 link</div>':'')+'</div>'+(p.tech?'<div class="rp-item-sub">'+esc(p.tech)+'</div>':'')+(p.desc?'<div class="rp-item-desc">'+esc(p.desc)+'</div>':'')+'</div>';}).join('');}else projSec.style.display='none';}
+  var eduSec=document.getElementById('rp-sec-edu');var eduList=document.getElementById('rp-edu-list');
+  if(eduList){if(resumeData.education.length>0){eduSec.style.display='block';eduList.innerHTML=resumeData.education.map(function(e){return'<div class="rp-item"><div class="rp-item-head"><div class="rp-item-title">'+esc(e.institution||'Institution')+'</div><div class="rp-item-date">'+esc((e.start&&e.end)?e.start+' – '+e.end:e.start||'')+'</div></div><div class="rp-item-sub">'+esc([e.degree,e.field].filter(Boolean).join(', '))+'</div>'+(e.grade?'<div class="rp-item-desc">Grade: '+esc(e.grade)+'</div>':'')+'</div>';}).join('');}else eduSec.style.display='none';}
+  reapplyAlignments();
+  document.getElementById('tb-save-status').textContent='Unsaved changes';
+  var raw=document.getElementById('raw-view');if(raw&&raw.style.display!=='none')raw.textContent=JSON.stringify(resumeData,null,2);
 }
-
 function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
 function setText(id,val){var el=document.getElementById(id);if(el)el.textContent=val;}
-function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-/* ══ AI ENHANCE ══ */
-var sampleEnhanced={
-  summary:"Results-driven IT professional with hands-on experience in full-stack web development using modern frameworks. Passionate about building intuitive, scalable applications with clean code and exceptional user experiences. Eager to contribute technical expertise to innovative teams and deliver impactful digital solutions.",
-  exp:"• Developed and maintained responsive web applications using React.js and Node.js, improving page load time by 40%.\n• Collaborated with cross-functional teams to design RESTful APIs and integrate third-party services.\n• Participated in code reviews, contributing to a 25% reduction in bug reports.",
-  proj:"• Built a full-stack AI-powered platform enabling users to generate professional resumes and portfolio websites in minutes.\n• Implemented JWT-based authentication, MongoDB data storage, and a React.js frontend with real-time preview.\n• Deployed on cloud infrastructure with 99.9% uptime and 200+ active users within the first month."
-};
-function aiEnhance(fieldId,type){var btn=event.target.closest('.ai-enhance-btn');var origHTML=btn.innerHTML;btn.innerHTML='<span class="ai-loading">⟳</span> AI';btn.disabled=true;setTimeout(function(){var el=document.getElementById(fieldId);if(el){el.value=sampleEnhanced[type]||el.value;liveUpdate();}btn.innerHTML=origHTML;btn.disabled=false;showToast('✨ AI enhanced your text!');},1800);}
-function aiEnhanceExp(id){var card=document.getElementById('card-'+id);if(!card)return;var btn=card.querySelector('.ai-enhance-btn');var origHTML=btn.innerHTML;btn.innerHTML='<span class="ai-loading">⟳</span>';btn.disabled=true;setTimeout(function(){var ta=card.querySelector('.ftextarea');if(ta){ta.value=sampleEnhanced.exp;updateExp(id,'desc',ta.value);}btn.innerHTML=origHTML;btn.disabled=false;showToast('✨ AI enhanced your experience!');},1800);}
-function aiEnhanceProj(id){var card=document.getElementById('card-'+id);if(!card)return;var btn=card.querySelector('.ai-enhance-btn');var origHTML=btn.innerHTML;btn.innerHTML='<span class="ai-loading">⟳</span>';btn.disabled=true;setTimeout(function(){var ta=card.querySelector('.ftextarea');if(ta){ta.value=sampleEnhanced.proj;updateProj(id,'desc',ta.value);}btn.innerHTML=origHTML;btn.disabled=false;showToast('✨ AI enhanced your project!');},1800);}
+/* ══ AI ══ */
+var aiTxt={summary:"Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications with clean code. Eager to contribute to innovative teams and deliver impactful digital solutions.",exp:"• Developed and maintained responsive web applications using React.js and Node.js, improving page load time by 40%.\n• Collaborated with cross-functional teams to design RESTful APIs.\n• Participated in code reviews, reducing bug reports by 25%.",proj:"• Built a full-stack AI-powered platform enabling users to generate professional resumes in minutes.\n• Implemented JWT authentication, MongoDB storage, and React.js frontend with real-time preview.\n• Deployed on cloud infrastructure with 99.9% uptime."};
+function aiEnhance(fieldId,type){var btn=event.target.closest('.ai-enhance-btn');var orig=btn.innerHTML;btn.innerHTML='<span class="ai-loading">⟳</span>AI';btn.disabled=true;setTimeout(function(){var el=document.getElementById(fieldId);if(el){el.value=aiTxt[type]||el.value;liveUpdate();}btn.innerHTML=orig;btn.disabled=false;showToast('✨ AI enhanced!');},1800);}
+function aiEnhanceCard(id,type){var card=document.getElementById('card-'+id);if(!card)return;var btn=card.querySelector('.ai-enhance-btn');var orig=btn.innerHTML;btn.innerHTML='<span class="ai-loading">⟳</span>';btn.disabled=true;setTimeout(function(){var ta=card.querySelector('.ftextarea');if(ta){ta.value=aiTxt[type]||ta.value;if(type==='exp')updateExp(id,'desc',ta.value);else updateProj(id,'desc',ta.value);}btn.innerHTML=orig;btn.disabled=false;showToast('✨ AI enhanced!');},1800);}
 
 /* ══ PREVIEW MODE ══ */
-function setPreviewMode(mode,btn){document.querySelectorAll('.preview-ctrl-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var paper=document.getElementById('resume-paper');var raw=document.getElementById('raw-view');if(mode==='preview'){paper.style.display='';raw.style.display='none';}else{paper.style.display='none';raw.style.display='block';raw.textContent=JSON.stringify(resumeData,null,2);}}
+function setPMode(mode,btn){document.querySelectorAll('.pctrl-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var paper=document.getElementById('resume-paper');var raw=document.getElementById('raw-view');if(mode==='preview'){paper.style.display='';raw.style.display='none';}else{paper.style.display='none';raw.style.display='block';raw.textContent=JSON.stringify(resumeData,null,2);}}
 function showPreviewMobile(){var pp=document.getElementById('preview-panel');pp.classList.toggle('show-mobile');showToast(pp.classList.contains('show-mobile')?'Showing preview':'Hiding preview');}
 
 /* ══ SAVE ══ */
-function handleSave(){liveUpdate();var btn=document.querySelector('.tb-btn.primary');var orig=btn.textContent;btn.textContent='⏳ Saving...';btn.disabled=true;setTimeout(function(){btn.textContent=orig;btn.disabled=false;document.getElementById('tb-save-status').textContent='All changes saved ✓';showToast('✅ Resume saved successfully!');},1400);}
+function handleSave(){liveUpdate();var btn=document.querySelector('.tb-btn.primary');var orig=btn.textContent;btn.textContent='⏳ Saving...';btn.disabled=true;setTimeout(function(){btn.textContent=orig;btn.disabled=false;document.getElementById('tb-save-status').textContent='All changes saved ✓';showToast('✅ Saved!');/*TODO: POST resumeData to backend*/},1400);}
 
 /* ══ TOAST ══ */
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
 
 /* ══ INIT ══ */
-(function init(){addExperience();addProject();addEducation();liveUpdate();})();
+(function(){addExperience();addProject();addEducation();liveUpdate();})();
 </script>
 </body>
 </html>
