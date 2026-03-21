@@ -414,6 +414,7 @@ code{font-family:'Fira Code',monospace;color:#c4b5fd;background:rgba(123,77,255,
 @media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}#docs-nav{display:none;}.sdk-grid{grid-template-columns:1fr;}}
 @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr;}#api-hero::after{display:none;}#docs-content{padding:20px;}.form-2{grid-template-columns:1fr;}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -423,17 +424,45 @@ code{font-family:'Fira Code',monospace;color:#c4b5fd;background:rgba(123,77,255,
   <aside id="sidebar">
     <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
     <nav id="sb-nav">
-      <div class="sb-lbl">Main</div>
-      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
-      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
-      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
-      <div class="sb-lbl">Manage</div>
-      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
-      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
-      <div class="nav-item active"><div class="nav-icon">🔗</div>Developer API</div>
-      <div class="sb-lbl">Support</div>
-      <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div>Help &amp; Docs</div>
-    </nav>
+    <div class="sb-section-label">Main</div>
+    <div class="nav-item" onclick="location.href='dashboard.html'">
+      <div class="nav-icon">📊</div> Dashboard
+    </div>
+    <div class="nav-item" onclick="location.href='resume-builder.html'">
+      <div class="nav-icon">📝</div> Resume Builder
+      <span class="nav-badge">AI</span>
+    </div>
+    <div class="nav-item" onclick="location.href='portfolio.html'">
+      <div class="nav-icon">🌐</div> My Portfolio
+    </div>
+    <div class="nav-item" onclick="location.href='portfolio.html'">
+      <div class="nav-icon">🎨</div> Portfolio Maker
+    </div>
+    <div class="nav-item" onclick="location.href='templates.html'">
+      <div class="nav-icon">🎨</div> Templates
+    </div>
+    <div class="nav-item" onclick="location.href='ai-enhance.html'">
+      <div class="nav-icon">✨</div> AI Enhance
+      <span class="nav-badge">AI</span>
+    </div>
+    <div class="sb-section-label">Manage</div>
+    <div class="nav-item" onclick="location.href='profile.html'">
+      <div class="nav-icon">👤</div> Profile
+    </div>
+    <div class="nav-item" onclick="location.href='settings.html'">
+      <div class="nav-icon">⚙️</div> Settings
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon">🔗</div> Developer API
+    </div>
+    <div class="sb-section-label">Support</div>
+    <div class="nav-item" onclick="location.href='help-docs.html'">
+      <div class="nav-icon">💬</div> Help &amp; Docs
+    </div>
+    <div class="nav-item" onclick="location.href='pricing.html'">
+      <div class="nav-icon">💎</div> Pricing &amp; Plans
+    </div>
+  </nav>
     <div id="sb-upgrade">
       <h4>✨ Go Pro</h4>
       <p>Unlock unlimited API calls, webhooks and advanced endpoints.</p>
@@ -1312,18 +1341,56 @@ function toast(msg) {
   window._tt = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-/* ── PLAN STATE ── */
+/* == PLAN STATE == */
 (function(){
-  var plan='free';
-  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
-  var isPro=plan==='pro'||plan==='team';
-  var isTeam=plan==='team';
+  var plan='free';try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';var isTeam=plan==='team';
   var r=document.getElementById('sb-user-role');
-  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
-  var u=document.getElementById('sb-upgrade');
-  if(u&&isPro)u.style.display='none';
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ❆';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');if(u&&isPro)u.style.display='none';
   var b=document.getElementById('plan-badge');
-  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'❆ Pro';b.style.display='inline-flex';}
+})();
+
+/* == SUPABASE USER LOADER == */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+  var cached = {};
+  try { cached = JSON.parse(localStorage.getItem('prolio_user') || '{}'); } catch(e) {}
+  if (cached.name) applyUser(cached);
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role  || 'Full Stack Developer';
+    var slug  = name.toLowerCase().replace(/ /g,'');
+    var u = { name:name, email:email, role:role, slug:slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(u)); } catch(e) {}
+    applyUser(u);
+    _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
+      if (r.data && r.data.plan && r.data.plan !== 'free') {
+        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+      }
+    });
+  });
+  function applyUser(u) {
+    var ini = u.name ? u.name.charAt(0).toUpperCase() : '?';
+    document.querySelectorAll('#sb-avatar,#tb-avatar').forEach(function(el){ el.textContent=ini; });
+    document.querySelectorAll('#sb-user-name,#user-name').forEach(function(el){ el.textContent=u.name; });
+    var greet = document.getElementById('greeting-name');
+    if (greet) greet.textContent = u.name.split(' ')[0];
+    var urlEl = document.getElementById('profile-url');
+    if (urlEl) urlEl.textContent = 'prolioai.com/u/' + u.slug;
+    var emailEl = document.getElementById('profile-email');
+    if (emailEl) { if(emailEl.tagName==='INPUT') emailEl.value=u.email; else emailEl.textContent=u.email; }
+    var roleEl = document.getElementById('user-role');
+    if (roleEl) roleEl.textContent = u.role;
+  }
 })();
 </script>
 </body>

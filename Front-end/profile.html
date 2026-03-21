@@ -562,6 +562,7 @@ body::before {
   #content { padding:20px 16px; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -572,35 +573,24 @@ body::before {
   <div id="sb-logo" onclick="window.location.href='dashboard.html'">Prolio AI</div>
   <nav id="sb-nav">
     <div class="sb-section-label">Main</div>
-    <div class="nav-item" onclick="window.location.href='dashboard.html'">
-      <div class="nav-icon">📊</div> Dashboard
-    </div>
-    <div class="nav-item" onclick="window.location.href='resume-builder.html'">
-      <div class="nav-icon">📝</div> Resume Builder
-      <span class="nav-badge">AI</span>
-    </div>
-    <div class="nav-item" onclick="window.location.href='portfolio.html'">
-      <div class="nav-icon">🌐</div> My Portfolio
-    </div>
+    <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div> Dashboard</div>
+    <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div> Resume Builder<span class="nav-badge">AI</span></div>
+    <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div> My Portfolio</div>
+    <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🎨</div> Portfolio Maker</div>
+    <div class="nav-item" onclick="location.href='templates.html'"><div class="nav-icon">🎨</div> Templates</div>
+    <div class="nav-item" onclick="location.href='ai-enhance.html'"><div class="nav-icon">✨</div> AI Enhance<span class="nav-badge">AI</span></div>
     <div class="sb-section-label">Manage</div>
-    <div class="nav-item active">
-      <div class="nav-icon">👤</div> Profile
-    </div>
-    <div class="nav-item" onclick="window.location.href='settings.html'">
-      <div class="nav-icon">⚙️</div> Settings
-    </div>
-    <div class="nav-item" onclick="window.location.href='developer-api.html'">
-      <div class="nav-icon">🔗</div> Developer API
-    </div>
+    <div class="nav-item active"><div class="nav-icon">👤</div> Profile</div>
+    <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div> Settings</div>
+    <div class="nav-item" onclick="location.href='developer-api.html'"><div class="nav-icon">🔗</div> Developer API</div>
     <div class="sb-section-label">Support</div>
-    <div class="nav-item" onclick="window.location.href='help-docs.html'">
-      <div class="nav-icon">💬</div> Help &amp; Docs
-    </div>
+    <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div> Help &amp; Docs</div>
+    <div class="nav-item" onclick="location.href='pricing.html'"><div class="nav-icon">💎</div> Pricing &amp; Plans</div>
   </nav>
   <div id="sb-upgrade">
     <h4>✨ Go Pro</h4>
     <p>Unlock unlimited resumes, custom domains and advanced AI features.</p>
-    <button id="sb-upgrade-btn" onclick="window.location.href='pricing.html'">Upgrade to Pro</button>
+    <button id="sb-upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
   </div>
   <div id="sb-user">
     <div id="sb-avatar" id="sb-av">A</div>
@@ -675,7 +665,7 @@ body::before {
                 <h4>Free Plan</h4>
                 <p>3 resumes · 1 portfolio · Basic AI</p>
               </div>
-              <span id="upgrade-link" onclick="window.location.href='pricing.html'">Upgrade →</span>
+              <span id="upgrade-link" onclick="location.href='pricing.html'">Upgrade →</span>
             </div>
             <div id="quick-stats">
               <div class="qs-item"><div class="qs-val" id="qs-res">3</div><div class="qs-lbl">Resumes</div></div>
@@ -1056,7 +1046,7 @@ body::before {
    DATA MODEL
 ══════════════════════════════════════ */
 var DATA = {
-  personal: { fname:'Arun', lname:'Ravi', role:'Full Stack Developer', location:'Chennai, India', email:'arun@example.com', phone:'+91 81241 81771', bio:'Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.', dob:'', gender:'', availability:'open' },
+  personal: { fname:'', lname:'', role:'', location:'', email:'', phone:'', bio:'Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.', dob:'', gender:'', availability:'open' },
   social: { linkedin:'linkedin.com/in/arunr', github:'github.com/arunr', twitter:'', website:'' },
   skills: ['HTML','CSS','JavaScript','React.js','Node.js','Python','MySQL','MongoDB','Git','Figma','TypeScript','REST API'],
   experience: [
@@ -1609,19 +1599,64 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-(function(){
-  var plan='free';
-  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
-  var isPro=plan==='pro'||plan==='team';
-  var isTeam=plan==='team';
-  var r=document.getElementById('sb-user-role');
-  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
-  var u=document.getElementById('sb-upgrade');
-  if(u&&isPro)u.style.display='none';
-  var b=document.getElementById('plan-badge');
-  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
-  var ul=document.getElementById('upgrade-link');
-  if(ul&&isPro)ul.style.display='none';
+(function(){var plan='free';try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}var isPro=plan==='pro'||plan==='team';var r=document.getElementById('sb-user-role');if(r&&isPro){r.textContent=isPro&&plan==='team'?'Team Plan':'Pro Plan';r.style.color='#c4b5fd';}var u=document.getElementById('sb-upgrade');if(u&&isPro)u.style.display='none';})();
+/* == SUPABASE USER LOADER == */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role || '';
+    var slug  = name.toLowerCase().replace(/ /g, '');
+    var u = { name: name, email: email, role: role, slug: slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(u)); } catch(e) {}
+    applyUser(u);
+  });
+
+  function applyUser(u) {
+    var ini   = u.name ? u.name.charAt(0).toUpperCase() : '?';
+    var parts = u.name ? u.name.split(' ') : [''];
+    var fname = parts[0] || '';
+    var lname = parts.slice(1).join(' ') || '';
+    var slug  = u.slug || fname.toLowerCase();
+    var role  = u.role || '';
+
+    /* Avatars */
+    document.querySelectorAll('#sb-avatar, #tb-avatar').forEach(function(el) { el.textContent = ini; });
+    /* Sidebar name */
+    document.querySelectorAll('#sb-user-name, #user-name').forEach(function(el) { el.textContent = u.name; });
+    /* Profile card */
+    var pn = document.getElementById('profile-name'); if (pn) pn.textContent = u.name;
+    var pr = document.getElementById('profile-role-tag'); if (pr && role) pr.textContent = role;
+    var pu = document.getElementById('profile-url-text'); if (pu) pu.textContent = 'prolioai.com/u/' + slug;
+    /* Display fields */
+    var vf = document.getElementById('vd-fname'); if (vf) vf.textContent = fname;
+    var vl = document.getElementById('vd-lname'); if (vl) vl.textContent = lname;
+    var vr = document.getElementById('vd-role');  if (vr) vr.textContent = role;
+    var ve = document.getElementById('vd-email'); if (ve) ve.textContent = u.email;
+    /* Edit inputs */
+    var ff = document.getElementById('fi-fname'); if (ff) ff.value = fname;
+    var fl = document.getElementById('fi-lname'); if (fl) fl.value = lname;
+    var fr = document.getElementById('fi-role');  if (fr) fr.value = role;
+    var fe = document.getElementById('fi-email'); if (fe) fe.value = u.email;
+    /* Update DATA object */
+    if (typeof DATA !== 'undefined' && DATA.personal) {
+      DATA.personal.fname = fname;
+      DATA.personal.lname = lname;
+      DATA.personal.role  = role;
+      DATA.personal.email = u.email;
+      if (typeof renderPersonalView === 'function') renderPersonalView();
+    }
+    window._profileSlug = slug;
+  }
 })();
 </script>
 </body>

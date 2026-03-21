@@ -595,6 +595,7 @@ body::before {
 }
 #mob-nav-toggle { display:none; width:100%; margin-bottom:16px; padding:11px 16px; border-radius:10px; background:var(--card); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif; cursor:pointer; text-align:left; align-items:center; gap:10px; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div id="shell">
@@ -604,28 +605,42 @@ body::before {
   <div id="sb-logo" onclick="window.location.href='dashboard.html'">Prolio AI</div>
   <nav id="sb-nav">
     <div class="sb-section-label">Main</div>
-    <div class="nav-item" onclick="window.location.href='dashboard.html'">
-      <div class="nav-icon">📊</div>Dashboard
+    <div class="nav-item" onclick="location.href='dashboard.html'">
+      <div class="nav-icon">📊</div> Dashboard
     </div>
-    <div class="nav-item" onclick="window.location.href='resume-builder.html'">
-      <div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span>
+    <div class="nav-item" onclick="location.href='resume-builder.html'">
+      <div class="nav-icon">📝</div> Resume Builder
+      <span class="nav-badge">AI</span>
     </div>
-    <div class="nav-item" onclick="window.location.href='portfolio.html'">
-      <div class="nav-icon">🌐</div>My Portfolio
+    <div class="nav-item" onclick="location.href='portfolio.html'">
+      <div class="nav-icon">🌐</div> My Portfolio
+    </div>
+    <div class="nav-item" onclick="location.href='portfolio.html'">
+      <div class="nav-icon">🎨</div> Portfolio Maker
+    </div>
+    <div class="nav-item" onclick="location.href='templates.html'">
+      <div class="nav-icon">🎨</div> Templates
+    </div>
+    <div class="nav-item" onclick="location.href='ai-enhance.html'">
+      <div class="nav-icon">✨</div> AI Enhance
+      <span class="nav-badge">AI</span>
     </div>
     <div class="sb-section-label">Manage</div>
-    <div class="nav-item" onclick="window.location.href='profile.html'">
-      <div class="nav-icon">👤</div>Profile
+    <div class="nav-item" onclick="location.href='profile.html'">
+      <div class="nav-icon">👤</div> Profile
     </div>
     <div class="nav-item active">
-      <div class="nav-icon">⚙️</div>Settings
+      <div class="nav-icon">⚙️</div> Settings
     </div>
-    <div class="nav-item" onclick="window.location.href='developer-api.html'">
-      <div class="nav-icon">🔗</div>Developer API
+    <div class="nav-item" onclick="location.href='developer-api.html'">
+      <div class="nav-icon">🔗</div> Developer API
     </div>
     <div class="sb-section-label">Support</div>
-    <div class="nav-item" onclick="window.location.href='help-docs.html'">
-      <div class="nav-icon">💬</div>Help &amp; Docs
+    <div class="nav-item" onclick="location.href='help-docs.html'">
+      <div class="nav-icon">💬</div> Help &amp; Docs
+    </div>
+    <div class="nav-item" onclick="location.href='pricing.html'">
+      <div class="nav-icon">💎</div> Pricing &amp; Plans
     </div>
   </nav>
   <div id="sb-upgrade">
@@ -1200,7 +1215,7 @@ body::before {
                 <div class="plan-badge-top popular-badge">⭐ Most Popular</div>
                 <div class="plan-body">
                   <div class="plan-name" style="background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro</div>
-                  <div class="plan-price" style="background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹299 <span style="color:var(--muted)">/ month</span></div>
+                  <div class="plan-price" style="background:linear-gradient(135deg,#7b4dff,#49C6C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹499 <span style="color:var(--muted)">/ month</span></div>
                   <div class="plan-desc">For serious professionals</div>
                   <div class="plan-features">
                     <div class="plan-feat feat-yes">Unlimited resumes</div>
@@ -1228,7 +1243,7 @@ body::before {
                     <div class="plan-feat feat-yes">API (10K calls/mo)</div>
                     <div class="plan-feat feat-yes">Dedicated support</div>
                   </div>
-                  <button class="plan-btn upgrade-btn" onclick="location.href='pricing.html'">Get Team Plan →</button>
+                  <button class="plan-btn upgrade-btn" onclick="location.href='pricing.html'">Contact Sales</button>
                 </div>
               </div>
             </div>
@@ -1651,24 +1666,60 @@ function showToast(msg) {
   window._toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3200);
 }
 
-/* ── PLAN STATE ── */
+/* == PLAN STATE == */
 (function(){
-  var plan='free';
-  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
-  var isPro=plan==='pro'||plan==='team';
-  var isTeam=plan==='team';
+  var plan='free';try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';var isTeam=plan==='team';
   var r=document.getElementById('sb-user-role');
-  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
-  var u=document.getElementById('sb-upgrade');
-  if(u&&isPro)u.style.display='none';
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ❆';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');if(u&&isPro)u.style.display='none';
   var b=document.getElementById('plan-badge');
-  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
-  if(isPro){
-    document.querySelectorAll('input[type="checkbox"][disabled]').forEach(function(inp){
-      inp.removeAttribute('disabled');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'❆ Pro';b.style.display='inline-flex';}
+})();
+
+/* == SUPABASE USER LOADER == */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+  var cached = {};
+  try { cached = JSON.parse(localStorage.getItem('prolio_user') || '{}'); } catch(e) {}
+  if (cached.name) applyUser(cached);
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role  || 'Full Stack Developer';
+    var slug  = name.toLowerCase().replace(/ /g,'');
+    var u = { name:name, email:email, role:role, slug:slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(u)); } catch(e) {}
+    applyUser(u);
+    _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
+      if (r.data && r.data.plan && r.data.plan !== 'free') {
+        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+      }
     });
+  });
+  function applyUser(u) {
+    var ini = u.name ? u.name.charAt(0).toUpperCase() : '?';
+    document.querySelectorAll('#sb-avatar,#tb-avatar').forEach(function(el){ el.textContent=ini; });
+    document.querySelectorAll('#sb-user-name,#user-name').forEach(function(el){ el.textContent=u.name; });
+    var greet = document.getElementById('greeting-name');
+    if (greet) greet.textContent = u.name.split(' ')[0];
+    var urlEl = document.getElementById('profile-url');
+    if (urlEl) urlEl.textContent = 'prolioai.com/u/' + u.slug;
+    var emailEl = document.getElementById('profile-email');
+    if (emailEl) { if(emailEl.tagName==='INPUT') emailEl.value=u.email; else emailEl.textContent=u.email; }
+    var roleEl = document.getElementById('user-role');
+    if (roleEl) roleEl.textContent = u.role;
   }
 })();
+
+function applyTheme(t){var r=document.documentElement;if(t==='light'){r.style.setProperty('--bg','#f8fafc');r.style.setProperty('--text','#0f172a');document.body.style.background='#f8fafc';}else if(t==='midnight'){r.style.setProperty('--bg','#020408');r.style.setProperty('--text','#e2e8f0');document.body.style.background='#020408';}else{r.style.setProperty('--bg','#080c18');r.style.setProperty('--text','#f1f5f9');document.body.style.background='#080c18';}try{localStorage.setItem('prolio_theme',t);}catch(e){}}
+(function(){try{var t=localStorage.getItem('prolio_theme');if(t)applyTheme(t);}catch(e){}})();
 </script>
 </body>
 </html>

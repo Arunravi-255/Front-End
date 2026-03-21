@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7b4dff;--purple-lt:#a78bff;--blue:#5E7CFF;--cyan:#49C6C6;--green:#22c55e;--gold:#ffe066;--red:#ef4444;--bg:#080c18;--bg2:#0d1220;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--border-lt:rgba(255,255,255,0.14);--text:#f1f5f9;--muted:rgba(255,255,255,0.45);--muted2:rgba(255,255,255,0.22);--grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);--sidebar-w:240px;--header-h:64px;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 0% 0%,rgba(123,77,255,0.18) 0%,transparent 50%),radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.14) 0%,transparent 50%);}
+#shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:rgba(8,12,24,0.92);border-right:1px solid var(--border);backdrop-filter:blur(20px);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;transition:transform 0.3s;}
+#sb-logo{padding:22px 20px 18px;font-size:20px;font-weight:900;letter-spacing:3px;font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;border-bottom:1px solid var(--border);cursor:pointer;flex-shrink:0;}
+#sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(123,77,255,0.18);color:#c4b5fd;border-color:rgba(123,77,255,0.25);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(123,77,255,0.25);}
+.nav-badge{margin-left:auto;background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px;}
+#sb-upgrade{margin:12px;padding:16px;border-radius:14px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.3);flex-shrink:0;}
+#sb-upgrade h4{font-size:13px;font-weight:800;margin-bottom:4px;color:#c4b5fd;}
+#sb-upgrade p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+#sb-upgrade-btn{width:100%;padding:8px;border:none;border-radius:8px;background:var(--grad);color:white;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+#sb-user{padding:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+#sb-user:hover{background:rgba(255,255,255,0.04);}
+#sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
+#sb-user-name{font-size:13px;font-weight:700;}
+#sb-user-role{font-size:11px;color:var(--muted);}
+#sb-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.6);}
+#sb-overlay.show{display:block;}
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+#topbar{height:var(--header-h);background:rgba(8,12,24,0.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:100;}
+#mob-menu{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+#tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
+.tb-btn:hover{background:rgba(255,255,255,0.1);}
+#tb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:'Playfair Display',serif;cursor:pointer;border:2px solid rgba(123,77,255,0.4);}
+#page{padding:32px;}
+/* Period tabs */
+.period-tabs{display:flex;gap:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;margin-bottom:24px;}
+.ptab{padding:7px 18px;border-radius:9px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Montserrat',sans-serif;transition:all 0.2s;}
+.ptab.active{background:var(--grad);color:white;box-shadow:0 3px 10px rgba(123,77,255,0.4);}
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:all 0.22s;}
+.stat-card:hover{border-color:rgba(123,77,255,0.3);transform:translateY(-2px);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
+.sc-p::before{background:linear-gradient(90deg,#7b4dff,#a78bff);}
+.sc-c::before{background:linear-gradient(90deg,#49C6C6,#7bedff);}
+.sc-g::before{background:linear-gradient(90deg,#22c55e,#4ade80);}
+.sc-o::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+.stat-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
+.sc-p .stat-val{color:#c4b5fd;}.sc-c .stat-val{color:#7bedff;}.sc-g .stat-val{color:#4ade80;}.sc-o .stat-val{color:#fbbf24;}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;}
+.stat-trend{font-size:11px;font-weight:800;}
+.trend-up{color:#4ade80;}.trend-dn{color:#f87171;}.trend-nt{color:var(--muted);}
+.sparkline{display:flex;align-items:flex-end;gap:3px;height:30px;margin-top:10px;}
+.spark-bar{flex:1;border-radius:2px;min-height:2px;opacity:0.7;}
+/* Charts row */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:24px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+.card-head h3{font-size:13px;font-weight:800;}
+.card-body{padding:20px;}
+/* Bar chart */
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;margin-bottom:8px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar{width:100%;border-radius:6px 6px 0 0;min-height:4px;transition:height 1s cubic-bezier(0.22,1,0.36,1);}
+.bar-lbl{font-size:9px;color:var(--muted);font-weight:700;text-align:center;}
+/* Referrers */
+.ref-list{display:flex;flex-direction:column;gap:10px;}
+.ref-row{display:flex;align-items:center;gap:10px;}
+.ref-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.ref-name{font-size:12px;font-weight:700;flex:1;}
+.ref-bar-wrap{width:80px;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+.ref-bar{height:100%;border-radius:3px;background:var(--grad);}
+.ref-pct{font-size:11px;font-weight:800;color:var(--muted);min-width:32px;text-align:right;}
+/* Tables */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.data-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+/* Device donuts */
+.device-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.device-row:last-child{margin-bottom:0;}
+.device-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.device-name{font-size:12px;font-weight:700;flex:1;}
+.device-bar-wrap{width:100px;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+.device-bar{height:100%;border-radius:3px;}
+.device-pct{font-size:11px;font-weight:800;color:var(--muted);min-width:36px;text-align:right;}
+/* Live feed */
+.live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.7);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.feed-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.feed-item:last-child{border-bottom:none;}
+.feed-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(123,77,255,0.12);}
+.feed-text{font-size:12px;line-height:1.5;flex:1;}
+.feed-time{font-size:10px;color:var(--muted2);white-space:nowrap;margin-top:2px;}
+.badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;}
+.b-view{background:rgba(123,77,255,0.15);color:#c4b5fd;}
+.b-dl{background:rgba(34,197,94,0.12);color:#4ade80;}
+.b-share{background:rgba(73,198,198,0.12);color:#7bedff;}
+/* Map placeholder */
+.world-map{height:180px;background:linear-gradient(135deg,rgba(123,77,255,0.08),rgba(73,198,198,0.05));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);position:relative;overflow:hidden;}
+.map-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--purple);box-shadow:0 0 8px rgba(123,77,255,0.7);animation:pulse 2s infinite;}
+/* Pro lock */
+.pro-lock-overlay{position:absolute;inset:0;background:rgba(8,12,24,0.85);backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-radius:14px;z-index:10;}
+.pro-lock-overlay h4{font-size:13px;font-weight:800;color:#c4b5fd;}
+.pro-lock-overlay p{font-size:12px;color:var(--muted);text-align:center;max-width:200px;line-height:1.5;}
+.unlock-btn{padding:8px 20px;border-radius:9px;background:var(--grad);border:none;color:white;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.2s;}
+.unlock-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,77,255,0.4);}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;border:1px solid rgba(255,255,255,0.08);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+@media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}.stats-grid{grid-template-columns:1fr 1fr;}.charts-row{grid-template-columns:1fr;}.bottom-grid{grid-template-columns:1fr;}}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr 1fr;}#page{padding:16px;}}
+</style>
+</head>
+<body>
+<div id="shell">
+  <aside id="sidebar">
+    <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
+    <nav id="sb-nav">
+      <div class="sb-lbl">Main</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
+      <div class="nav-item active"><div class="nav-icon">📈</div>Analytics</div>
+      <div class="sb-lbl">Manage</div>
+      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
+      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
+      <div class="nav-item" onclick="location.href='developer-api.html'"><div class="nav-icon">🔗</div>Developer API</div>
+      <div class="sb-lbl">Support</div>
+      <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div>Help &amp; Docs</div>
+      <div class="nav-item" onclick="location.href='pricing.html'"><div class="nav-icon">💎</div>Pricing &amp; Plans</div>
+    </nav>
+    <div id="sb-upgrade"><h4>✨ Go Pro</h4><p>Unlock full analytics — heatmaps, visitor locations and detailed resume tracking.</p><button id="sb-upgrade-btn" onclick="window.location.href='pricing.html'">Upgrade to Pro</button></div>
+    <div id="sb-user" onclick="location.href='profile.html'">
+      <div id="sb-avatar">A</div>
+      <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px;">›</span>
+    </div>
+  </aside>
+  <div id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <div id="main">
+    <header id="topbar">
+      <button id="mob-menu" onclick="toggleSidebar()">☰</button>
+      <div>
+        <div style="font-size:16px;font-weight:800;">Analytics</div>
+        <div style="font-size:12px;color:var(--muted);">Portfolio &amp; Resume performance</div>
+      </div>
+      <div id="tb-right">
+        <span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
+        <button style="padding:8px 16px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;" onclick="toast('📊 Report exported!')">⬇ Export</button>
+        <div class="tb-btn" onclick="location.href='help-docs.html'">💡</div>
+        <div id="tb-avatar">A</div>
+      </div>
+    </header>
+
+    <div id="page">
+      <!-- Period tabs -->
+      <div class="period-tabs">
+        <button class="ptab" onclick="setPeriod('7d',this)">7 Days</button>
+        <button class="ptab active" onclick="setPeriod('30d',this)">30 Days</button>
+        <button class="ptab" onclick="setPeriod('90d',this)">90 Days</button>
+        <button class="ptab" onclick="setPeriod('all',this)">All Time</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card sc-p"><div class="stat-val" id="st-views">124</div><div class="stat-lbl">Portfolio Views</div><div class="stat-trend trend-up">↑ 18% vs last period</div><div class="sparkline" id="sp-views"></div></div>
+        <div class="stat-card sc-c"><div class="stat-val" id="st-visitors">89</div><div class="stat-lbl">Unique Visitors</div><div class="stat-trend trend-up">↑ 12% vs last period</div><div class="sparkline" id="sp-visitors"></div></div>
+        <div class="stat-card sc-g"><div class="stat-val" id="st-downloads">34</div><div class="stat-lbl">Resume Downloads</div><div class="stat-trend trend-up">↑ 31% vs last period</div><div class="sparkline" id="sp-downloads"></div></div>
+        <div class="stat-card sc-o"><div class="stat-val" id="st-time">2m 34s</div><div class="stat-lbl">Avg Time on Page</div><div class="stat-trend trend-nt">→ Same as last period</div><div class="sparkline" id="sp-time"></div></div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="charts-row">
+        <!-- Bar chart -->
+        <div class="card">
+          <div class="card-head"><h3>📈 Daily Portfolio Views</h3><span style="font-size:11px;color:var(--muted);">Last 30 days</span></div>
+          <div class="card-body">
+            <div class="bar-chart" id="bar-chart"></div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted2);font-weight:700;" id="bar-labels"></div>
+          </div>
+        </div>
+        <!-- Referrers -->
+        <div class="card">
+          <div class="card-head"><h3>🔗 Top Referrers</h3></div>
+          <div class="card-body">
+            <div class="ref-list">
+              <div class="ref-row"><div class="ref-icon" style="background:rgba(10,102,194,0.15);">🔵</div><span class="ref-name">LinkedIn</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:62%"></div></div><span class="ref-pct">42%</span></div>
+              <div class="ref-row"><div class="ref-icon" style="background:rgba(255,255,255,0.07);">🔍</div><span class="ref-name">Direct</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:42%"></div></div><span class="ref-pct">29%</span></div>
+              <div class="ref-row"><div class="ref-icon" style="background:rgba(34,197,94,0.12);">🌐</div><span class="ref-name">Google</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:25%"></div></div><span class="ref-pct">17%</span></div>
+              <div class="ref-row"><div class="ref-icon" style="background:rgba(29,155,240,0.12);">🐦</div><span class="ref-name">Twitter/X</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:14%"></div></div><span class="ref-pct">8%</span></div>
+              <div class="ref-row"><div class="ref-icon" style="background:rgba(255,224,102,0.12);">📧</div><span class="ref-name">Email</span><div class="ref-bar-wrap"><div class="ref-bar" style="width:6%"></div></div><span class="ref-pct">4%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom grid -->
+      <div class="bottom-grid">
+        <!-- Resume downloads table -->
+        <div class="card">
+          <div class="card-head"><h3>📄 Resume Performance</h3></div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>Resume</th><th>Views</th><th>Downloads</th><th>Shares</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:700;">Frontend Dev Resume</td><td>67</td><td>18</td><td>9</td></tr>
+                <tr><td style="font-weight:700;">Full Stack Resume</td><td>42</td><td>12</td><td>5</td></tr>
+                <tr><td style="font-weight:700;">React Developer</td><td>28</td><td>8</td><td>3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Devices -->
+        <div class="card">
+          <div class="card-head"><h3>📱 Device Breakdown</h3></div>
+          <div class="card-body">
+            <div class="device-row"><div class="device-dot" style="background:#7b4dff;"></div><span class="device-name">Desktop</span><div class="device-bar-wrap"><div class="device-bar" style="width:68%;background:linear-gradient(90deg,#7b4dff,#a78bff);"></div></div><span class="device-pct">68%</span></div>
+            <div class="device-row"><div class="device-dot" style="background:#49C6C6;"></div><span class="device-name">Mobile</span><div class="device-bar-wrap"><div class="device-bar" style="width:53%;background:linear-gradient(90deg,#49C6C6,#7bedff);"></div></div><span class="device-pct">28%</span></div>
+            <div class="device-row"><div class="device-dot" style="background:#5E7CFF;"></div><span class="device-name">Tablet</span><div class="device-bar-wrap"><div class="device-bar" style="width:10%;background:linear-gradient(90deg,#5E7CFF,#93c5fd);"></div></div><span class="device-pct">4%</span></div>
+            <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+            <div style="font-size:11px;font-weight:800;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Top Browsers</div>
+            <div class="device-row"><span class="device-name" style="font-size:12px;">Chrome</span><span class="device-pct">64%</span></div>
+            <div class="device-row"><span class="device-name" style="font-size:12px;">Safari</span><span class="device-pct">21%</span></div>
+            <div class="device-row"><span class="device-name" style="font-size:12px;">Firefox</span><span class="device-pct">11%</span></div>
+            <div class="device-row"><span class="device-name" style="font-size:12px;">Edge</span><span class="device-pct">4%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pro-locked: Visitor map + Live feed -->
+      <div class="bottom-grid">
+        <!-- Visitor map (Pro) -->
+        <div class="card" style="position:relative;">
+          <div class="card-head"><h3>🌍 Visitor Locations</h3><span class="badge b-view">Pro</span></div>
+          <div class="card-body">
+            <div class="world-map">
+              <span>🌍 World map — upgrade to unlock</span>
+              <div class="map-dot" style="top:35%;left:65%;"></div>
+              <div class="map-dot" style="top:45%;left:20%;animation-delay:0.5s;background:#49C6C6;"></div>
+              <div class="map-dot" style="top:30%;left:48%;animation-delay:1s;background:#5E7CFF;"></div>
+            </div>
+          </div>
+          <div class="pro-lock-overlay" id="map-lock">
+            <div style="font-size:32px;">🌍</div>
+            <h4>Visitor Locations</h4>
+            <p>See exactly which cities and countries your visitors come from.</p>
+            <button class="unlock-btn" onclick="location.href='pricing.html'">Unlock with Pro →</button>
+          </div>
+        </div>
+
+        <!-- Live activity feed (Pro) -->
+        <div class="card" style="position:relative;">
+          <div class="card-head"><h3>⚡ Live Activity</h3><div style="display:flex;align-items:center;gap:6px;"><div class="live-dot"></div><span style="font-size:11px;color:var(--green);font-weight:700;">Live</span><span class="badge b-view">Pro</span></div></div>
+          <div class="card-body" style="padding:0 20px;">
+            <div class="feed-item"><div class="feed-icon">👁</div><div><div class="feed-text">Someone from <strong>Bangalore, IN</strong> viewed your portfolio <span class="badge b-view">View</span></div><div class="feed-time">2 min ago</div></div></div>
+            <div class="feed-item"><div class="feed-icon">⬇</div><div><div class="feed-text"><strong>Frontend Dev Resume</strong> was downloaded <span class="badge b-dl">Download</span></div><div class="feed-time">14 min ago</div></div></div>
+            <div class="feed-item"><div class="feed-icon">🔗</div><div><div class="feed-text">Your portfolio link was shared on <strong>LinkedIn</strong> <span class="badge b-share">Share</span></div><div class="feed-time">1 hr ago</div></div></div>
+          </div>
+          <div class="pro-lock-overlay" id="feed-lock">
+            <div style="font-size:32px;">⚡</div>
+            <h4>Live Activity Feed</h4>
+            <p>See real-time notifications when recruiters view or download your resume.</p>
+            <button class="unlock-btn" onclick="location.href='pricing.html'">Unlock with Pro →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+var PERIOD_DATA = {
+  '7d':  {views:38,visitors:28,downloads:11,bars:[3,5,2,7,4,8,9]},
+  '30d': {views:124,visitors:89,downloads:34,bars:[2,4,3,6,5,8,4,7,5,9,6,8,7,10,8,9,6,11,7,8,9,12,8,10,9,11,8,12,10,14]},
+  '90d': {views:387,visitors:276,downloads:98,bars:[12,18,14,22,16,24,19,26,21,28,23,24]},
+  'all': {views:1204,visitors:894,downloads:287,bars:[45,62,78,91,103,120,98,134,112,145,128,167]}
+};
+var currentPeriod = '30d';
+
+function setPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.ptab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var d = PERIOD_DATA[p];
+  animCount('st-views', d.views);
+  animCount('st-visitors', d.visitors);
+  animCount('st-downloads', d.downloads);
+  buildBars(d.bars);
+}
+
+function animCount(id, target) {
+  var el = document.getElementById(id); if(!el) return;
+  var start = 0, steps = 30, step = target/steps, i = 0;
+  var iv = setInterval(function(){
+    i++; start += step;
+    el.textContent = Math.round(Math.min(start, target));
+    if(i >= steps) clearInterval(iv);
+  }, 30);
+}
+
+function buildBars(data) {
+  var chart = document.getElementById('bar-chart');
+  var labels = document.getElementById('bar-labels');
+  if(!chart) return;
+  var max = Math.max.apply(null, data);
+  var cols = ['#7b4dff','#5E7CFF','#49C6C6'];
+  chart.innerHTML = data.map(function(v,i){
+    var h = Math.round((v/max)*130);
+    var col = cols[i%3];
+    return '<div class="bar-col"><div class="bar" style="height:'+h+'px;background:'+col+';opacity:0.8;"></div></div>';
+  }).join('');
+  if(labels) {
+    var pts = data.length <= 8 ? data.length : 8;
+    var step = Math.floor(data.length/pts);
+    var lbs = [];
+    for(var i=0;i<data.length;i+=step) lbs.push('W'+(Math.floor(i/step)+1));
+    labels.innerHTML = lbs.map(function(l){return '<span>'+l+'</span>';}).join('');
+  }
+}
+
+function buildSparklines() {
+  var sets = {
+    'sp-views':     {d:[3,5,4,7,5,8,6,9,7,10,8,11]},
+    'sp-visitors':  {d:[2,4,3,5,4,6,5,7,5,8,6,9]},
+    'sp-downloads': {d:[1,2,1,3,2,4,2,3,4,5,3,6]},
+    'sp-time':      {d:[5,4,5,4,6,5,4,5,6,5,4,5]}
+  };
+  var cols = {'sp-views':'#7b4dff','sp-visitors':'#49C6C6','sp-downloads':'#22c55e','sp-time':'#f59e0b'};
+  Object.keys(sets).forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    var d=sets[id].d, mx=Math.max.apply(null,d), col=cols[id];
+    el.innerHTML=d.map(function(v){
+      return '<div class="spark-bar" style="height:'+Math.round(v/mx*100)+'%;background:'+col+';"></div>';
+    }).join('');
+  });
+}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show');},3000);}
+
+/* Plan state */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+  if(isPro){
+    var ml=document.getElementById('map-lock');
+    var fl=document.getElementById('feed-lock');
+    if(ml)ml.style.display='none';
+    if(fl)fl.style.display='none';
+  }
+})();
+
+/* Init */
+buildSparklines();
+buildBars(PERIOD_DATA['30d'].bars);
+
+/* ── SUPABASE SESSION CHECK ── */
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.onload = async function() {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    var { data: { session } } = await cl.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    /* Update name/avatar */
+    var name = localStorage.getItem('prolio_name') || session.user.email.split('@')[0];
+    ['sb-user-name'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name;
+    });
+    ['sb-avatar','tb-avatar'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name.charAt(0).toUpperCase();
+    });
+  };
+  document.head.appendChild(s);
+})();
+
+/* ── LOGOUT ── */
+async function logout() {
+  if(typeof supabase !== 'undefined') {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    await cl.auth.signOut();
+  }
+  localStorage.removeItem('prolio_plan');
+  localStorage.removeItem('prolio_name');
+  window.location.href = 'index.html';
+}
+
+/* ══ SUPABASE USER LOADER ══ */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+
+  /* Load from localStorage instantly (no flicker) */
+  var cached = {};
+  try { cached = JSON.parse(localStorage.getItem('prolio_user') || '{}'); } catch(e) {}
+  if (cached.name) applyUserData(cached);
+
+  /* Then verify with Supabase and refresh */
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role  || 'Full Stack Developer';
+    var city  = meta.city  || '';
+    var phone = meta.phone || '';
+    var slug  = name.toLowerCase().replace(/\s+/g,'');
+
+    /* Save to localStorage for next page load */
+    var userData = { name:name, email:email, role:role, city:city, phone:phone, slug:slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(userData)); } catch(e) {}
+
+    applyUserData(userData);
+
+    /* Also load plan */
+    _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
+      if (r.data && r.data.plan && r.data.plan !== 'free') {
+        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+        var planEl = document.getElementById('sb-user-role');
+        if (planEl) planEl.textContent = r.data.plan === 'team' ? 'Team Plan' : 'Pro Plan ✦';
+      }
+    });
+  });
+
+  function applyUserData(u) {
+    var initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+
+    /* Avatar letters */
+    document.querySelectorAll('#sb-avatar, #tb-avatar, .user-avatar').forEach(function(el) {
+      el.textContent = initial;
+    });
+
+    /* Name fields */
+    document.querySelectorAll('#sb-user-name, #user-name, #topbar-user-name').forEach(function(el) {
+      el.textContent = u.name;
+    });
+
+    /* Role/title fields */
+    document.querySelectorAll('#sb-user-role-title, #user-role, #user-title').forEach(function(el) {
+      el.textContent = u.role;
+    });
+
+    /* Email fields */
+    document.querySelectorAll('#user-email, #profile-email').forEach(function(el) {
+      if (el.tagName === 'INPUT') el.value = u.email;
+      else el.textContent = u.email;
+    });
+
+    /* Greeting */
+    var greetName = document.getElementById('greeting-name');
+    if (greetName) greetName.textContent = u.name.split(' ')[0];
+
+    /* Profile URL slug */
+    document.querySelectorAll('#profile-url, #profile-slug, .profile-url-text').forEach(function(el) {
+      el.textContent = 'prolioai.com/u/' + u.slug;
+    });
+
+    /* Page title personalization */
+    var heroName = document.getElementById('hero-user-name');
+    if (heroName) heroName.textContent = u.name;
+  }
+})();
+</script>
+</body>
+</html>

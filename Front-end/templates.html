@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates — Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7b4dff;--purple-lt:#a78bff;--blue:#5E7CFF;--cyan:#49C6C6;--green:#22c55e;--gold:#ffe066;--bg:#080c18;--bg2:#0d1220;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--border-lt:rgba(255,255,255,0.14);--text:#f1f5f9;--muted:rgba(255,255,255,0.45);--muted2:rgba(255,255,255,0.22);--grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);--sidebar-w:240px;--header-h:64px;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 0% 0%,rgba(123,77,255,0.18) 0%,transparent 50%),radial-gradient(ellipse at 100% 80%,rgba(73,198,198,0.14) 0%,transparent 50%);}
+#shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:rgba(8,12,24,0.92);border-right:1px solid var(--border);backdrop-filter:blur(20px);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;transition:transform 0.3s;}
+#sb-logo{padding:22px 20px 18px;font-size:20px;font-weight:900;letter-spacing:3px;font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;border-bottom:1px solid var(--border);cursor:pointer;flex-shrink:0;}
+#sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(123,77,255,0.18);color:#c4b5fd;border-color:rgba(123,77,255,0.25);}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(123,77,255,0.25);}
+.nav-badge{margin-left:auto;background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px;}
+#sb-upgrade{margin:12px;padding:16px;border-radius:14px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.3);flex-shrink:0;}
+#sb-upgrade h4{font-size:13px;font-weight:800;margin-bottom:4px;color:#c4b5fd;}
+#sb-upgrade p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+#sb-upgrade-btn{width:100%;padding:8px;border:none;border-radius:8px;background:var(--grad);color:white;font-size:12px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+#sb-user{padding:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+#sb-user:hover{background:rgba(255,255,255,0.04);}
+#sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:'Playfair Display',serif;flex-shrink:0;}
+#sb-user-name{font-size:13px;font-weight:700;}
+#sb-user-role{font-size:11px;color:var(--muted);}
+#sb-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.6);}
+#sb-overlay.show{display:block;}
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+#topbar{height:var(--header-h);background:rgba(8,12,24,0.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:100;}
+#mob-menu{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+#tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
+#tb-avatar{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-family:'Playfair Display',serif;cursor:pointer;border:2px solid rgba(123,77,255,0.4);}
+#page{padding:32px;}
+/* Search + filter bar */
+#filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:28px;flex-wrap:wrap;}
+#tmpl-search{flex:1;min-width:200px;max-width:360px;padding:10px 16px 10px 40px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);font-size:13px;font-family:'Montserrat',sans-serif;outline:none;transition:border-color 0.2s;position:relative;}
+#tmpl-search:focus{border-color:rgba(123,77,255,0.6);}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:360px;}
+.search-wrap::before{content:'🔍';position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;}
+.filter-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.ftab{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,0.03);transition:all 0.2s;font-family:'Montserrat',sans-serif;}
+.ftab:hover{border-color:rgba(123,77,255,0.4);color:var(--text);}
+.ftab.active{background:rgba(123,77,255,0.15);border-color:rgba(123,77,255,0.35);color:#c4b5fd;}
+.sort-select{padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:12px;font-family:'Montserrat',sans-serif;outline:none;cursor:pointer;}
+.sort-select option{background:#0f172a;}
+/* Section title */
+.sec-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:16px;}
+.sec-title em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* Template grid */
+.tmpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-bottom:40px;}
+.tmpl-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.25s;position:relative;}
+.tmpl-card:hover{border-color:rgba(123,77,255,0.4);transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,0.3);}
+.tmpl-card.pro-tmpl{opacity:0.85;}
+.tmpl-thumb{height:160px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);}
+.tmpl-overlay{position:absolute;inset:0;background:rgba(8,12,24,0.7);display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity 0.22s;}
+.tmpl-card:hover .tmpl-overlay{opacity:1;}
+.ovl-btn{padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all 0.2s;}
+.ovl-use{background:var(--grad);color:white;}
+.ovl-preview{background:rgba(255,255,255,0.12);color:white;}
+.tmpl-info{padding:14px 16px;}
+.tmpl-name{font-size:13px;font-weight:800;margin-bottom:3px;}
+.tmpl-cat{font-size:11px;color:var(--muted);}
+.tmpl-badges{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.tbadge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;}
+.tb-ats{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.2);}
+.tb-new{background:rgba(123,77,255,0.15);color:#c4b5fd;border:1px solid rgba(123,77,255,0.25);}
+.tb-pop{background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);}
+.tb-pro{background:rgba(255,224,102,0.12);color:#ffe066;border:1px solid rgba(255,224,102,0.2);}
+.pro-badge{position:absolute;top:10px;right:10px;background:rgba(255,224,102,0.9);color:#0d1220;font-size:9px;font-weight:900;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;}
+.used-badge{position:absolute;top:10px;left:10px;background:rgba(34,197,94,0.9);color:white;font-size:9px;font-weight:900;padding:3px 8px;border-radius:4px;}
+/* Preview modal */
+#preview-modal{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+#preview-modal.open{display:flex;}
+#preview-box{background:#0d1220;border:1px solid rgba(123,77,255,0.3);border-radius:20px;max-width:480px;width:100%;padding:28px;animation:mIn 0.3s ease;text-align:center;}
+@keyframes mIn{from{opacity:0;transform:scale(0.93);}to{opacity:1;transform:scale(1);}}
+#preview-thumb{height:200px;border-radius:12px;margin-bottom:18px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);}
+#preview-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:6px;}
+#preview-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.preview-btns{display:flex;gap:10px;}
+.pbtn-use{flex:1;padding:12px;border-radius:10px;background:var(--grad);border:none;color:white;font-size:13px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;}
+.pbtn-close{padding:12px 18px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:white;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;border:1px solid rgba(255,255,255,0.08);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+@media(max-width:900px){#sidebar{transform:translateX(-100%);}#sidebar.open{transform:translateX(0);}#sb-overlay.show{display:block;}#main{margin-left:0;}#mob-menu{display:block;}}
+@media(max-width:600px){#page{padding:16px;}.tmpl-grid{grid-template-columns:repeat(2,1fr);}#filter-bar{flex-direction:column;align-items:stretch;}}
+</style>
+</head>
+<body>
+<div id="shell">
+  <aside id="sidebar">
+    <div id="sb-logo" onclick="location.href='dashboard.html'">Prolio AI</div>
+    <nav id="sb-nav">
+      <div class="sb-lbl">Main</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">📊</div>Dashboard</div>
+      <div class="nav-item" onclick="location.href='resume-builder.html'"><div class="nav-icon">📝</div>Resume Builder<span class="nav-badge">AI</span></div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🌐</div>My Portfolio</div>
+      <div class="nav-item" onclick="location.href='portfolio.html'"><div class="nav-icon">🎨</div>Portfolio Maker</div>
+      <div class="nav-item active"><div class="nav-icon">🎨</div>Templates</div>
+      <div class="sb-lbl">Manage</div>
+      <div class="nav-item" onclick="location.href='profile.html'"><div class="nav-icon">👤</div>Profile</div>
+      <div class="nav-item" onclick="location.href='settings.html'"><div class="nav-icon">⚙️</div>Settings</div>
+      <div class="nav-item" onclick="location.href='developer-api.html'"><div class="nav-icon">🔗</div>Developer API</div>
+      <div class="sb-lbl">Support</div>
+      <div class="nav-item" onclick="location.href='help-docs.html'"><div class="nav-icon">💬</div>Help &amp; Docs</div>
+      <div class="nav-item" onclick="location.href='pricing.html'"><div class="nav-icon">💎</div>Pricing &amp; Plans</div>
+    </nav>
+    <div id="sb-upgrade"><h4>✨ Go Pro</h4><p>Unlock all 35+ premium templates including exclusive designs.</p><button id="sb-upgrade-btn" onclick="window.location.href='pricing.html'">Upgrade to Pro</button></div>
+    <div id="sb-user" onclick="location.href='profile.html'">
+      <div id="sb-avatar">A</div>
+      <div><div id="sb-user-name">Arun R</div><div id="sb-user-role">Free Plan</div></div>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px;">›</span>
+    </div>
+  </aside>
+  <div id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <div id="main">
+    <header id="topbar">
+      <button id="mob-menu" onclick="toggleSidebar()">☰</button>
+      <div><div style="font-size:16px;font-weight:800;">Templates</div><div style="font-size:12px;color:var(--muted);">35+ resume &amp; portfolio designs</div></div>
+      <div id="tb-right">
+        <span id="plan-badge" style="display:none;align-items:center;padding:4px 10px;border-radius:50px;background:linear-gradient(135deg,rgba(123,77,255,0.25),rgba(73,198,198,0.15));border:1px solid rgba(123,77,255,0.35);font-size:11px;font-weight:800;color:#c4b5fd;margin-right:4px;"></span>
+        <div class="tb-btn" onclick="location.href='help-docs.html'">💡</div>
+        <div id="tb-avatar">A</div>
+      </div>
+    </header>
+
+    <div id="page">
+      <!-- Filter bar -->
+      <div id="filter-bar">
+        <div class="search-wrap">
+          <input type="text" id="tmpl-search" placeholder="Search templates..." oninput="filterTemplates()">
+        </div>
+        <div class="filter-tabs" id="filter-tabs">
+          <button class="ftab active" onclick="setFilter('all',this)">All (35)</button>
+          <button class="ftab" onclick="setFilter('resume',this)">Resume (22)</button>
+          <button class="ftab" onclick="setFilter('portfolio',this)">Portfolio (13)</button>
+          <button class="ftab" onclick="setFilter('minimal',this)">Minimal</button>
+          <button class="ftab" onclick="setFilter('creative',this)">Creative</button>
+          <button class="ftab" onclick="setFilter('tech',this)">Tech</button>
+          <button class="ftab" onclick="setFilter('executive',this)">Executive</button>
+        </div>
+        <select class="sort-select" onchange="filterTemplates()">
+          <option>Most Popular</option>
+          <option>Newest First</option>
+          <option>ATS Friendly</option>
+          <option>Free Only</option>
+        </select>
+      </div>
+
+      <!-- Template grid -->
+      <div class="sec-title">🎨 <em>Resume</em> Templates</div>
+      <div class="tmpl-grid" id="tmpl-grid"></div>
+
+      <div class="sec-title">🌐 <em>Portfolio</em> Templates</div>
+      <div class="tmpl-grid" id="port-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Preview modal -->
+<div id="preview-modal">
+  <div id="preview-box">
+    <div id="preview-thumb"></div>
+    <div id="preview-name"></div>
+    <div id="preview-desc"></div>
+    <div class="preview-btns">
+      <button class="pbtn-use" id="preview-use-btn">Use This Template</button>
+      <button class="pbtn-close" onclick="closePreview()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script>
+var RESUME_TEMPLATES = [
+  {id:'midnight',   name:'Midnight',       cat:'resume', tags:['tech','minimal'],     free:true,  used:true,  ats:true,  pop:true,  new:false, color:'linear-gradient(135deg,#0d1220,#1a1040)',  desc:'Dark elegant template. Perfect for tech and creative roles.'},
+  {id:'pure-white', name:'Pure White',     cat:'resume', tags:['minimal','executive'],free:true,  used:false, ats:true,  pop:false, new:false, color:'linear-gradient(135deg,#1e293b,#0f172a)',  desc:'Ultra-clean minimal design. Best ATS compatibility.'},
+  {id:'ocean',      name:'Ocean Blue',     cat:'resume', tags:['creative'],           free:true,  used:false, ats:true,  pop:false, new:false, color:'linear-gradient(135deg,#0c2340,#1a4070)',  desc:'Professional blue tones. Great for business roles.'},
+  {id:'neon-grid',  name:'Neon Grid',      cat:'resume', tags:['tech','creative'],    free:false, used:false, ats:false, pop:true,  new:true,  color:'linear-gradient(135deg,#0d0d2b,#1a0540)',  desc:'Bold neon accents on dark. Made for developers.'},
+  {id:'luxury-gold',name:'Luxury Gold',    cat:'resume', tags:['executive'],          free:false, used:false, ats:true,  pop:true,  new:false, color:'linear-gradient(135deg,#1a1200,#2a1e00)',  desc:'Gold accents for senior and executive profiles.'},
+  {id:'compact-pro',name:'Compact Pro',    cat:'resume', tags:['minimal'],            free:true,  used:false, ats:true,  pop:false, new:false, color:'linear-gradient(135deg,#111827,#1f2937)',  desc:'Fits more content in one page. Perfect for experienced professionals.'},
+  {id:'forest',     name:'Forest Green',   cat:'resume', tags:['creative','minimal'], free:false, used:false, ats:true,  pop:false, new:true,  color:'linear-gradient(135deg,#052e16,#0f4027)',  desc:'Fresh green tones for sustainability and health roles.'},
+  {id:'bold-red',   name:'Bold Red',       cat:'resume', tags:['creative','executive'],free:false,used:false, ats:false, pop:false, new:false, color:'linear-gradient(135deg,#1c0404,#3b0808)',  desc:'High-contrast red design for bold personalities.'},
+  {id:'cyber',      name:'Cyberpunk',      cat:'resume', tags:['tech','creative'],    free:false, used:false, ats:false, pop:true,  new:true,  color:'linear-gradient(135deg,#050118,#160024)',  desc:'Futuristic neon design. Ideal for tech startups.'},
+  {id:'editorial',  name:'Editorial',      cat:'resume', tags:['creative'],           free:false, used:false, ats:true,  pop:false, new:false, color:'linear-gradient(135deg,#1a1a2e,#16213e)',  desc:'Magazine-style layout for designers and writers.'},
+  {id:'slate',      name:'Slate Gray',     cat:'resume', tags:['minimal','executive'],free:true,  used:false, ats:true,  pop:false, new:false, color:'linear-gradient(135deg,#1c2333,#243040)',  desc:'Calm neutral tones. Works for any industry.'},
+  {id:'sunrise',    name:'Sunrise',        cat:'resume', tags:['creative'],           free:false, used:false, ats:true,  pop:false, new:true,  color:'linear-gradient(135deg,#1a0a00,#2d1500)',  desc:'Warm orange gradient. Stands out in a pile.'},
+];
+
+var PORTFOLIO_TEMPLATES = [
+  {id:'p-midnight', name:'Midnight Portfolio',  cat:'portfolio', tags:['tech','minimal'],    free:true,  used:false, ats:false, pop:true,  new:false, color:'linear-gradient(135deg,#080c18,#0d1220)', desc:'Match your resume with this dark portfolio theme.'},
+  {id:'p-glass',    name:'Glassmorphism',       cat:'portfolio', tags:['creative'],          free:false, used:false, ats:false, pop:true,  new:true,  color:'linear-gradient(135deg,#0a0a1a,#12122a)', desc:'Frosted glass cards on a deep gradient background.'},
+  {id:'p-minimal',  name:'Pure Minimal',        cat:'portfolio', tags:['minimal','executive'],free:true, used:true,  ats:false, pop:false, new:false, color:'linear-gradient(135deg,#111,#1a1a2e)',    desc:'Clean white space. Lets your work do the talking.'},
+  {id:'p-neon',     name:'Neon Dark',           cat:'portfolio', tags:['tech','creative'],   free:false, used:false, ats:false, pop:true,  new:false, color:'linear-gradient(135deg,#030014,#0d0025)', desc:'Electric purple and cyan on pitch black.'},
+  {id:'p-card',     name:'Card Grid',           cat:'portfolio', tags:['creative'],          free:true,  used:false, ats:false, pop:false, new:false, color:'linear-gradient(135deg,#131c31,#1e2d4a)', desc:'Project cards in a responsive masonry grid.'},
+  {id:'p-split',    name:'Split Screen',        cat:'portfolio', tags:['creative','executive'],free:false,used:false, ats:false, pop:false, new:true,  color:'linear-gradient(135deg,#0e1117,#161b25)', desc:'Your photo and bio side by side. Striking first impression.'},
+];
+
+var currentFilter = 'all';
+
+var ACCENT_COLORS = ['#7b4dff','#49C6C6','#5E7CFF','#22c55e','#f59e0b','#ef4444','#a78bff','#7bedff'];
+
+function buildCard(t, idx) {
+  var isPro = !t.free;
+  var accent = ACCENT_COLORS[idx % ACCENT_COLORS.length];
+  var badges = '';
+  if(t.ats)  badges += '<span class="tbadge tb-ats">ATS</span>';
+  if(t.new)  badges += '<span class="tbadge tb-new">New</span>';
+  if(t.pop)  badges += '<span class="tbadge tb-pop">Popular</span>';
+  if(isPro)  badges += '<span class="tbadge tb-pro">Pro</span>';
+
+  return '<div class="tmpl-card' + (isPro?' pro-tmpl':'') + '" id="tc-'+t.id+'" onclick="openPreview(\''+t.id+'\')">' +
+    '<div class="tmpl-thumb" style="background:'+t.color+';">' +
+      (t.used ? '<div class="used-badge">✓ In Use</div>' : '') +
+      (isPro  ? '<div class="pro-badge">⭐ PRO</div>' : '') +
+      '<div class="tmpl-overlay">' +
+        '<button class="ovl-btn ovl-preview" onclick="event.stopPropagation();openPreview(\''+t.id+'\')">Preview</button>' +
+        '<button class="ovl-btn ovl-use" onclick="event.stopPropagation();useTemplate(\''+t.id+'\','+isPro+')">Use</button>' +
+      '</div>' +
+      '<div style="text-align:center;padding:20px;">' +
+        '<div style="font-size:28px;margin-bottom:8px;">📄</div>' +
+        '<div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.6);">' + t.name + '</div>' +
+        '<div style="width:40px;height:3px;background:'+accent+';border-radius:3px;margin:8px auto 0;"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="tmpl-info">' +
+      '<div class="tmpl-name">' + t.name + '</div>' +
+      '<div class="tmpl-cat">' + t.tags.join(' · ') + '</div>' +
+      '<div class="tmpl-badges">' + badges + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderGrids() {
+  var q = document.getElementById('tmpl-search').value.toLowerCase();
+  var resumeCards = RESUME_TEMPLATES.filter(function(t){
+    var matchFilter = currentFilter==='all' || t.cat===currentFilter || t.tags.includes(currentFilter);
+    var matchSearch = !q || t.name.toLowerCase().includes(q) || t.tags.some(function(tg){return tg.includes(q);});
+    return matchFilter && matchSearch;
+  }).map(function(t,i){return buildCard(t,i);}).join('');
+
+  var portCards = PORTFOLIO_TEMPLATES.filter(function(t){
+    var matchFilter = currentFilter==='all' || t.cat===currentFilter || t.tags.includes(currentFilter);
+    var matchSearch = !q || t.name.toLowerCase().includes(q) || t.tags.some(function(tg){return tg.includes(q);});
+    return matchFilter && matchSearch;
+  }).map(function(t,i){return buildCard(t,i);}).join('');
+
+  document.getElementById('tmpl-grid').innerHTML  = resumeCards  || '<div style="color:var(--muted);font-size:13px;padding:20px;">No resume templates match your filter.</div>';
+  document.getElementById('port-grid').innerHTML  = portCards    || '<div style="color:var(--muted);font-size:13px;padding:20px;">No portfolio templates match your filter.</div>';
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.ftab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderGrids();
+}
+
+function filterTemplates() { renderGrids(); }
+
+function useTemplate(id, isPro) {
+  var plan = 'free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var hasPro = plan==='pro'||plan==='team';
+  if(isPro && !hasPro) {
+    toast('⭐ This is a Pro template — upgrade to unlock it!');
+    setTimeout(function(){location.href='pricing.html';},1500);
+    return;
+  }
+  closePreview();
+  toast('✅ Template applied! Opening Resume Builder...');
+  setTimeout(function(){location.href='resume-builder.html';},1200);
+}
+
+var currentPreviewId = '';
+function openPreview(id) {
+  var all = RESUME_TEMPLATES.concat(PORTFOLIO_TEMPLATES);
+  var t = all.find(function(x){return x.id===id;});
+  if(!t) return;
+  currentPreviewId = id;
+  document.getElementById('preview-thumb').style.background = t.color;
+  document.getElementById('preview-thumb').innerHTML = '<div style="text-align:center;"><div style="font-size:48px;margin-bottom:12px;">📄</div><div style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.7);">'+t.name+'</div></div>';
+  document.getElementById('preview-name').textContent = t.name;
+  document.getElementById('preview-desc').textContent = t.desc;
+  var isPro = !t.free;
+  var useBtn = document.getElementById('preview-use-btn');
+  useBtn.textContent = isPro ? '⭐ Unlock with Pro' : '✅ Use This Template';
+  useBtn.onclick = function(){useTemplate(id, isPro);};
+  document.getElementById('preview-modal').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('preview-modal').classList.remove('open');
+}
+
+document.getElementById('preview-modal').addEventListener('click', function(e){
+  if(e.target===this) closePreview();
+});
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show');},3000);}
+
+/* Plan state */
+(function(){
+  var plan='free';
+  try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var isTeam=plan==='team';
+  var r=document.getElementById('sb-user-role');
+  if(r&&isPro){r.textContent=isTeam?'Team Plan':'Pro Plan ✦';r.style.color='#c4b5fd';}
+  var u=document.getElementById('sb-upgrade');
+  if(u&&isPro)u.style.display='none';
+  var b=document.getElementById('plan-badge');
+  if(b&&isPro){b.textContent=isTeam?'👥 Team':'✦ Pro';b.style.display='inline-flex';}
+})();
+
+/* Init */
+renderGrids();
+
+/* ── SUPABASE SESSION CHECK ── */
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.onload = async function() {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    var { data: { session } } = await cl.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    /* Update name/avatar */
+    var name = localStorage.getItem('prolio_name') || session.user.email.split('@')[0];
+    ['sb-user-name'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name;
+    });
+    ['sb-avatar','tb-avatar'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name.charAt(0).toUpperCase();
+    });
+  };
+  document.head.appendChild(s);
+})();
+
+/* ── LOGOUT ── */
+async function logout() {
+  if(typeof supabase !== 'undefined') {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    await cl.auth.signOut();
+  }
+  localStorage.removeItem('prolio_plan');
+  localStorage.removeItem('prolio_name');
+  window.location.href = 'index.html';
+}
+
+/* ══ SUPABASE USER LOADER ══ */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+
+  /* Load from localStorage instantly (no flicker) */
+  var cached = {};
+  try { cached = JSON.parse(localStorage.getItem('prolio_user') || '{}'); } catch(e) {}
+  if (cached.name) applyUserData(cached);
+
+  /* Then verify with Supabase and refresh */
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role  || 'Full Stack Developer';
+    var city  = meta.city  || '';
+    var phone = meta.phone || '';
+    var slug  = name.toLowerCase().replace(/\s+/g,'');
+
+    /* Save to localStorage for next page load */
+    var userData = { name:name, email:email, role:role, city:city, phone:phone, slug:slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(userData)); } catch(e) {}
+
+    applyUserData(userData);
+
+    /* Also load plan */
+    _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
+      if (r.data && r.data.plan && r.data.plan !== 'free') {
+        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+        var planEl = document.getElementById('sb-user-role');
+        if (planEl) planEl.textContent = r.data.plan === 'team' ? 'Team Plan' : 'Pro Plan ✦';
+      }
+    });
+  });
+
+  function applyUserData(u) {
+    var initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+
+    /* Avatar letters */
+    document.querySelectorAll('#sb-avatar, #tb-avatar, .user-avatar').forEach(function(el) {
+      el.textContent = initial;
+    });
+
+    /* Name fields */
+    document.querySelectorAll('#sb-user-name, #user-name, #topbar-user-name').forEach(function(el) {
+      el.textContent = u.name;
+    });
+
+    /* Role/title fields */
+    document.querySelectorAll('#sb-user-role-title, #user-role, #user-title').forEach(function(el) {
+      el.textContent = u.role;
+    });
+
+    /* Email fields */
+    document.querySelectorAll('#user-email, #profile-email').forEach(function(el) {
+      if (el.tagName === 'INPUT') el.value = u.email;
+      else el.textContent = u.email;
+    });
+
+    /* Greeting */
+    var greetName = document.getElementById('greeting-name');
+    if (greetName) greetName.textContent = u.name.split(' ')[0];
+
+    /* Profile URL slug */
+    document.querySelectorAll('#profile-url, #profile-slug, .profile-url-text').forEach(function(el) {
+      el.textContent = 'prolioai.com/u/' + u.slug;
+    });
+
+    /* Page title personalization */
+    var heroName = document.getElementById('hero-user-name');
+    if (heroName) heroName.textContent = u.name;
+  }
+})();
+</script>
+</body>
+</html>

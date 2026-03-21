@@ -971,6 +971,7 @@
   #page-privacy footer span, #page-choices footer span { color: #7c3aed; }
 
   </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1054,7 +1055,7 @@
       </div>
       <div id="footerContact">
         <h3 id="contactTitle">Contact</h3>
-        <p>support@prolioai.com</p>
+        <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84f7f1f4f4ebf6f0c4f4f6ebe8edebe5edaae7ebe9">[email&#160;protected]</a></p>
         <p>+91 8124181771</p>
       </div>
     </div>
@@ -1297,7 +1298,7 @@
     <div class="stepView active" id="step1">
       <h2 style="text-align:center;font-size:clamp(16px,2vw,22px);font-weight:800;color:#0f172a;margin-bottom:3px;">Create account</h2>
       <p style="font-size:12px;color:#64748b;margin-bottom:16px;text-align:center;">Sign up with Google, Microsoft or email</p>
-      <button class="socialBtn" onclick="signupShowToast('Connecting to Google...')">
+      <button class="socialBtn" onclick="signInWithGoogle()">
         <svg class="googleIcon" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.1 0 5.6 1.1 7.6 2.9l5.6-5.6C33.6 3.5 29.1 1.5 24 1.5 14.9 1.5 7.2 7.1 3.9 15l6.6 5.1C12.1 14 17.6 9.5 24 9.5z"/>
           <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.4c-.5 2.8-2.1 5.1-4.4 6.7l6.8 5.3c4-3.7 6.3-9.2 6.3-16z"/>
@@ -1343,7 +1344,7 @@
     </div>
 
     <!-- Step 2: OTP Verification -->
-    <div class="stepView" id="step2">
+    <div class="stepView" id="step2" data-type="email-otp">
       <h2 style="text-align:center;font-size:clamp(16px,2vw,22px);font-weight:800;color:#0f172a;margin-bottom:3px;">Verify your account</h2>
       <p id="otpInfo" style="font-size:12px;color:#64748b;text-align:center;margin-bottom:4px;">We sent a 6-digit code to<br><strong id="otpTarget">—</strong></p>
       <div id="otpContainer">
@@ -1532,7 +1533,7 @@
       </div>
       <div id="footerContact">
         <h3 id="contactTitle">Contact</h3>
-        <p>support@prolioai.com</p>
+        <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="98ebede8e8f7eaecd8e8eaf7f4f1f7f9f1b6fbf7f5">[email&#160;protected]</a></p>
         <p>+91 8124181771</p>
       </div>
     </div>
@@ -1563,7 +1564,7 @@
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">09</div><div class="priv-section-title">Third-Party Services</div></div><div class="priv-section-body"><p>Our platform may integrate with third-party services (such as payment gateways or analytics tools). These services have their own privacy policies, and we are not responsible for their practices.</p></div></div>
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">10</div><div class="priv-section-title">Children's Privacy</div></div><div class="priv-section-body"><p>Prolio AI is not intended for users under the age of 13. We do not knowingly collect personal data from children.</p></div></div>
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">11</div><div class="priv-section-title">Changes to This Policy</div></div><div class="priv-section-body"><p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated effective date.</p></div></div>
-    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">12</div><div class="priv-section-title">Contact Us</div></div><div class="priv-section-body"><p>If you have any questions about this Privacy Policy, you can reach us at:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:support@prolioai.com">support@prolioai.com</a></span></div></div></div></div>
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">12</div><div class="priv-section-title">Contact Us</div></div><div class="priv-section-body"><p>If you have any questions about this Privacy Policy, you can reach us at:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="/cdn-cgi/l/email-protection#d3a0a6a3a3bca1a793a3a1bcbfbabcb2bafdb0bcbe"><span class="__cf_email__" data-cfemail="93e0e6e3e3fce1e7d3e3e1fcfffafcf2fabdf0fcfe">[email&#160;protected]</span></a></span></div></div></div></div>
   </div>
   <footer>© 2026 <span>Prolio AI</span> by Bronzera · All Rights Reserved</footer>
 </div><!-- /page-privacy -->
@@ -1587,7 +1588,7 @@
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">05</div><div class="priv-section-title">AI Data Usage Control</div></div><div class="priv-section-body"><p>Since Prolio AI uses your resume and professional data:</p><ul><li>You can choose what data you upload</li><li>You may request deletion of AI-processed data</li><li>You can stop using AI-based features at any time</li></ul></div></div>
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">06</div><div class="priv-section-title">Your Rights Under Privacy Laws</div></div><div class="priv-section-body"><p>Depending on your location, you may have additional rights under laws such as:</p><ul><li>General Data Protection Regulation (GDPR)</li><li>California Consumer Privacy Act (CCPA)</li></ul><div class="sub-label" style="margin-top:14px;">These rights may include</div><ul><li>Right to know what data is collected</li><li>Right to request deletion</li><li>Right to opt-out of data usage</li><li>Right to non-discrimination</li></ul></div></div>
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">07</div><div class="priv-section-title">Data Retention Choices</div></div><div class="priv-section-body"><p>You may request:</p><ul><li>Immediate deletion of your account and data</li><li>Limitation on how long your data is stored</li></ul><p style="margin-top:14px;">We will process such requests in accordance with applicable laws.</p></div></div>
-    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">08</div><div class="priv-section-title">Contact for Privacy Requests</div></div><div class="priv-section-body"><p>To exercise your privacy rights or make a request, contact us:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:support@prolioai.com">support@prolioai.com</a></span></div></div><p style="margin-top:14px;">We will respond within a reasonable timeframe as required by law.</p></div></div>
+    <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">08</div><div class="priv-section-title">Contact for Privacy Requests</div></div><div class="priv-section-body"><p>To exercise your privacy rights or make a request, contact us:</p><div class="contact-card"><div class="contact-row"><span class="contact-label">Company</span><span class="contact-value">Bronzera</span></div><div class="contact-row"><span class="contact-label">Product</span><span class="contact-value">Prolio AI</span></div><div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="/cdn-cgi/l/email-protection#f5868085859a8781b585879a999c9a949cdb969a98"><span class="__cf_email__" data-cfemail="4c3f393c3c233e380c3c3e232025232d25622f2321">[email&#160;protected]</span></a></span></div></div><p style="margin-top:14px;">We will respond within a reasonable timeframe as required by law.</p></div></div>
     <div class="priv-section"><div class="priv-section-header"><div class="priv-section-number">09</div><div class="priv-section-title">Updates to Your Choices</div></div><div class="priv-section-body"><p>We may update this page as our services evolve or legal requirements change. Please review it periodically to stay informed.</p></div></div>
   </div>
   <footer>© 2026 <span>Prolio AI</span> by Bronzera · All Rights Reserved</footer>
@@ -1598,6 +1599,22 @@
      SCRIPTS
 ═══════════════════════════════════════════════════════ -->
 <script>
+/* ══════════════════════════════════════
+   SUPABASE CONFIGURATION
+══════════════════════════════════════ */
+var SUPABASE_URL  = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+var SUPABASE_KEY  = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* Check if already logged in → go to dashboard */
+(function() {
+  _sb.auth.getSession().then(function(res) {
+    if (res.data && res.data.session) {
+      window.location.href = 'dashboard.html';
+    }
+  });
+})();
+
 /* ══════════════════
    PAGE ROUTER
 ══════════════════ */
@@ -1833,14 +1850,25 @@ function handleLogin() {
   if (!validateEmail(email)) { loginShowToast('⚠️ Please enter a valid email.'); return; }
   if (!password)             { loginShowToast('⚠️ Please enter your password.'); return; }
   if (password.length < 6)   { loginShowToast('⚠️ Password must be at least 6 characters.'); return; }
+
   btn.classList.add('loading'); btn.disabled = true;
-  setTimeout(function() {
-    btn.classList.remove('loading'); btn.disabled = false;
-    loginShowToast('✅ Login successful! Redirecting...');
-    setTimeout(function() {
-      window.location.href = './dashboard.html';
-    }, 800);
-  }, 1800);
+
+  _sb.auth.signInWithPassword({ email: email, password: password })
+    .then(function(res) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      if (res.error) {
+        loginShowToast('⚠️ ' + (res.error.message === 'Invalid login credentials'
+          ? 'Wrong email or password. Please try again.'
+          : res.error.message));
+        return;
+      }
+      loginShowToast('✅ Welcome back! Redirecting...');
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
+    })
+    .catch(function(err) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      loginShowToast('⚠️ Connection error. Please try again.');
+    });
 }
 document.getElementById('page-login').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && loginMethod === 'email') handleLogin();
@@ -1857,22 +1885,22 @@ function forgotShowToast(msg) {
   setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
 function handleForgotSubmit() {
-  var email = document.getElementById('forgot-emailInput').value.trim();
-  var err   = document.getElementById('forgot-emailError');
-  var inp   = document.getElementById('forgot-emailInput');
-  err.classList.remove('show'); inp.classList.remove('error');
+  var email = document.getElementById('forgotEmailInput').value.trim();
+  var btn   = document.getElementById('forgotSubmitBtn');
   if (!email || !validateEmail(email)) {
-    err.classList.add('show'); inp.classList.add('error'); return;
+    document.getElementById('forgotEmailError').classList.add('show'); return;
   }
-  var btn = document.getElementById('forgotSubmitBtn');
   btn.classList.add('loading'); btn.disabled = true;
-  setTimeout(function() {
+  _sb.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://prolio-ai4.netlify.app/index.html'
+  }).then(function(res) {
     btn.classList.remove('loading'); btn.disabled = false;
-    document.getElementById('forgot-sentTo').textContent = email;
-    document.getElementById('forgotForm').style.display    = 'none';
-    document.getElementById('forgotSuccess').style.display = 'block';
-    /* TODO: call backend API to send reset email */
-  }, 1600);
+    if (res.error) { loginShowToast('⚠️ ' + res.error.message); return; }
+    showPage('forgot-sent');
+  }).catch(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    loginShowToast('⚠️ Connection error. Please try again.');
+  });
 }
 function resetForgotForm() {
   var form    = document.getElementById('forgotForm');
@@ -1964,33 +1992,70 @@ function setStep(n) {
   for (var j = 1; j <= 2; j++) {
     document.getElementById('line' + j).classList.toggle('done', j < n);
   }
+
+  /* Start resend countdown when reaching step 2 */
+  if (n === 2) {
+    var btn     = document.getElementById('resendBtn');
+    var timerEl = document.getElementById('resendTimer');
+    if (btn) btn.disabled = true;
+    var secs = 30;
+    if (timerEl) timerEl.textContent = secs + 's';
+    clearInterval(window._resendIv);
+    window._resendIv = setInterval(function() {
+      secs--;
+      if (timerEl) timerEl.textContent = secs > 0 ? secs + 's' : '';
+      if (secs <= 0) {
+        clearInterval(window._resendIv);
+        if (btn) btn.disabled = false;
+      }
+    }, 1000);
+  }
 }
 function goStep2() {
   var contact  = document.getElementById('contactInput').value.trim();
   var password = document.getElementById('signup-passwordInput').value;
-  var cErr = document.getElementById('contactError');
-  var pErr = document.getElementById('passwordError');
-  var valid = true;
+  var cErr     = document.getElementById('contactError');
+  var pErr     = document.getElementById('passwordError');
   cErr.classList.remove('show'); document.getElementById('contactInput').classList.remove('error');
-  if (signupContactType === 'email' && !validateEmail(contact)) {
-    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); valid = false;
-  } else if (signupContactType === 'phone' && !validatePhone(contact)) {
-    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); valid = false;
-  }
   pErr.classList.remove('show'); document.getElementById('signup-passwordInput').classList.remove('error');
-  if (password.length < 8) {
-    pErr.classList.add('show'); document.getElementById('signup-passwordInput').classList.add('error'); valid = false;
+
+  if (!contact) {
+    cErr.textContent = 'Please enter your email address.';
+    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); return;
   }
-  if (!valid) return;
+  if (!validateEmail(contact)) {
+    cErr.textContent = 'Please enter a valid email address.';
+    cErr.classList.add('show'); document.getElementById('contactInput').classList.add('error'); return;
+  }
+  if (!password || password.length < 6) {
+    pErr.textContent = 'Password must be at least 6 characters.';
+    pErr.classList.add('show'); document.getElementById('signup-passwordInput').classList.add('error'); return;
+  }
+
+  window._signupEmail    = contact;
+  window._signupPassword = password;
+
   var btn = document.getElementById('step1Btn');
   btn.classList.add('loading'); btn.disabled = true;
-  setTimeout(function() {
+
+  /* Use signInWithOtp — Supabase sends a 6-digit code to email */
+  _sb.auth.signInWithOtp({
+    email: contact,
+    options: {
+      shouldCreateUser: true,
+      emailRedirectTo: 'https://prolio-ai4.netlify.app/dashboard.html'
+    }
+  }).then(function(res) {
     btn.classList.remove('loading'); btn.disabled = false;
-    document.getElementById('otpTarget').textContent = contact;
-    setStep(2); startResendTimer();
-    document.getElementById('otp1').focus();
-    signupShowToast('📨 OTP sent to ' + contact);
-  }, 1200);
+    if (res.error) { signupShowToast('⚠️ ' + res.error.message); return; }
+    var el = document.getElementById('otpTarget');
+    if (el) el.textContent = contact;
+    signupShowToast('✅ OTP sent to ' + contact + '! Check your inbox.');
+    setStep(2);
+  }).catch(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    signupShowToast('⚠️ Connection error. Please try again.');
+  });
 }
 
 /* Signup OTP boxes */
@@ -2023,23 +2088,69 @@ function startResendTimer() {
   }, 1000);
 }
 function resendOTP() {
-  signupShowToast('📨 OTP resent!');
-  document.querySelectorAll('#page-signup .otpBox').forEach(function(b) { b.value = ''; b.classList.remove('filled'); });
-  startResendTimer(); document.getElementById('otp1').focus();
+  if (!window._signupEmail) {
+    signupShowToast('⚠️ Please go back and enter your email first.');
+    return;
+  }
+  var btn     = document.getElementById('resendBtn');
+  var timerEl = document.getElementById('resendTimer');
+  btn.disabled = true;
+
+  _sb.auth.signInWithOtp({
+    email: window._signupEmail,
+    options: { shouldCreateUser: true }
+  }).then(function(res) {
+    if (res.error) {
+      signupShowToast('⚠️ ' + res.error.message);
+      btn.disabled = false;
+      return;
+    }
+    signupShowToast('✅ New OTP sent to ' + window._signupEmail + '!');
+    var secs = 30;
+    if (timerEl) timerEl.textContent = secs + 's';
+    clearInterval(window._resendIv);
+    window._resendIv = setInterval(function() {
+      secs--;
+      if (timerEl) timerEl.textContent = secs > 0 ? secs + 's' : '';
+      if (secs <= 0) { clearInterval(window._resendIv); btn.disabled = false; }
+    }, 1000);
+  }).catch(function() {
+    signupShowToast('⚠️ Connection error. Please try again.');
+    btn.disabled = false;
+  });
 }
 function verifyOTP() {
   var otp = ['otp1','otp2','otp3','otp4','otp5','otp6']
     .map(function(id) { return document.getElementById(id).value; }).join('');
-  if (otp.length < 6 || /\D/.test(otp)) {
+  if (otp.length < 6) {
     signupShowToast('⚠️ Please enter the complete 6-digit OTP.'); return;
   }
   var btn = document.getElementById('step2Btn');
   btn.classList.add('loading'); btn.disabled = true;
-  setTimeout(function() {
+
+  _sb.auth.verifyOtp({
+    email: window._signupEmail,
+    token: otp,
+    type: 'email'
+  }).then(function(res) {
     btn.classList.remove('loading'); btn.disabled = false;
-    setStep(3); clearInterval(signupResendInterval);
-    /* TODO: verify OTP with backend */
-  }, 1400);
+    if (res.error) {
+      signupShowToast('⚠️ ' + (res.error.message.includes('expired') || res.error.message.includes('invalid')
+        ? 'Invalid or expired OTP. Please try again or click Resend.'
+        : res.error.message));
+      return;
+    }
+    /* OTP verified — now update password and move to step 3 */
+    if (window._signupPassword) {
+      _sb.auth.updateUser({ password: window._signupPassword });
+    }
+    clearInterval(window._resendIv);
+    signupShowToast('✅ Email verified! One more step...');
+    setStep(3);
+  }).catch(function() {
+    btn.classList.remove('loading'); btn.disabled = false;
+    signupShowToast('⚠️ Verification failed. Please try again.');
+  });
 }
 function createAccount() {
   var name  = document.getElementById('fullName').value.trim();
@@ -2048,16 +2159,27 @@ function createAccount() {
   nErr.classList.remove('show'); document.getElementById('fullName').classList.remove('error');
   if (!name)  { nErr.classList.add('show'); document.getElementById('fullName').classList.add('error'); return; }
   if (!terms) { signupShowToast('⚠️ Please agree to the Privacy Policy to continue.'); return; }
+
   var btn = document.getElementById('step3Btn');
   btn.classList.add('loading'); btn.disabled = true;
-  setTimeout(function() {
-    btn.classList.remove('loading'); btn.disabled = false;
-    document.querySelectorAll('#page-signup .stepView').forEach(function(v) { v.style.display = 'none'; });
-    document.getElementById('stepIndicator').style.display = 'none';
-    document.getElementById('stepLabels').style.display    = 'none';
-    document.getElementById('successView').style.display   = 'flex';
-    /* TODO: submit account data to backend */
-  }, 1600);
+
+  /* Update the user's display name in Supabase */
+  _sb.auth.updateUser({ data: { full_name: name } })
+    .then(function(res) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      /* Show success view */
+      document.querySelectorAll('#page-signup .stepView').forEach(function(v) { v.style.display = 'none'; });
+      document.getElementById('stepIndicator').style.display = 'none';
+      document.getElementById('stepLabels').style.display    = 'none';
+      document.getElementById('successView').style.display   = 'flex';
+      /* Auto redirect to dashboard */
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 1800);
+    })
+    .catch(function() {
+      btn.classList.remove('loading'); btn.disabled = false;
+      /* Even if name update fails, redirect to dashboard since they're verified */
+      window.location.href = 'dashboard.html';
+    });
 }
 document.getElementById('page-signup').addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
@@ -2106,23 +2228,31 @@ var statsObserver = new IntersectionObserver(function(entries) {
   if (entries[0].isIntersecting) {
     document.querySelectorAll('.stat-num').forEach(function(el) {
       var text = el.textContent;
-      if (!isNaN(parseInt(text))) {
-        var target  = parseInt(text);
-        var current = 0;
-        var suffix  = text.replace(/[0-9]/g,'');
-        var step    = Math.max(1, Math.floor(target / 40));
-        var intv    = setInterval(function() {
-          current = Math.min(current + step, target);
-          el.textContent = current + suffix;
-          if (current >= target) clearInterval(intv);
-        }, 30);
+      if (!isNaN(parseFloat(text))) {
+        var target = parseFloat(text);
+        var start = 0;
+        var step = target / 40;
+        var timer = setInterval(function() {
+          start += step;
+          if (start >= target) { start = target; clearInterval(timer); }
+          el.textContent = Number.isInteger(target) ? Math.round(start) : start.toFixed(1);
+        }, 40);
       }
     });
-    statsObserver.disconnect();
   }
-}, { threshold: 0.3 });
-var statsEl = document.getElementById('statsStrip');
-if (statsEl) statsObserver.observe(statsEl);
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num').forEach(function(el) {
+  statsObserver.observe(el);
+});
+
+
+/* ══ GOOGLE OAUTH ══ */
+function signInWithGoogle() {
+  _sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: 'https://prolio-ai4.netlify.app/dashboard.html' }
+  });
+}
 </script>
 </body>
 </html>

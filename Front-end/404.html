@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found · Prolio AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7b4dff;--blue:#5E7CFF;--cyan:#49C6C6;--bg:#080c18;--text:#f1f5f9;--muted:rgba(255,255,255,0.45);--grad:linear-gradient(135deg,#7b4dff,#5E7CFF,#49C6C6);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 30% 30%,rgba(123,77,255,0.2),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(73,198,198,0.15),transparent 55%);}
+.container{text-align:center;position:relative;z-index:1;max-width:520px;}
+.big-404{font-family:'Playfair Display',serif;font-size:clamp(100px,20vw,160px);font-weight:900;line-height:1;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0;animation:float 4s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.icon{font-size:48px;margin-bottom:14px;display:block;}
+h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);font-weight:900;margin-bottom:12px;}
+h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
+.btn-home{padding:13px 28px;border-radius:12px;background:var(--grad);border:none;color:white;font-size:14px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.25s;}
+.btn-home:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(123,77,255,0.5);}
+.btn-back{padding:12px 22px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--muted);font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.25s;}
+.btn-back:hover{border-color:rgba(255,255,255,0.22);color:var(--text);}
+.quick-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.ql{padding:6px 14px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.ql:hover{background:rgba(123,77,255,0.15);border-color:rgba(123,77,255,0.3);color:#c4b5fd;}
+.logo{font-size:18px;font-weight:900;letter-spacing:3px;font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:32px;display:block;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="container">
+  <span class="logo" onclick="location.href='dashboard.html'">Prolio AI</span>
+  <div class="big-404">404</div>
+  <span class="icon">🔍</span>
+  <h1>Page <em>Not Found</em></h1>
+  <p>The page you're looking for doesn't exist or may have been moved. Let's get you back on track.</p>
+  <div class="btns">
+    <button class="btn-home" onclick="location.href='dashboard.html'">🏠 Go to Dashboard</button>
+    <button class="btn-back" onclick="history.back()">← Go Back</button>
+  </div>
+  <div class="quick-links">
+    <a class="ql" onclick="location.href='resume-builder.html'">📝 Resume Builder</a>
+    <a class="ql" onclick="location.href='portfolio.html'">🌐 Portfolio</a>
+    <a class="ql" onclick="location.href='pricing.html'">💎 Pricing</a>
+    <a class="ql" onclick="location.href='help-docs.html'">💬 Help</a>
+  </div>
+</div>
+</body>
+</html>

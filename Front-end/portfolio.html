@@ -1315,7 +1315,7 @@ body { font-family:'DM Sans',sans-serif; background:#080c18; color:#f1f5f9; over
           <img id="hero-photo" src="" alt="Profile Photo" class="shape-circle">
         </div>
         <div id="hero-eyebrow">👋 Available for opportunities</div>
-        <h1 id="hero-name">Arun R</h1>
+        <h1 id="hero-name" id="sb-user-name">Arun R</h1>
         <h2 id="hero-role">Full Stack Developer</h2>
         <p id="hero-bio">Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.</p>
         <div class="hero-btns">
@@ -2043,6 +2043,118 @@ function toast(msg) {
   t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
+
+/* ── SUPABASE SESSION CHECK ── */
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.onload = async function() {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    var { data: { session } } = await cl.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    /* Update name/avatar */
+    var name = localStorage.getItem('prolio_name') || session.user.email.split('@')[0];
+    ['sb-user-name'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name;
+    });
+    ['sb-avatar','tb-avatar'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.textContent = name.charAt(0).toUpperCase();
+    });
+  };
+  document.head.appendChild(s);
+})();
+
+/* ── LOGOUT ── */
+async function logout() {
+  if(typeof supabase !== 'undefined') {
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    await cl.auth.signOut();
+  }
+  localStorage.removeItem('prolio_plan');
+  localStorage.removeItem('prolio_name');
+  window.location.href = 'index.html';
+}
+
+/* ══ SUPABASE USER LOADER ══ */
+(function() {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+
+  /* Load from localStorage instantly (no flicker) */
+  var cached = {};
+  try { cached = JSON.parse(localStorage.getItem('prolio_user') || '{}'); } catch(e) {}
+  if (cached.name) applyUserData(cached);
+
+  /* Then verify with Supabase and refresh */
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var user = res.data.session.user;
+    var meta = user.user_metadata || {};
+
+    var name  = meta.full_name || user.email.split('@')[0];
+    var email = user.email;
+    var role  = meta.role  || 'Full Stack Developer';
+    var city  = meta.city  || '';
+    var phone = meta.phone || '';
+    var slug  = name.toLowerCase().replace(/\s+/g,'');
+
+    /* Save to localStorage for next page load */
+    var userData = { name:name, email:email, role:role, city:city, phone:phone, slug:slug };
+    try { localStorage.setItem('prolio_user', JSON.stringify(userData)); } catch(e) {}
+
+    applyUserData(userData);
+
+    /* Also load plan */
+    _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
+      if (r.data && r.data.plan && r.data.plan !== 'free') {
+        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+        var planEl = document.getElementById('sb-user-role');
+        if (planEl) planEl.textContent = r.data.plan === 'team' ? 'Team Plan' : 'Pro Plan ✦';
+      }
+    });
+  });
+
+  function applyUserData(u) {
+    var initial = u.name ? u.name.charAt(0).toUpperCase() : '?';
+
+    /* Avatar letters */
+    document.querySelectorAll('#sb-avatar, #tb-avatar, .user-avatar').forEach(function(el) {
+      el.textContent = initial;
+    });
+
+    /* Name fields */
+    document.querySelectorAll('#sb-user-name, #user-name, #topbar-user-name').forEach(function(el) {
+      el.textContent = u.name;
+    });
+
+    /* Role/title fields */
+    document.querySelectorAll('#sb-user-role-title, #user-role, #user-title').forEach(function(el) {
+      el.textContent = u.role;
+    });
+
+    /* Email fields */
+    document.querySelectorAll('#user-email, #profile-email').forEach(function(el) {
+      if (el.tagName === 'INPUT') el.value = u.email;
+      else el.textContent = u.email;
+    });
+
+    /* Greeting */
+    var greetName = document.getElementById('greeting-name');
+    if (greetName) greetName.textContent = u.name.split(' ')[0];
+
+    /* Profile URL slug */
+    document.querySelectorAll('#profile-url, #profile-slug, .profile-url-text').forEach(function(el) {
+      el.textContent = 'prolioai.com/u/' + u.slug;
+    });
+
+    /* Page title personalization */
+    var heroName = document.getElementById('hero-user-name');
+    if (heroName) heroName.textContent = u.name;
+  }
+})();
 </script>
 </body>
 </html>
