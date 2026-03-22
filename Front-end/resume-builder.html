@@ -657,7 +657,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   <div id="tb-right">
     <span id="tb-save-status">All changes saved</span>
     <button class="tb-btn outline" onclick="showPreviewMobile()" id="tb-preview-toggle">👁 Preview</button>
-    <button class="tb-btn outline" onclick="showToast('PDF export — connect backend to enable!')">⬇ PDF</button>
+    <button class="tb-btn outline" onclick="downloadPDF()">⬇ PDF</button>
     <button class="tb-btn primary" onclick="handleSave()">💾 Save</button>
   </div>
 </header>
@@ -1304,7 +1304,25 @@ function setPMode(mode,btn){document.querySelectorAll('.pctrl-btn').forEach(func
 function showPreviewMobile(){var pp=document.getElementById('preview-panel');pp.classList.toggle('show-mobile');showToast(pp.classList.contains('show-mobile')?'Showing preview':'Hiding preview');}
 
 /* ══ SAVE ══ */
-function handleSave(){liveUpdate();var btn=document.querySelector('.tb-btn.primary');var orig=btn.textContent;btn.textContent='⏳ Saving...';btn.disabled=true;setTimeout(function(){btn.textContent=orig;btn.disabled=false;document.getElementById('tb-save-status').textContent='All changes saved ✓';showToast('✅ Saved!');/*TODO: POST resumeData to backend*/},1400);}
+function handleSave() {
+  liveUpdate();
+  var btn = document.querySelector('.tb-btn.primary');
+  var orig = btn.textContent;
+  btn.textContent = '⏳ Saving...';
+  btn.disabled = true;
+
+  saveResumeToSupabase(function(err) {
+    btn.textContent = orig;
+    btn.disabled = false;
+    if (err) {
+      document.getElementById('tb-save-status').textContent = 'Save failed ✗';
+      showToast('⚠️ Save failed: ' + err);
+    } else {
+      document.getElementById('tb-save-status').textContent = 'All changes saved ✓';
+      showToast('✅ Saved!');
+    }
+  });
+}
 
 /* ══ TOAST ══ */
 function showToast(msg){var t=document.getElementById('toast');t.tex
@@ -1315,7 +1333,7 @@ function showToast(msg){var t=document.getElementById('toast');t.tex
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
   s.onload = async function() {
-    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0');
     var { data: { session } } = await cl.auth.getSession();
     if (!session) { window.location.href = 'index.html'; return; }
     /* Update name/avatar */
@@ -1333,7 +1351,7 @@ function showToast(msg){var t=document.getElementById('toast');t.tex
 /* ── LOGOUT ── */
 async function logout() {
   if(typeof supabase !== 'undefined') {
-    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');
+    var cl = supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0');
     await cl.auth.signOut();
   }
   localStorage.removeItem('prolio_plan');
@@ -1344,7 +1362,7 @@ async function logout() {
 /* ══ SUPABASE USER LOADER ══ */
 (function() {
   var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
 
   /* Load from localStorage instantly (no flicker) */
   var cached = {};
@@ -1419,6 +1437,208 @@ async function logout() {
     /* Page title personalization */
     var heroName = document.getElementById('hero-user-name');
     if (heroName) heroName.textContent = u.name;
+  }
+})();
+
+/* ══════════════════════════════════════
+   SUPABASE RESUME SAVE / LOAD
+══════════════════════════════════════ */
+var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
+var _sb = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+var _currentResumeId = null;
+var _currentUserId   = null;
+
+/* Get resume ID from URL: ?id=xxx */
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  _currentResumeId = params.get('id') || null;
+})();
+
+/* ── SAVE resume to Supabase ── */
+function saveResumeToSupabase(callback) {
+  if (!_sb) { callback && callback('Supabase SDK not loaded'); return; }
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) {
+      callback && callback('Not logged in');
+      return;
+    }
+    var uid = res.data.session.user.id;
+    _currentUserId = uid;
+
+    var payload = {
+      user_id:    uid,
+      title:      resumeData.role || resumeData.firstname + ' ' + resumeData.lastname || 'Untitled Resume',
+      status:     'draft',
+      content:    JSON.stringify(resumeData),
+      updated_at: new Date().toISOString()
+    };
+
+    if (_currentResumeId) {
+      /* Update existing resume */
+      _sb.from('resumes')
+        .update(payload)
+        .eq('id', _currentResumeId)
+        .eq('user_id', uid)
+        .then(function(r) {
+          if (r.error) { callback && callback(r.error.message); }
+          else {
+            console.log('Resume updated:', _currentResumeId);
+            callback && callback(null);
+          }
+        });
+    } else {
+      /* Insert new resume */
+      _sb.from('resumes')
+        .insert(payload)
+        .select('id')
+        .single()
+        .then(function(r) {
+          if (r.error) { console.error('Supabase insert error:', r.error); callback && callback(r.error.message); }
+          else if (!r.data) { console.error('No data returned'); callback && callback('No data returned'); }
+          else {
+            _currentResumeId = r.data.id;
+            /* Update URL without reload */
+            var newUrl = window.location.pathname + '?id=' + _currentResumeId;
+            window.history.replaceState({}, '', newUrl);
+            console.log('Resume created:', _currentResumeId);
+            callback && callback(null);
+          }
+        });
+    }
+  });
+}
+
+/* ── LOAD resume from Supabase ── */
+function loadResumeFromSupabase() {
+  if (!_sb || !_currentResumeId) return;
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var uid = res.data.session.user.id;
+
+    _sb.from('resumes')
+      .select('id, title, content, status, updated_at')
+      .eq('id', _currentResumeId)
+      .eq('user_id', uid)
+      .single()
+      .then(function(r) {
+        if (r.error) { console.log('Load error:', r.error.message); return; }
+        if (!r.data || !r.data.content) return;
+
+        try {
+          var saved = JSON.parse(r.data.content);
+          /* Merge into resumeData */
+          Object.keys(saved).forEach(function(k) {
+            resumeData[k] = saved[k];
+          });
+          /* Re-render all fields */
+          populateFormFromData();
+          liveUpdate();
+          document.getElementById('tb-save-status').textContent = 'Loaded ✓';
+          console.log('Resume loaded:', r.data.title);
+        } catch(e) {
+          console.error('Parse error:', e);
+        }
+      });
+  });
+}
+
+/* ── POPULATE form fields from resumeData ── */
+function populateFormFromData() {
+  var fields = ['firstname','lastname','role','email','phone','location','linkedin','github','summary'];
+  fields.forEach(function(f) {
+    var el = document.getElementById(f) || document.querySelector('[name="'+f+'"]');
+    if (el && resumeData[f]) el.value = resumeData[f];
+  });
+  /* Re-render dynamic sections */
+  if (typeof renderSkillTags  === 'function') renderSkillTags();
+  if (typeof renderExpCards   === 'function') renderExpCards();
+  if (typeof renderProjCards  === 'function') renderProjCards();
+  if (typeof renderEduCards   === 'function') renderEduCards();
+}
+
+/* ── LOAD on page ready ── */
+window.addEventListener('DOMContentLoaded', function() {
+  if (_currentResumeId) {
+    /* Load existing resume if ID in URL */
+    loadResumeFromSupabase();
+  } else {
+    /* Pre-fill from profile data if available */
+    try {
+      var u = JSON.parse(localStorage.getItem('prolio_user') || '{}');
+      if (u.name) {
+        var parts = u.name.split(' ');
+        resumeData.firstname = parts[0] || '';
+        resumeData.lastname  = parts.slice(1).join(' ') || '';
+        var fnEl = document.getElementById('firstname');
+        var lnEl = document.getElementById('lastname');
+        if (fnEl) fnEl.value = resumeData.firstname;
+        if (lnEl) lnEl.value = resumeData.lastname;
+      }
+    } catch(e) {}
+  }
+});
+
+/* ══ PDF DOWNLOAD ══ */
+function downloadPDF() {
+  var preview = document.getElementById('resume-preview') ||
+                document.getElementById('preview-content') ||
+                document.querySelector('.resume-paper') ||
+                document.querySelector('.preview-wrap');
+
+  if (!preview) {
+    showToast('⚠️ Please switch to Preview tab first');
+    return;
+  }
+
+  /* Use browser print as PDF */
+  var printWindow = window.open('', '_blank');
+  printWindow.document.write('<html><head><title>' +
+    (resumeData.firstname + ' ' + resumeData.lastname + ' - Resume') +
+    '</title><style>');
+  printWindow.document.write(document.querySelector('style') ?
+    document.querySelector('style').innerHTML : '');
+  printWindow.document.write('</style></head><body>');
+  printWindow.document.write(preview.outerHTML);
+  printWindow.document.write('</body></html>');
+  printWindow.document.close();
+
+  setTimeout(function() {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+}
+
+/* ══ PDF DOWNLOAD ══ */
+function downloadPDF() {
+  /* Use browser print to PDF */
+  var preview = document.getElementById('resume-preview');
+  if (!preview) { showToast('Please go to Preview tab first'); return; }
+
+  /* Create a print window with just the resume */
+  var printWin = window.open('', '_blank');
+  var styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+    .map(function(el) { return el.outerHTML; }).join('');
+  printWin.document.write(
+    '<!DOCTYPE html><html><head><title>Resume</title>' + styles +
+    '<style>@media print{body{margin:0;padding:0;} .resume-page{box-shadow:none!important;margin:0!important;}}</style>' +
+    '</head><body>' + preview.innerHTML + '</body></html>'
+  );
+  printWin.document.close();
+  setTimeout(function() {
+    printWin.print();
+    showToast('Use "Save as PDF" in the print dialog');
+  }, 500);
+}
+
+/* ══ FIX: Check session on load and handle URL ══ */
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  _currentResumeId = params.get('id') || null;
+  if (_currentResumeId) {
+    document.getElementById('tb-save-status') && (document.getElementById('tb-save-status').textContent = 'Loading...');
   }
 })();
 </script>

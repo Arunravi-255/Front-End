@@ -593,7 +593,7 @@ body::before {
     <button id="sb-upgrade-btn" onclick="location.href='pricing.html'">Upgrade to Pro</button>
   </div>
   <div id="sb-user">
-    <div id="sb-avatar" id="sb-av">A</div>
+    <div id="sb-avatar">A</div>
     <div>
       <div id="sb-user-name">Arun R</div>
       <div id="sb-user-role">Free Plan</div>
@@ -646,10 +646,10 @@ body::before {
               <input type="file" id="avatar-file" accept="image/*" onchange="handleAvatarUpload(event)">
             </div>
             <div id="profile-name">Arun R</div>
-            <div id="profile-role-tag">Full Stack Developer</div>
+            <div id="profile-role-tag"></div>
             <div id="profile-url" onclick="copyProfileUrl()">
               <span>🔗</span>
-              <span id="profile-url-text">prolioai.com/u/arunr</span>
+              <span id="profile-url-text">prolioai.com/u/...</span>
             </div>
             <div id="profile-strength-wrap">
               <div class="strength-label">
@@ -668,9 +668,9 @@ body::before {
               <span id="upgrade-link" onclick="location.href='pricing.html'">Upgrade →</span>
             </div>
             <div id="quick-stats">
-              <div class="qs-item"><div class="qs-val" id="qs-res">3</div><div class="qs-lbl">Resumes</div></div>
-              <div class="qs-item"><div class="qs-val" id="qs-views">124</div><div class="qs-lbl">Views</div></div>
-              <div class="qs-item"><div class="qs-val" id="qs-links">7</div><div class="qs-lbl">Shares</div></div>
+              <div class="qs-item"><div class="qs-val" id="qs-res">0</div><div class="qs-lbl">Resumes</div></div>
+              <div class="qs-item"><div class="qs-val" id="qs-views">0</div><div class="qs-lbl">Views</div></div>
+              <div class="qs-item"><div class="qs-val" id="qs-links">0</div><div class="qs-lbl">Shares</div></div>
             </div>
           </div>
         </div>
@@ -687,7 +687,7 @@ body::before {
                 <div class="social-icon si-linkedin">🔗</div>
                 <div class="social-info">
                   <div class="social-name">LinkedIn</div>
-                  <div class="social-val" id="sv-linkedin">linkedin.com/in/arunr</div>
+                  <div class="social-val" id="sv-linkedin"></div>
                 </div>
                 <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
               </div>
@@ -695,7 +695,7 @@ body::before {
                 <div class="social-icon si-github">🐙</div>
                 <div class="social-info">
                   <div class="social-name">GitHub</div>
-                  <div class="social-val" id="sv-github">github.com/arunr</div>
+                  <div class="social-val" id="sv-github"></div>
                 </div>
                 <button class="social-edit-inline" onclick="toggleSection('social')">✎</button>
               </div>
@@ -720,13 +720,13 @@ body::before {
               <div class="form-row single" style="margin-bottom:10px;">
                 <div class="fgroup">
                   <label class="flabel">LinkedIn</label>
-                  <input class="finput" id="fi-linkedin" placeholder="linkedin.com/in/yourname" value="linkedin.com/in/arunr">
+                  <input class="finput" id="fi-linkedin" placeholder="linkedin.com/in/yourname" value="">
                 </div>
               </div>
               <div class="form-row single" style="margin-bottom:10px;">
                 <div class="fgroup">
                   <label class="flabel">GitHub</label>
-                  <input class="finput" id="fi-github" placeholder="github.com/yourname" value="github.com/arunr">
+                  <input class="finput" id="fi-github" placeholder="github.com/yourname" value="">
                 </div>
               </div>
               <div class="form-row single" style="margin-bottom:10px;">
@@ -770,15 +770,15 @@ body::before {
                 <div class="fgroup"><label class="flabel">Last Name</label><div class="field-display" id="vd-lname">Ravi</div></div>
               </div>
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Job Title</label><div class="field-display" id="vd-role">Full Stack Developer</div></div>
-                <div class="fgroup"><label class="flabel">Location</label><div class="field-display" id="vd-location">Chennai, India</div></div>
+                <div class="fgroup"><label class="flabel">Job Title</label><div class="field-display" id="vd-role"></div></div>
+                <div class="fgroup"><label class="flabel">Location</label><div class="field-display" id="vd-location"></div></div>
               </div>
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Email</label><div class="field-display" id="vd-email">arun@example.com</div></div>
-                <div class="fgroup"><label class="flabel">Phone</label><div class="field-display" id="vd-phone">+91 81241 81771</div></div>
+                <div class="fgroup"><label class="flabel">Email</label><div class="field-display" id="vd-email"></div></div>
+                <div class="fgroup"><label class="flabel">Phone</label><div class="field-display" id="vd-phone"></div></div>
               </div>
               <div class="form-row single">
-                <div class="fgroup"><label class="flabel">Bio</label><div class="field-display" id="vd-bio" style="align-items:flex-start;min-height:64px;">Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.</div></div>
+                <div class="fgroup"><label class="flabel">Bio</label><div class="field-display" id="vd-bio" style="align-items:flex-start;min-height:64px;"></div></div>
               </div>
             </div>
             <div class="edit-fields">
@@ -787,12 +787,12 @@ body::before {
                 <div class="fgroup"><label class="flabel">Last Name</label><input class="finput" id="fi-lname" value="Ravi" autocomplete="family-name"></div>
               </div>
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Job Title *</label><input class="finput" id="fi-role" value="Full Stack Developer"></div>
-                <div class="fgroup"><label class="flabel">Location</label><input class="finput" id="fi-location" value="Chennai, India"></div>
+                <div class="fgroup"><label class="flabel">Job Title *</label><input class="finput" id="fi-role" value=""></div>
+                <div class="fgroup"><label class="flabel">Location</label><input class="finput" id="fi-location" value=""></div>
               </div>
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Email *</label><input class="finput" id="fi-email" type="email" value="arun@example.com" autocomplete="email"></div>
-                <div class="fgroup"><label class="flabel">Phone</label><input class="finput" id="fi-phone" type="tel" value="+91 81241 81771" autocomplete="tel"></div>
+                <div class="fgroup"><label class="flabel">Email *</label><input class="finput" id="fi-email" type="email" value="" autocomplete="email"></div>
+                <div class="fgroup"><label class="flabel">Phone</label><input class="finput" id="fi-phone" type="tel" value="" autocomplete="tel"></div>
               </div>
               <div class="form-row triple">
                 <div class="fgroup"><label class="flabel">Date of Birth</label><input class="finput" id="fi-dob" type="date"></div>
@@ -813,7 +813,7 @@ body::before {
                 </div>
               </div>
               <div class="form-row single">
-                <div class="fgroup"><label class="flabel">Bio / About</label><textarea class="ftextarea" id="fi-bio">Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.</textarea></div>
+                <div class="fgroup"><label class="flabel">Bio / About</label><textarea class="ftextarea" id="fi-bio"></textarea></div>
               </div>
             </div>
             <div class="section-actions">
@@ -903,11 +903,11 @@ body::before {
           <div class="card-body" id="account-section">
             <div class="view-fields">
               <div class="form-row">
-                <div class="fgroup"><label class="flabel">Username</label><div class="field-display">arunr</div></div>
+                <div class="fgroup"><label class="flabel">Username</label><div class="field-display" id="vd-username"></div></div>
                 <div class="fgroup"><label class="flabel">Password</label><div class="field-display">••••••••••••</div></div>
               </div>
               <div class="form-row single">
-                <div class="fgroup"><label class="flabel">Account Created</label><div class="field-display">15 March 2026</div></div>
+                <div class="fgroup"><label class="flabel">Account Created</label><div class="field-display" id="vd-created"></div></div>
               </div>
             </div>
             <div class="edit-fields">
@@ -980,21 +980,21 @@ body::before {
             <h3><span>🔌</span> Connected Accounts</h3>
           </div>
           <div class="card-body">
-            <div class="connected-row">
-              <div class="connected-icon ci-google">🔴</div>
-              <div class="connected-info"><h4>Google</h4><p>arun@gmail.com · Connected 15 Mar 2026</p></div>
-              <button class="connect-btn connected" onclick="toggleConnect(this,'Google')">✓ Connected</button>
-            </div>
-            <div class="connected-row">
-              <div class="connected-icon ci-github">🐙</div>
-              <div class="connected-info"><h4>GitHub</h4><p>github.com/arunr · Connected 15 Mar 2026</p></div>
-              <button class="connect-btn connected" onclick="toggleConnect(this,'GitHub')">✓ Connected</button>
-            </div>
-            <div class="connected-row">
-              <div class="connected-icon ci-linkedin">🔗</div>
-              <div class="connected-info"><h4>LinkedIn</h4><p>Not connected</p></div>
-              <button class="connect-btn disconnected" onclick="toggleConnect(this,'LinkedIn')">+ Connect</button>
-            </div>
+            <div class="connected-row" id="conn-google">
+  <div class="connected-icon ci-google">🔴</div>
+  <div class="connected-info"><h4>Google</h4><p id="google-info">Not connected</p></div>
+  <button class="connect-btn" id="google-btn" onclick="connectAccount('google')">+ Connect</button>
+</div>
+            <div class="connected-row" id="conn-github">
+  <div class="connected-icon ci-github">🐙</div>
+  <div class="connected-info"><h4>GitHub</h4><p id="github-info">Not connected</p></div>
+  <button class="connect-btn" id="github-btn" onclick="connectAccount('github')">+ Connect</button>
+</div>
+            <div class="connected-row" id="conn-linkedin">
+  <div class="connected-icon ci-linkedin">🔗</div>
+  <div class="connected-info"><h4>LinkedIn</h4><p id="linkedin-info">Not connected</p></div>
+  <button class="connect-btn" id="linkedin-btn" onclick="connectAccount('linkedin')">+ Connect</button>
+</div>
           </div>
         </div>
 
@@ -1046,17 +1046,11 @@ body::before {
    DATA MODEL
 ══════════════════════════════════════ */
 var DATA = {
-  personal: { fname:'', lname:'', role:'', location:'', email:'', phone:'', bio:'Results-driven IT professional with hands-on experience in full-stack web development. Passionate about building intuitive, scalable applications.', dob:'', gender:'', availability:'open' },
-  social: { linkedin:'linkedin.com/in/arunr', github:'github.com/arunr', twitter:'', website:'' },
-  skills: ['HTML','CSS','JavaScript','React.js','Node.js','Python','MySQL','MongoDB','Git','Figma','TypeScript','REST API'],
-  experience: [
-    { id:1, role:'Full Stack Developer Intern', company:'TechNova Solutions', location:'Bangalore, India', start:'2024-06', end:'2024-12', current:false, desc:'• Developed responsive web apps using React.js and Node.js, improving page load time by 40%.\n• Designed RESTful APIs and integrated third-party services.\n• Participated in code reviews, reducing bug reports by 25%.' },
-    { id:2, role:'Frontend Developer (Freelance)', company:'Self-Employed', location:'Remote', start:'2024-01', end:'', current:true, desc:'• Built 8+ client websites with modern frameworks and pixel-perfect designs.\n• Delivered on time with 100% client satisfaction.' }
-  ],
-  education: [
-    { id:1, degree:'B.E. Information Technology', institution:'GRTIET', location:'Tamil Nadu', start:'2022', end:'2026', grade:'8.5 CGPA', desc:'' },
-    { id:2, degree:'Higher Secondary (12th)', institution:"St. Joseph's School", location:'Tamil Nadu', start:'2020', end:'2022', grade:'92%', desc:'' }
-  ]
+  personal: { fname:'', lname:'', role:'', location:'', email:'', phone:'', bio:'', dob:'', gender:'', availability:'open' },
+  social: { linkedin:'', github:'', twitter:'', website:'' },
+  skills: [],
+  experience: [],
+  education: []
 };
 
 var editSkills = DATA.skills.slice();
@@ -1166,6 +1160,7 @@ function saveSection(id) {
 
     cancelSection(id);
     showToast('✅ Changes saved successfully!');
+    saveToSupabase(id);
   }, 900);
 }
 
@@ -1485,7 +1480,7 @@ function toggleConnect(btn, name) {
    COPY PROFILE URL
 ══════════════════════════════════════ */
 function copyProfileUrl() {
-  var url = 'https://prolioai.com/u/arunr';
+  var slug = window._profileSlug || 'user'; var url = 'https://prolioai.com/u/' + slug;
   try { navigator.clipboard.writeText(url); } catch(e) {}
   showToast('🔗 Profile URL copied to clipboard!');
 }
@@ -1561,7 +1556,7 @@ function closeSidebar() {
    STAT COUNTER ANIMATION
 ══════════════════════════════════════ */
 function animateStats() {
-  [{ id:'qs-res', end:3 }, { id:'qs-views', end:124 }, { id:'qs-links', end:7 }].forEach(function(t){
+  [{ id:'qs-res', end:0 }, { id:'qs-views', end:0 }, { id:'qs-links', end:0 }].forEach(function(t){
     var el = document.getElementById(t.id); if (!el) return;
     var cur = 0; var step = Math.max(1, Math.floor(t.end / 40));
     var iv = setInterval(function(){
@@ -1599,65 +1594,236 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-(function(){var plan='free';try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}var isPro=plan==='pro'||plan==='team';var r=document.getElementById('sb-user-role');if(r&&isPro){r.textContent=isPro&&plan==='team'?'Team Plan':'Pro Plan';r.style.color='#c4b5fd';}var u=document.getElementById('sb-upgrade');if(u&&isPro)u.style.display='none';})();
-/* == SUPABASE USER LOADER == */
-(function() {
-  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+/* ══ SUPABASE INIT ══ */
+var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
+var _sb = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-  if (typeof supabase === 'undefined') return;
-  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+/* ══ SAVE TO SUPABASE ══ */
+function saveToSupabase(section) {
+  if (!_sb) { console.warn('Supabase not loaded'); return; }
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) { console.warn('No session'); return; }
+    var uid   = res.data.session.user.id;
+    var email = res.data.session.user.email;
+    var payload = { id: uid, email: email };
 
+    if (section === 'personal' || section === 'all') {
+      payload.full_name = ((DATA.personal.fname||'') + ' ' + (DATA.personal.lname||'')).trim();
+      payload.job_title = DATA.personal.role     || '';
+      payload.phone     = DATA.personal.phone    || '';
+      payload.location  = DATA.personal.location || '';
+      payload.bio       = DATA.personal.bio      || '';
+    }
+    if (section === 'social' || section === 'all') {
+      payload.linkedin = DATA.social.linkedin || '';
+      payload.github   = DATA.social.github   || '';
+      payload.website  = DATA.social.website  || '';
+    }
+    if (section === 'skills' || section === 'all') {
+      payload.skills_json = JSON.stringify(DATA.skills || []);
+    }
+    if (section === 'exp' || section === 'all') {
+      payload.experience_json = JSON.stringify(DATA.experience || []);
+    }
+    if (section === 'edu' || section === 'all') {
+      payload.education_json = JSON.stringify(DATA.education || []);
+    }
+    payload.updated_at = new Date().toISOString();
+
+    console.log('Saving to Supabase:', section, payload);
+
+    _sb.from('profiles').upsert(payload, { onConflict: 'id' }).then(function(r) {
+      if (r.error) {
+        console.error('Supabase save error:', r.error);
+        showToast('Save error: ' + r.error.message);
+      } else {
+        console.log('Saved to Supabase OK:', section);
+        try {
+          var u = JSON.parse(localStorage.getItem('prolio_user') || '{}');
+          if (payload.full_name) u.name = payload.full_name;
+          if (payload.job_title) u.role = payload.job_title;
+          u.slug = (u.name||'').toLowerCase().replace(/ /g,'');
+          localStorage.setItem('prolio_user', JSON.stringify(u));
+        } catch(e) {}
+      }
+    });
+  });
+}
+
+/* ══ LOAD FROM SUPABASE ══ */
+function loadFromSupabase() {
+  if (!_sb) return;
   _sb.auth.getSession().then(function(res) {
     if (!res.data || !res.data.session) return;
-    var user = res.data.session.user;
-    var meta = user.user_metadata || {};
+    var user  = res.data.session.user;
+    var meta  = user.user_metadata || {};
     var name  = meta.full_name || user.email.split('@')[0];
     var email = user.email;
-    var role  = meta.role || '';
-    var slug  = name.toLowerCase().replace(/ /g, '');
-    var u = { name: name, email: email, role: role, slug: slug };
-    try { localStorage.setItem('prolio_user', JSON.stringify(u)); } catch(e) {}
-    applyUser(u);
-  });
 
-  function applyUser(u) {
-    var ini   = u.name ? u.name.charAt(0).toUpperCase() : '?';
-    var parts = u.name ? u.name.split(' ') : [''];
-    var fname = parts[0] || '';
-    var lname = parts.slice(1).join(' ') || '';
-    var slug  = u.slug || fname.toLowerCase();
-    var role  = u.role || '';
+    applyUserToUI({ name:name, email:email, role:'', slug:name.toLowerCase().replace(/ /g,'') });
 
-    /* Avatars */
-    document.querySelectorAll('#sb-avatar, #tb-avatar').forEach(function(el) { el.textContent = ini; });
-    /* Sidebar name */
-    document.querySelectorAll('#sb-user-name, #user-name').forEach(function(el) { el.textContent = u.name; });
-    /* Profile card */
-    var pn = document.getElementById('profile-name'); if (pn) pn.textContent = u.name;
-    var pr = document.getElementById('profile-role-tag'); if (pr && role) pr.textContent = role;
-    var pu = document.getElementById('profile-url-text'); if (pu) pu.textContent = 'prolioai.com/u/' + slug;
-    /* Display fields */
-    var vf = document.getElementById('vd-fname'); if (vf) vf.textContent = fname;
-    var vl = document.getElementById('vd-lname'); if (vl) vl.textContent = lname;
-    var vr = document.getElementById('vd-role');  if (vr) vr.textContent = role;
-    var ve = document.getElementById('vd-email'); if (ve) ve.textContent = u.email;
-    /* Edit inputs */
-    var ff = document.getElementById('fi-fname'); if (ff) ff.value = fname;
-    var fl = document.getElementById('fi-lname'); if (fl) fl.value = lname;
-    var fr = document.getElementById('fi-role');  if (fr) fr.value = role;
-    var fe = document.getElementById('fi-email'); if (fe) fe.value = u.email;
-    /* Update DATA object */
-    if (typeof DATA !== 'undefined' && DATA.personal) {
-      DATA.personal.fname = fname;
-      DATA.personal.lname = lname;
-      DATA.personal.role  = role;
-      DATA.personal.email = u.email;
-      if (typeof renderPersonalView === 'function') renderPersonalView();
+    /* Account section */
+    var vuser = document.getElementById('vd-username');
+    if (vuser) vuser.textContent = email.split('@')[0];
+    var vcreated = document.getElementById('vd-created');
+    if (vcreated) {
+      var d = new Date(user.created_at);
+      vcreated.textContent = d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
     }
-    window._profileSlug = slug;
+
+    _sb.from('profiles')
+      .select('full_name,job_title,phone,location,bio,linkedin,github,website,plan,skills_json,experience_json,education_json')
+      .eq('id', user.id)
+      .single()
+      .then(function(r) {
+        if (r.error) { console.log('Load error:', r.error.message); return; }
+        var d = r.data; if (!d) return;
+
+        var parts = (d.full_name || name).split(' ');
+        DATA.personal.fname    = parts[0] || '';
+        DATA.personal.lname    = parts.slice(1).join(' ') || '';
+        DATA.personal.role     = d.job_title || '';
+        DATA.personal.phone    = d.phone     || '';
+        DATA.personal.location = d.location  || '';
+        DATA.personal.bio      = d.bio       || '';
+        DATA.personal.email    = email;
+        DATA.social.linkedin   = d.linkedin  || '';
+        DATA.social.github     = d.github    || '';
+        DATA.social.website    = d.website   || '';
+
+        try { if (d.skills_json)     DATA.skills     = JSON.parse(d.skills_json);     } catch(e) {}
+        try { if (d.experience_json) DATA.experience = JSON.parse(d.experience_json); } catch(e) {}
+        try { if (d.education_json)  DATA.education  = JSON.parse(d.education_json);  } catch(e) {}
+
+        if (typeof renderAllViews === 'function') renderAllViews();
+
+        var fullName = d.full_name || name;
+        applyUserToUI({
+          name:fullName, email:email,
+          role:d.job_title||'',
+          slug:fullName.toLowerCase().replace(/ /g,'')
+        });
+
+        /* Update social display */
+        var svli=document.getElementById('sv-linkedin'); if(svli) svli.textContent=d.linkedin||'—';
+        var svgh=document.getElementById('sv-github');   if(svgh) svgh.textContent=d.github||'—';
+
+        /* Update connected accounts */
+        updateConnectedUI('google',  d.linkedin ? true : false, email);
+        updateConnectedUI('github',  d.github   ? true : false, d.github||'');
+        updateConnectedUI('linkedin',d.linkedin  ? true : false, d.linkedin||'');
+
+        /* Plan */
+        if (d.plan && d.plan !== 'free') {
+          try { localStorage.setItem('prolio_plan', d.plan); } catch(e) {}
+          var sr=document.getElementById('sb-user-role');
+          if(sr){sr.textContent=d.plan==='team'?'Team Plan':'Pro Plan';sr.style.color='#c4b5fd';}
+          var ub=document.getElementById('sb-upgrade'); if(ub) ub.style.display='none';
+          var pb=document.getElementById('plan-badge');
+          if(pb){pb.textContent=d.plan==='team'?'Team':'Pro';pb.style.display='inline-flex';}
+        }
+      });
+  });
+}
+
+/* ══ APPLY USER TO UI ══ */
+function applyUserToUI(u) {
+  var ini   = u.name ? u.name.charAt(0).toUpperCase() : '?';
+  var parts = u.name ? u.name.split(' ') : [''];
+  var fname = parts[0] || '';
+  var lname = parts.slice(1).join(' ') || '';
+  var slug  = u.slug || fname.toLowerCase();
+
+  document.querySelectorAll('#sb-avatar,#tb-avatar,#topbar-avatar').forEach(function(el){el.textContent=ini;});
+  var ai=document.getElementById('avatar-initials'); if(ai) ai.textContent=ini;
+  document.querySelectorAll('#sb-user-name,#user-name').forEach(function(el){el.textContent=u.name;});
+
+  var pn=document.getElementById('profile-name');     if(pn) pn.textContent=u.name;
+  var pr=document.getElementById('profile-role-tag'); if(pr) pr.textContent=u.role||'';
+  var pu=document.getElementById('profile-url-text'); if(pu) pu.textContent='prolioai.com/u/'+slug;
+
+  var vf=document.getElementById('vd-fname');    if(vf) vf.textContent=fname;
+  var vl=document.getElementById('vd-lname');    if(vl) vl.textContent=lname;
+  var vr=document.getElementById('vd-role');     if(vr) vr.textContent=u.role||'';
+  var ve=document.getElementById('vd-email');    if(ve) ve.textContent=u.email;
+  var vp=document.getElementById('vd-phone');    if(vp) vp.textContent=DATA.personal.phone||'';
+  var vlo=document.getElementById('vd-location');if(vlo)vlo.textContent=DATA.personal.location||'';
+  var vb=document.getElementById('vd-bio');      if(vb) vb.textContent=DATA.personal.bio||'';
+
+  var ff=document.getElementById('fi-fname');    if(ff) ff.value=fname;
+  var fl=document.getElementById('fi-lname');    if(fl) fl.value=lname;
+  var fr=document.getElementById('fi-role');     if(fr) fr.value=u.role||'';
+  var fe=document.getElementById('fi-email');    if(fe) fe.value=u.email;
+  var fp=document.getElementById('fi-phone');    if(fp) fp.value=DATA.personal.phone||'';
+  var flo=document.getElementById('fi-location');if(flo)flo.value=DATA.personal.location||'';
+  var fb=document.getElementById('fi-bio');      if(fb) fb.value=DATA.personal.bio||'';
+  var fli=document.getElementById('fi-linkedin');if(fli)fli.value=DATA.social.linkedin||'';
+  var fgh=document.getElementById('fi-github');  if(fgh)fgh.value=DATA.social.github||'';
+  var ftw=document.getElementById('fi-twitter'); if(ftw)ftw.value=DATA.social.twitter||'';
+  var fwb=document.getElementById('fi-website'); if(fwb)fwb.value=DATA.social.website||'';
+
+  var plan='free'; try{plan=localStorage.getItem('prolio_plan')||'free';}catch(e){}
+  var isPro=plan==='pro'||plan==='team';
+  var ub=document.getElementById('sb-upgrade'); if(ub&&isPro) ub.style.display='none';
+  var pb=document.getElementById('plan-badge');
+  if(pb&&isPro){pb.textContent=plan==='team'?'Team':'Pro';pb.style.display='inline-flex';}
+  var sr=document.getElementById('sb-user-role');
+  if(sr&&isPro){sr.textContent=plan==='team'?'Team Plan':'Pro Plan';sr.style.color='#c4b5fd';}
+
+  window._profileSlug = slug;
+}
+
+/* ══ CONNECTED ACCOUNTS ══ */
+function updateConnectedUI(provider, isConnected, info) {
+  var btn  = document.getElementById(provider + '-btn');
+  var infoEl = document.getElementById(provider + '-info');
+  if (!btn) return;
+  if (isConnected) {
+    btn.textContent = '✓ Connected';
+    btn.className = 'connect-btn connected';
+    if (infoEl) infoEl.textContent = info || (provider.charAt(0).toUpperCase()+provider.slice(1)) + ' · Connected';
+  } else {
+    btn.textContent = '+ Connect';
+    btn.className = 'connect-btn';
+    if (infoEl) infoEl.textContent = 'Not connected';
   }
-})();
+}
+
+function connectAccount(provider) {
+  var btn = document.getElementById(provider + '-btn');
+  var infoEl = document.getElementById(provider + '-info');
+  var isConnected = btn && btn.classList.contains('connected');
+
+  if (isConnected) {
+    /* Disconnect */
+    if (!confirm('Disconnect ' + provider.charAt(0).toUpperCase() + provider.slice(1) + '?')) return;
+    /* Remove from social data */
+    if (provider === 'linkedin') DATA.social.linkedin = '';
+    if (provider === 'github')   DATA.social.github   = '';
+    if (provider === 'website')  DATA.social.website  = '';
+    saveToSupabase('social');
+    updateConnectedUI(provider, false, '');
+    showToast('Disconnected from ' + provider);
+  } else {
+    /* Connect — show input prompt */
+    var label = provider === 'google' ? 'Enter your email' :
+                provider === 'github' ? 'Enter your GitHub username (e.g. github.com/yourname)' :
+                'Enter your LinkedIn URL (e.g. linkedin.com/in/yourname)';
+    var val = prompt(label);
+    if (!val || !val.trim()) return;
+    val = val.trim();
+
+    if (provider === 'linkedin') DATA.social.linkedin = val;
+    if (provider === 'github')   DATA.social.github   = val;
+
+    saveToSupabase('social');
+    updateConnectedUI(provider, true, val);
+    showToast('Connected ' + provider + '!');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function() { loadFromSupabase(); });
 </script>
 </body>
 </html>

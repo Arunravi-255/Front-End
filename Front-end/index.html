@@ -1603,7 +1603,7 @@
    SUPABASE CONFIGURATION
 ══════════════════════════════════════ */
 var SUPABASE_URL  = 'https://xonjacgqtokjqamzsrcj.supabase.co';
-var SUPABASE_KEY  = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+var SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
 var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* Check if already logged in → go to dashboard */
@@ -1885,33 +1885,64 @@ function forgotShowToast(msg) {
   setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
 function handleForgotSubmit() {
-  var email = document.getElementById('forgotEmailInput').value.trim();
-  var btn   = document.getElementById('forgotSubmitBtn');
+  /* Support both possible input IDs */
+  var emailEl = document.getElementById('forgot-emailInput') ||
+                document.getElementById('forgotEmailInput');
+  var errEl   = document.getElementById('forgot-emailError') ||
+                document.getElementById('forgotEmailError');
+  var btn     = document.getElementById('forgotSubmitBtn');
+
+  if (!emailEl) return;
+  var email = emailEl.value.trim();
+
+  /* Clear previous error */
+  if (errEl) errEl.classList.remove('show');
+  emailEl.classList.remove('error');
+
   if (!email || !validateEmail(email)) {
-    document.getElementById('forgotEmailError').classList.add('show'); return;
+    if (errEl) errEl.classList.add('show');
+    emailEl.classList.add('error');
+    return;
   }
+
+  if (!_sb) { loginShowToast('Connection error. Please refresh.'); return; }
+
   btn.classList.add('loading'); btn.disabled = true;
+
   _sb.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://prolio-ai4.netlify.app/index.html'
+    redirectTo: 'https://prolio-ai4.netlify.app/reset-password.html'
   }).then(function(res) {
     btn.classList.remove('loading'); btn.disabled = false;
-    if (res.error) { loginShowToast('⚠️ ' + res.error.message); return; }
-    showPage('forgot-sent');
-  }).catch(function() {
+    if (res.error) {
+      loginShowToast('Oops: ' + res.error.message);
+      return;
+    }
+    /* Show success state */
+    var form    = document.getElementById('forgotForm');
+    var success = document.getElementById('forgotSuccess');
+    if (form)    form.style.display    = 'none';
+    if (success) success.style.display = 'flex';
+    /* Also try showPage forgot-sent if it exists */
+    var sentPage = document.getElementById('page-forgot-sent');
+    if (sentPage) showPage('forgot-sent');
+    loginShowToast('Reset link sent to ' + email + '!');
+  }).catch(function(err) {
     btn.classList.remove('loading'); btn.disabled = false;
-    loginShowToast('⚠️ Connection error. Please try again.');
+    loginShowToast('Connection error. Please try again.');
   });
 }
 function resetForgotForm() {
   var form    = document.getElementById('forgotForm');
   var success = document.getElementById('forgotSuccess');
-  var inp     = document.getElementById('forgot-emailInput');
-  var err     = document.getElementById('forgot-emailError');
+  var inp     = document.getElementById('forgot-emailInput') ||
+                document.getElementById('forgotEmailInput');
+  var err     = document.getElementById('forgot-emailError') ||
+                document.getElementById('forgotEmailError');
   var btn     = document.getElementById('forgotSubmitBtn');
-  if (form)    { form.style.display    = 'block'; }
-  if (success) { success.style.display = 'none';  }
+  if (form)    form.style.display    = 'block';
+  if (success) success.style.display = 'none';
   if (inp)     { inp.value = ''; inp.classList.remove('error'); }
-  if (err)     { err.classList.remove('show'); }
+  if (err)     err.classList.remove('show');
   if (btn)     { btn.classList.remove('loading'); btn.disabled = false; }
 }
 document.getElementById('page-forgot').addEventListener('keydown', function(e) {
@@ -2043,7 +2074,7 @@ function goStep2() {
     email: contact,
     options: {
       shouldCreateUser: true,
-      emailRedirectTo: 'https://prolio-ai4.netlify.app/dashboard.html'
+      emailRedirectTo: 'https://prolio-ai4.netlify.app/reset-password.html'
     }
   }).then(function(res) {
     btn.classList.remove('loading'); btn.disabled = false;
@@ -2250,7 +2281,7 @@ document.querySelectorAll('.stat-num').forEach(function(el) {
 function signInWithGoogle() {
   _sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://prolio-ai4.netlify.app/dashboard.html' }
+    options: { redirectTo: 'https://prolio-ai4.netlify.app/reset-password.html' }
   });
 }
 </script>

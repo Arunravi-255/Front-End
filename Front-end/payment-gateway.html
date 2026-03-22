@@ -279,6 +279,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 }
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -841,7 +842,7 @@ function launchRazorpay() {
     currency:    'INR',
     name:        'Prolio AI',
     description: 'Prolio AI ' + planData.name + ' Plan — ' + planData.billing,
-    image:       'https://prolio-ai.netlify.app/favicon.ico',
+    image:       'https://prolio-ai4.netlify.app/favicon.ico',
     prefill: {
       name:    document.getElementById('card-name') ? document.getElementById('card-name').value : '',
       email:   '',
@@ -884,13 +885,81 @@ function launchRazorpay() {
 }
 
 function onPaymentSuccess(paymentId) {
-  /* Save plan and show success */
-  try { localStorage.setItem('prolio_plan', 'pro'); } catch(e) {}
-  /* Update receipt */
+  /* 1. Save to localStorage immediately */
+  var plan = planData.name.toLowerCase(); /* 'pro' or 'team' */
+  try { localStorage.setItem('prolio_plan', plan); } catch(e) {}
+
+  /* 2. Update receipt with payment ID */
   var txnEl = document.getElementById('txn-id');
   if (txnEl) txnEl.textContent = paymentId;
-  /* Show processing animation then success */
+
+  /* 3. Save to Supabase database — makes Pro permanent across all devices */
+  activateProInDB(plan, paymentId);
+
+  /* 4. Show processing animation then success */
   startProcessing();
+}
+
+function activateProInDB(plan, paymentId) {
+  var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
+
+  if (typeof supabase === 'undefined') {
+    console.warn('Supabase not loaded — plan saved to localStorage only');
+    return;
+  }
+
+  var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) {
+      console.warn('No session — plan saved to localStorage only');
+      return;
+    }
+
+    var uid   = res.data.session.user.id;
+    var email = res.data.session.user.email;
+
+    /* Step 1: Update profile plan using upsert */
+    _sb.from('profiles')
+      .upsert({
+        id:         uid,
+        email:      email,
+        plan:       plan,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' })
+      .then(function(r) {
+        if (r.error) {
+          console.error('Plan update error:', r.error.message);
+          /* Show error but don't block — localStorage already has the plan */
+        } else {
+          console.log('Plan activated in DB:', plan);
+          /* Update localStorage with confirmed plan */
+          try { localStorage.setItem('prolio_plan', plan); } catch(e) {}
+          /* Show success toast on dashboard after redirect */
+          try { localStorage.setItem('prolio_payment_success', JSON.stringify({
+            plan: plan,
+            paymentId: paymentId,
+            timestamp: Date.now()
+          })); } catch(e) {}
+        }
+      });
+
+    /* Step 2: Record payment in payments table */
+    _sb.from('payments')
+      .insert({
+        user_id:      uid,
+        razorpay_id:  paymentId,
+        plan:         plan,
+        billing:      planData.billing ? planData.billing.toLowerCase() : 'monthly',
+        amount:       planData.total ? parseInt(planData.total.replace(/[^0-9]/g,'')) * 100 : 0,
+        status:       'success'
+      })
+      .then(function(r) {
+        if (r.error) console.error('Payment record error:', r.error.message);
+        else console.log('Payment recorded:', paymentId);
+      });
+  });
 }
 
 /* ── PROCESSING ANIMATION ── */
@@ -949,7 +1018,6 @@ function showToast(msg) {
   t.textContent = msg; t.style.transform = 'translateX(-50%) translateY(0)';
   clearTimeout(window._tt);
   window._tt = setTimeout(function(){ t.style.transform = 'translateX(-50%) translateY(80px)'; }, 3000);
-}
-</script>
+}</script>
 </body>
 </html>

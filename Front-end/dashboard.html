@@ -560,27 +560,27 @@
         <div id="stats-grid">
           <div class="stat-card s-purple">
             <div class="stat-icon">📄</div>
-            <div class="stat-value" id="cnt-resumes">3</div>
+            <div class="stat-value" id="cnt-resumes">0</div>
             <div class="stat-label">Resumes Created</div>
-            <div class="stat-change up">↑ 1 this week</div>
+            <div class="stat-change up">Get started!</div>
           </div>
           <div class="stat-card s-cyan">
             <div class="stat-icon">👁</div>
-            <div class="stat-value" id="cnt-views">124</div>
+            <div class="stat-value" id="cnt-views">0</div>
             <div class="stat-label">Portfolio Views</div>
-            <div class="stat-change up">↑ 18 today</div>
+            <div class="stat-change up">Share your portfolio</div>
           </div>
           <div class="stat-card s-blue">
             <div class="stat-icon">🔗</div>
-            <div class="stat-value" id="cnt-links">7</div>
+            <div class="stat-value" id="cnt-links">0</div>
             <div class="stat-label">Link Shares</div>
-            <div class="stat-change zero">— same as yesterday</div>
+            <div class="stat-change zero">No shares yet</div>
           </div>
           <div class="stat-card s-gold">
             <div class="stat-icon">🏆</div>
-            <div class="stat-value">68%</div>
+            <div class="stat-value" id="cnt-profile">0%</div>
             <div class="stat-label">Profile Completion</div>
-            <div class="stat-change up">↑ 12% this week</div>
+            <div class="stat-change up">Complete your profile</div>
           </div>
         </div>
 
@@ -592,6 +592,13 @@
               <a onclick="goToResumeBuilder()">View all →</a>
             </div>
             <div id="resume-list">
+              <div style="text-align:center;padding:40px 20px;color:var(--muted);">
+                <div style="font-size:40px;margin-bottom:12px;">📄</div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:6px;">No resumes yet</div>
+                <div style="font-size:12px;margin-bottom:16px;">Create your first resume to get started</div>
+                <button onclick="location.href='resume-builder.html'" style="padding:10px 20px;border-radius:10px;background:var(--grad);border:none;color:white;font-size:13px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;">+ Create Resume</button>
+              </div>
+            </div><div id="resume-list">
               <div class="resume-card" onclick="goToResumeBuilder()">
                 <div class="rc-thumb t-purple">📄</div>
                 <div class="rc-info">
@@ -766,7 +773,7 @@ function goToResumeBuilder() { window.location.href = 'resume-builder.html'; }
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('show');}
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show');},3000);}
-function logout(){if(typeof supabase!=='undefined'){var _sb=supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq');_sb.auth.signOut().then(function(){localStorage.removeItem('prolio_plan');localStorage.removeItem('prolio_user');window.location.href='index.html';});}else{localStorage.removeItem('prolio_plan');localStorage.removeItem('prolio_user');window.location.href='index.html';}}
+function logout(){if(typeof supabase!=='undefined'){var _sb=supabase.createClient('https://xonjacgqtokjqamzsrcj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0');_sb.auth.signOut().then(function(){localStorage.removeItem('prolio_plan');localStorage.removeItem('prolio_user');window.location.href='index.html';});}else{localStorage.removeItem('prolio_plan');localStorage.removeItem('prolio_user');window.location.href='index.html';}}
 function doSearch(q){
   q=q.toLowerCase().trim();
   var pages=[{name:'Dashboard',url:'dashboard.html',keys:'home stats overview'},{name:'Resume Builder',url:'resume-builder.html',keys:'resume cv create'},{name:'My Portfolio',url:'portfolio.html',keys:'portfolio website'},{name:'Templates',url:'templates.html',keys:'templates design theme'},{name:'AI Enhance',url:'ai-enhance.html',keys:'ai enhance writing'},{name:'Profile',url:'profile.html',keys:'profile account bio'},{name:'Settings',url:'settings.html',keys:'settings preferences'},{name:'Developer API',url:'developer-api.html',keys:'api developer key'},{name:'Help & Docs',url:'help-docs.html',keys:'help docs faq support'},{name:'Pricing & Plans',url:'pricing.html',keys:'pricing pro upgrade plan'}];
@@ -783,7 +790,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('#topbar-sear
 /* == SUPABASE USER LOADER == */
 (function() {
   var SUPABASE_URL = 'https://xonjacgqtokjqamzsrcj.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_jYXSIF7UaKALUpB61fArbA_rMbamusq';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0';
 
   if (typeof supabase === 'undefined') return;
   var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -804,7 +811,14 @@ document.addEventListener('click',function(e){if(!e.target.closest('#topbar-sear
     applyUser(u);
     _sb.from('profiles').select('plan').eq('id', user.id).single().then(function(r) {
       if (r.data && r.data.plan && r.data.plan !== 'free') {
-        try { localStorage.setItem('prolio_plan', r.data.plan); } catch(e) {}
+        var plan = r.data.plan;
+        try { localStorage.setItem('prolio_plan', plan); } catch(e) {}
+        /* Update sidebar immediately */
+        var sr = document.getElementById('sb-user-role');
+        if (sr) { sr.textContent = plan === 'team' ? 'Team Plan' : 'Pro Plan ✦'; sr.style.color = '#c4b5fd'; }
+        var ub = document.getElementById('sb-upgrade'); if (ub) ub.style.display = 'none';
+        var pb = document.getElementById('plan-badge');
+        if (pb) { pb.textContent = plan === 'team' ? '👥 Team' : '✦ Pro'; pb.style.display = 'inline-flex'; }
       }
     });
   });
@@ -813,7 +827,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('#topbar-sear
     var ini = u.name ? u.name.charAt(0).toUpperCase() : '?';
     var firstName = u.name ? u.name.split(' ')[0] : '';
     /* Avatars */
-    document.querySelectorAll('#sb-avatar, #tb-avatar').forEach(function(el) {
+    document.querySelectorAll('#sb-avatar, #tb-avatar, #topbar-avatar').forEach(function(el) {
       el.textContent = ini;
     });
     /* Sidebar name */
@@ -842,6 +856,131 @@ document.addEventListener('click',function(e){if(!e.target.closest('#topbar-sear
   }
 })();
 
+
+/* ══ PAYMENT SUCCESS HANDLER ══ */
+(function() {
+  try {
+    var ps = localStorage.getItem('prolio_payment_success');
+    if (ps) {
+      var data = JSON.parse(ps);
+      /* Only show if within last 5 minutes */
+      if (Date.now() - data.timestamp < 300000) {
+        setTimeout(function() {
+          showToast('🎉 Welcome to ' + (data.plan === 'team' ? 'Team' : 'Pro') + ' Plan! All features unlocked.');
+        }, 1500);
+        /* Update sidebar */
+        var sr = document.getElementById('sb-user-role');
+        if (sr) { sr.textContent = data.plan === 'team' ? 'Team Plan' : 'Pro Plan ✦'; sr.style.color = '#c4b5fd'; }
+        var ub = document.getElementById('sb-upgrade'); if (ub) ub.style.display = 'none';
+        var pb = document.getElementById('plan-badge');
+        if (pb) { pb.textContent = data.plan === 'team' ? '👥 Team' : '✦ Pro'; pb.style.display = 'inline-flex'; }
+      }
+      localStorage.removeItem('prolio_payment_success');
+    }
+  } catch(e) {}
+})();
+
+
+
+/* ══ LOAD REAL RESUMES FROM SUPABASE ══ */
+function loadResumes() {
+  console.log('loadResumes called, supabase:', typeof supabase);
+  if (typeof supabase === 'undefined') { console.warn('Supabase not loaded'); return; }
+  var _sb = supabase.createClient(
+    'https://xonjacgqtokjqamzsrcj.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0'
+  );
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    var uid = res.data.session.user.id;
+    _sb.from('resumes').select('id,title,status,updated_at')
+      .eq('user_id', uid).order('updated_at', { ascending: false }).limit(5)
+      .then(function(r) {
+        if (r.error) { console.error('Resume load error:', r.error); return; }
+        var list = document.getElementById('resume-list');
+        var countEl = document.getElementById('cnt-resumes');
+        var resumes = r.data || [];
+        if (countEl) countEl.textContent = resumes.length;
+        if (!list) return;
+        if (resumes.length === 0) {
+          var wrap = document.createElement('div');
+          wrap.style.cssText = 'text-align:center;padding:40px 20px;color:var(--muted);';
+          var icon = document.createElement('div');
+          icon.style.cssText = 'font-size:40px;margin-bottom:12px;';
+          icon.textContent = String.fromCodePoint(0x1F4C4);
+          var title = document.createElement('div');
+          title.style.cssText = 'font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;';
+          title.textContent = 'No resumes yet';
+          var sub = document.createElement('div');
+          sub.style.cssText = 'font-size:12px;margin-bottom:16px;';
+          sub.textContent = 'Create your first AI-powered resume';
+          var btn = document.createElement('button');
+          btn.textContent = '+ New Resume';
+          btn.style.cssText = 'padding:10px 22px;border-radius:10px;background:var(--grad);border:none;color:white;font-size:13px;font-weight:800;cursor:pointer;';
+          btn.addEventListener('click', function() { location.href = 'resume-builder.html'; });
+          wrap.appendChild(icon); wrap.appendChild(title); wrap.appendChild(sub); wrap.appendChild(btn);
+          list.innerHTML = ''; list.appendChild(wrap);
+          return;
+        }
+        var colors = ['t-purple','t-cyan','t-gold','t-blue','t-green'];
+        list.innerHTML = '';
+        resumes.forEach(function(rv, i) {
+          var updated = new Date(rv.updated_at);
+          var diff = Math.floor((new Date() - updated) / 60000);
+          var timeAgo = diff < 60 ? diff + ' min ago' : diff < 1440 ? Math.floor(diff/60) + ' hr ago' : Math.floor(diff/1440) + ' days ago';
+          var card = document.createElement('div');
+          card.className = 'resume-card';
+          card.style.cursor = 'pointer';
+          card.addEventListener('click', function() { location.href = 'resume-builder.html?id=' + rv.id; });
+          var thumb = document.createElement('div');
+          thumb.className = 'rc-thumb ' + colors[i % colors.length];
+          thumb.textContent = String.fromCodePoint(0x1F4C4);
+          var info = document.createElement('div'); info.className = 'rc-info';
+          var name = document.createElement('div'); name.className = 'rc-name'; name.textContent = rv.title || 'Untitled';
+          var meta = document.createElement('div'); meta.className = 'rc-meta'; meta.textContent = 'Updated ' + timeAgo;
+          info.appendChild(name); info.appendChild(meta);
+          var status = document.createElement('span');
+          status.className = 'rc-status ' + (rv.status === 'complete' ? 'done' : 'draft');
+          status.textContent = rv.status === 'complete' ? 'Complete' : 'Draft';
+          var actions = document.createElement('div'); actions.className = 'rc-actions';
+          var editBtn = document.createElement('div'); editBtn.className = 'rc-btn'; editBtn.title = 'Edit'; editBtn.textContent = String.fromCodePoint(0x270F, 0xFE0F);
+          editBtn.addEventListener('click', function(e) { e.stopPropagation(); location.href = 'resume-builder.html?id=' + rv.id; });
+          var delBtn = document.createElement('div'); delBtn.className = 'rc-btn'; delBtn.title = 'Delete'; delBtn.textContent = String.fromCodePoint(0x1F5D1, 0xFE0F);
+          delBtn.addEventListener('click', function(e) { e.stopPropagation(); deleteResume(rv.id); });
+          actions.appendChild(editBtn); actions.appendChild(delBtn);
+          card.appendChild(thumb); card.appendChild(info); card.appendChild(status); card.appendChild(actions);
+          list.appendChild(card);
+        });
+      });
+  });
+}
+
+function deleteResume(id) {
+  if (!confirm('Delete this resume?')) return;
+  if (typeof supabase === 'undefined') return;
+  var _sb = supabase.createClient(
+    'https://xonjacgqtokjqamzsrcj.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvbmphY2dxdG9ranFhbXpzcmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDU4NjIsImV4cCI6MjA4OTY4MTg2Mn0.ysyGcmO5y9o-xrS4_-4Km-5lYoNd6cZzh7xWAGtBpt0'
+  );
+  _sb.auth.getSession().then(function(res) {
+    if (!res.data || !res.data.session) return;
+    _sb.from('resumes').delete().eq('id', id).eq('user_id', res.data.session.user.id)
+      .then(function(r) { if (!r.error) { showToast('Resume deleted'); loadResumes(); } });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  /* Wait for Supabase to be ready then load resumes */
+  var attempts = 0;
+  var waitForAuth = setInterval(function() {
+    attempts++;
+    if (typeof supabase !== 'undefined') {
+      clearInterval(waitForAuth);
+      setTimeout(loadResumes, 800);
+    }
+    if (attempts > 20) clearInterval(waitForAuth);
+  }, 200);
+});
 </script>
 </body>
 </html>
